@@ -4,41 +4,18 @@ sidebar_position: 4
 
 # Conditions
 
-Conditions define the set of circumstances under which a job can be triggered. In Warp, conditions are written in JSON and describe the necessary parameters that must be met to trigger a job.  
+Conditions define the set of circumstances under which a job can be triggered. 
+Once all the specific parameters of a condition are met, the job tied to the condition becomes active and is ready to be completed.
 
-Conditions are made up of **expressions**, or units of code that resolve to make a condition. Expressions can be nested and combined using the _`and`_, _`or`_, and _`not`_ boolean operators to create a theoretically infinite variety of specific conditions to trigger a job.
+## Expressions
 
-The conditional boolean operators for triggering a job include:
+Expressions define the logic of a condition, evaluating to either `true` or `false`. All conditions are made up of at least one expression which contains a left side, an operator, and a right side. 
 
-- _`and`_: A condition is met if all expresions joined by _`and`_ evaluate to be true. 
+The simplest form of condition contains only one expression which triggers a job when the expression evaluates as `true`. 
 
-- _`or`_:  A condition is met if either expression evaluates to be true. 
+## Values
 
-- _`not`_: If the expression after this operator evaluates to be true, the condition is not met. 
-
-- _`expr`_: A condition is met if the expression evaluates to be true. 
-
-
-## Expression syntax
-
-Values are combined into expressions using the following syntax. 
-
-### Comparative expressions: 
-
-Left: the first value that preceeds the operator
-
-operator: the operator used, depending on the value type. 
-
-right: the value after the operator
-
-### Boolean expressions
-
-Boolean expressions do not require operators, and evaluate to true or false. 
-
-
-## Expression value types
-
-There are two basic expression value types. 
+There are two basic value types. 
 
 1. Simple values, such as strings, integers, blockheights, or timestamps.
 
@@ -74,6 +51,40 @@ pub struct QueryExpr {
     pub contract: String,
 }
 ```
+
+
+
+
+### Combining expressions
+
+Expressions can be nested and combined using the _`and`_, _`or`_, and _`not`_ boolean operators to create a theoretically infinite variety of specific conditions to trigger a job.
+
+The boolean operators for creating a multiple expression include:
+
+- _`and`_: A condition is met if all expresions joined by _`and`_ evaluate as `true`. 
+
+- _`or`_:  A condition is met if either expression evaluates as `true`. 
+
+- _`not`_: If the expression after this operator evaluates as `true`, the condition is not met. 
+
+
+
+
+## Expression syntax
+
+Values are combined into expressions using the following syntax. 
+
+### Comparative expressions: 
+
+Left: the first value that preceeds the operator
+
+operator: the operator used, depending on the value type. 
+
+right: the value after the operator
+
+### Boolean expressions
+
+Boolean expressions do not require operators as they evaluate to `true` or `false`. 
 
 
 ## Nesting
