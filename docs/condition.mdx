@@ -10,9 +10,27 @@ The conditional boolean operators for triggering a job include:
 
 - _`or`_:  A condition is met if either expression evaluates to be true. 
 
-- _`not`_: If the expression after this operator evaluates, to be true, the condition is not met. 
+- _`not`_: If the expression after this operator evaluates to be true, the condition is not met. 
 
 - _`expr`_: A condition is met if the expression evaluates to be true. 
+
+
+## Expression syntax
+
+Values are combined into expressions using the following syntax. 
+
+### Comparative expressions: 
+
+Left: the first value that preceeds the operator
+
+operator: the operator used, depending on the value type. 
+
+right: the value after the operator
+
+### Boolean expressions
+
+Boolean expressions do not require operators, and evaluate to true or false. 
+
 
 ## Expression value types
 
@@ -27,6 +45,8 @@ There are two basic expression value types.
 ### Simple values
 
 Simple values can be 
+
+
 ```rust
 #[cw_serde]
 pub enum Expr {
@@ -50,25 +70,6 @@ pub struct QueryExpr {
     pub contract: String,
 }
 ```
-
-
-
-## Expression syntax
-
-Values are combined into expressions using the following syntax. 
-
-### Comparative expressions: 
-
-Left: the first value that preceeds the operator
-
-operator: the operator used, depending on the value type. 
-
-right: the value after the operator
-
-### Boolean expressions
-
-Boolean expressions do not require operators, and evaluate to true or false. 
-
 
 
 ## Nesting
