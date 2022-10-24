@@ -91,12 +91,12 @@ module.exports = async function config() {
           contextualSearch: true,
         },
         navbar: {
-          title: "",
-          logo: {
-            alt: "Terra Docs",
-            src: "img/logo_light.svg",
-            srcDark: "img/logo_dark.svg",
-          },
+          title: "Warp Docs",
+          //logo: {
+            //alt: "Terra Docs",
+            //src: "img/logo_light.svg",
+            //srcDark: "img/logo_dark.svg",
+          //},
           items: [
             {
               href: "https://terra.money", //front-end URL
