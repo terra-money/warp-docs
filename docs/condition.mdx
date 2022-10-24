@@ -1,0 +1,174 @@
+# Conditions
+
+Conditions define the set of circumstances under which a job can be triggered. In Warp, conditions are written in JSON and describe the necessary parameters that must be met to trigger a job.  
+
+Conditions are made up of **expressions**, or units of code that resolve to make a condition. Expressions can be nested and combined using the _`and`_, _`or`_, and _`not`_ boolean operators to create a theoretically infinite variety of specific conditions to trigger a job.
+
+The conditional boolean operators for triggering a job include:
+
+- _`and`_: A condition is met if all expresions joined by _`and`_ evaluate to be true. 
+
+- _`or`_:  A condition is met if either expression evaluates to be true. 
+
+- _`not`_: If the expression after this operator evaluates, to be true, the condition is not met. 
+
+- _`expr`_: A condition is met if the expression evaluates to be true. 
+
+## Expression value types
+
+There are two basic expression value types. 
+
+1. Simple values, such as strings, integers, blockheights, or timestamps.
+
+
+2. Query values, which are complex and parse out to custom JSON query files. 
+
+
+### Simple values
+
+Simple values can be 
+```rust
+#[cw_serde]
+pub enum Expr {
+    String(GenExpr<Value<String>, StringOp>),
+    Uint(GenExpr<Value<Uint256>, NumOp>),
+    Int(GenExpr<Value<i128>, NumOp>),
+    Decimal(GenExpr<Value<Decimal256>, NumOp>),
+    Timestamp(TimeExpr),
+    BlockHeight(TimeExpr),
+    Bool(QueryExpr),
+}
+```
+
+
+### Query values
+
+```
+pub struct QueryExpr {
+    pub selector: String,
+    pub query: String,
+    pub contract: String,
+}
+```
+
+
+
+## Expression syntax
+
+Values are combined into expressions using the following syntax. 
+
+### Comparative expressions: 
+
+Left: the first value that preceeds the operator
+
+operator: the operator used, depending on the value type. 
+
+right: the value after the operator
+
+### Boolean expressions
+
+Boolean expressions do not require operators, and evaluate to true or false. 
+
+
+
+## Nesting
+
+
+
+
+
+
+
+This trigger will be active under the following conditions:
+
+1. When a `string` of the `"query": "{\"query_test_string\":{\"str\":\"str\"}}",` equals the `"query": "{\"query_test_string\":{\"str\":\"str\"}}",` of the `"contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm"`
+
+OR 
+
+The parent conditions of this JSON trigger are listed . Conditions will always preceed their 
+
+
+Conditions come first in the JSON 
+
+<CH.Scrollycoding>
+
+## Conditions
+
+Conditions 
+
+```json Example.JSON focus=4,6,29,54 mark=4,6,29,54
+{
+    "query_resolve_trigger": {
+        "trigger": {
+          "and": [
+            {
+              "or": [
+                {
+                  "expr": {
+                    "string": {
+                      "op": "eq",
+                      "left": {
+                        "query": {
+                          "query": "{\"query_test_string\":{\"str\":\"str\"}}",
+                          
+                          "selector": "$.str"
+                        }
+                      },
+                      "right": {
+                        "query": {
+                          "query": "{\"query_test_string\":{\"str\":\"str\"}}",
+                          "contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm",
+                          "selector": "$.str"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "not": {
+                    "expr": {
+                      "int": {
+                        "op": "eq",
+                        "left": {
+                          "query": {
+                            "query": "{\"query_test_int\":{\"int\":\"1\"}}",
+                            "contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm",
+                            "selector": "$.int"
+                          }
+                        },
+                        "right": {
+                          "query": {
+                            "query": "{\"query_test_int\":{\"int\":\"1\"}}",
+                            "contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm",
+                            "selector": "$.int"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "expr": {
+                "bool": {
+                  "query": "{\"query_test_bool\":{\"bool\":true}}",
+                  "contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm",
+                  "selector": "$.bool"
+                }
+              }
+            }
+          ]
+        }
+    }
+}
+```
+---
+
+## Operators
+
+```json Example.JSON
+
+```
+
+</CH.Scrollycoding>
