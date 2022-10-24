@@ -9,6 +9,9 @@ Once all the specific parameters of a condition are met, the job tied to the con
 
 ## Expressions
 
+Integer or string 
+
+
 Expressions define the logic of a condition, evaluating to either `true` or `false`. All conditions are made up of at least one expression which contains a left side, an operator, and a right side. 
 
 The simplest form of condition contains only one expression which triggers a job when the expression evaluates as `true`. 
@@ -87,10 +90,23 @@ right: the value after the operator
 Boolean expressions do not require operators as they evaluate to `true` or `false`. 
 
 
-## Nesting
 
 
+## Strings
 
+StringOp
+
+## Integers and decimals
+
+NumOp
+
+## Timestamp or Blockheight
+
+TimeExpr
+
+## Bool
+
+QueryExpr
 
 
 
