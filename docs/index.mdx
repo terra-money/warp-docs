@@ -1,7 +1,13 @@
-import CardSection from '/src/components/Cards/CardSection';
-import homeCards from '/src/components/Cards/card-data/home-cards';
-
 # Warp Docs
 
+## Problem
 
-<CardSection cards={homeCards} />
+- Many types of transactions are responses to various on chain – examples are arbitrage (swap txn in response to price deviations on dexes), staggered airdrops (multiple send txns in response to time), but there is no way currently to succinctly monitor changes in onchain state & execute a callback function without the use of centralized bots and dedicated infrastructure. In short, blockchains need ***event handlers***
+- The problem is even more pronounced when the end users are protocols – for example, if there is a governance proposal that takes multiple steps to execute, e.g. send tokens across to IBC, wait for the IBC txn to be confirmed, and provide liquidity on Osmosis, then this necessitates the existence of a centralized executor, bringing with it custodian and execution risks
+
+## Solution
+
+- Warp protocol is an incentivized event handler for the Cosmos ecosystem that observes onchain events, and executes an arbitrary callback function in response.
+- A user can register a *callback* corresponding to a *trigger* of an event, offering a bounty to a relayer to execute the callback.
+- Internally, warp protocol maintains a priority queue of (reward, trigger, callback) tuples, where the priority is the reward in descending order.
+- Parameters can be passed into the callback – if the parameters are coins, they are stored in a vault contract, which can only be withdrawn by executing the callback each deposit is matched to, and returned to the vault in case of failure
