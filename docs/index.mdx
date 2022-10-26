@@ -9,13 +9,12 @@ sidebar_position: 1
 Most transactions are executed in response to various on-chain activities. For example, arbitrage transactions are executed in response to prices deviations on decentralized exchanges. Other examples include staggered airdrops which are sent as a response to corresponding times. Despit the importance and prevelance of these transaction types, there is currently no way to succinctly monitor changes in on-chain state and execute a callback function without the use of centralized bots and dedicated infrastructure. In short, blockchains need ***event handlers***. 
 
 
-
-- The problem is even more pronounced when the end users are protocols – for example, if there is a governance proposal that takes multiple steps to execute, e.g. send tokens across to IBC, wait for the IBC txn to be confirmed, and provide liquidity on Osmosis, then this necessitates the existence of a centralized executor, bringing with it custodian and execution risks
+The problem is even more pronounced when transactors are protocols. For example, if there is a governance proposal that takes multiple steps to execute, e.g. send tokens across to IBC, wait for the IBC txn to be confirmed, and provide liquidity on Osmosis, then this necessitates the existence of a centralized executor, bringing with it custodian and execution risks
 
 ## Solution
 
-- Warp protocol is an incentivized event handler for the Cosmos ecosystem that observes onchain events, and executes an arbitrary callback function in response.
-- A user can register a *callback* corresponding to a *trigger* of an event, offering a bounty to a relayer to execute the callback.
+- Warp protocol is an incentivized event handler for the Cosmos ecosystem that observes on-chain events and executes an arbitrary callback function in response.
+- A user can register a callback function corresponding to a *trigger* of an event, offering a bounty to a relayer to execute the callback.
 - Internally, warp protocol maintains a priority queue of (reward, trigger, callback) tuples, where the priority is the reward in descending order.
 - Parameters can be passed into the callback – if the parameters are coins, they are stored in a vault contract, which can only be withdrawn by executing the callback each deposit is matched to, and returned to the vault in case of failure
 
@@ -37,4 +36,4 @@ A job is an execute message
 
 When a user creates a job, they submit a message and a contract address, as well as a reward amount for executing the job. 
 
-After being created, Jobs are queued until their conditions are met. Once the conditions of a job are met, 
+After being created, Jobs are placed in a queue until their conditions are met. Once the conditions of a job are met, 
