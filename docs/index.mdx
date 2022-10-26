@@ -18,3 +18,20 @@ Most transactions are executed in response to various on-chain activities. For e
 - A user can register a *callback* corresponding to a *trigger* of an event, offering a bounty to a relayer to execute the callback.
 - Internally, warp protocol maintains a priority queue of (reward, trigger, callback) tuples, where the priority is the reward in descending order.
 - Parameters can be passed into the callback – if the parameters are coins, they are stored in a vault contract, which can only be withdrawn by executing the callback each deposit is matched to, and returned to the vault in case of failure
+
+- Warp protocol is an incentivized event handler for the Cosmos ecosystem that observes onchain events and executes arbitrary callback functions in response. 
+
+
+
+## Jobs 
+
+Jobs describe the 
+
+## Conditions
+
+
+## How it works
+
+A job is an execute message 
+
+When a user creates a job, they submit a message, a contract address, and a reward amount for executing the job. 
