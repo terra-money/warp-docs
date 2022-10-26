@@ -5,31 +5,21 @@ sidebar_position: 4
 # Conditions
 
 Conditions define the set of circumstances under which a job can be triggered. 
-Once all the specific parameters of a condition are met, the job tied to the condition becomes active and is ready to be completed.
+Once all the specific parameters of a condition are met, the job tied to the condition becomes active, and the message contained in the job can be executed.
 
 ## Expressions
 
-Integer or string 
-
-
-Expressions define the logic of a condition, evaluating to either `true` or `false`. All conditions are made up of at least one expression which contains a left side, an operator, and a right side. 
-
-The simplest form of condition contains only one expression which triggers a job when the expression evaluates as `true`. 
+Expressions define the logic of a condition, evaluating to either `true` or `false`. All conditions are made up of at least one expression. Expressions can be combined using boolean operators to specify complex conditions. When all expressions of a condition evaluate to `true`, the condition is met, and the Job can be triggered. 
 
 ## Values
 
-There are two basic value types. 
+Values are inputs that combine with operators to make up the logic of expressions. There are two basic value types:
 
-1. Simple values, such as strings, integers, blockheights, or timestamps.
-
-
-2. Query values, which are complex and parse out to custom JSON query files. 
-
+- Simple values, such as strings, integers, 
 
 ### Simple values
 
-Simple values can be 
-
+Simple values can be
 
 ```rust
 #[cw_serde]
@@ -44,34 +34,34 @@ pub enum Expr {
 }
 ```
 
+#### Strings
 
-### Query values
+StringOp
 
-```
+#### Integers and decimals
+
+NumOp
+
+#### Timestamp or Blockheight
+
+TimeExpr
+
+
+### Queries
+
+```rust
+#[cw_serde]
 pub struct QueryExpr {
     pub selector: String,
     pub query: String,
     pub contract: String,
+    pub name: String,
 }
 ```
 
+#### Bool
 
-
-
-### Combining expressions
-
-Expressions can be nested and combined using the _`and`_, _`or`_, and _`not`_ boolean operators to create a theoretically infinite variety of specific conditions to trigger a job.
-
-The boolean operators for creating a multiple expression include:
-
-- _`and`_: A condition is met if all expresions joined by _`and`_ evaluate as `true`. 
-
-- _`or`_:  A condition is met if either expression evaluates as `true`. 
-
-- _`not`_: If the expression after this operator evaluates as `true`, the condition is not met. 
-
-
-
+QueryExpr
 
 ## Expression syntax
 
@@ -89,24 +79,18 @@ right: the value after the operator
 
 Boolean expressions do not require operators as they evaluate to `true` or `false`. 
 
+## Combining expressions
 
+Expressions can be nested and combined using the _`and`_, _`or`_, and _`not`_ boolean operators to create a theoretically infinite variety of specific conditions to trigger a job.
 
+The boolean operators for creating a multiple expression include:
 
-## Strings
+- _`and`_: A condition is met if all expresions joined by _`and`_ evaluate as `true`. 
 
-StringOp
+- _`or`_:  A condition is met if either expression evaluates as `true`. 
 
-## Integers and decimals
+- _`not`_: If the expression after this operator evaluates as `true`, the condition is not met. 
 
-NumOp
-
-## Timestamp or Blockheight
-
-TimeExpr
-
-## Bool
-
-QueryExpr
 
 
 
