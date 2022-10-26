@@ -5,7 +5,11 @@ sidebar_position: 1
 
 ## Problem
 
-- Many types of transactions are responses to various on chain – examples are arbitrage (swap txn in response to price deviations on dexes), staggered airdrops (multiple send txns in response to time), but there is no way currently to succinctly monitor changes in onchain state & execute a callback function without the use of centralized bots and dedicated infrastructure. In short, blockchains need ***event handlers***
+
+Most transactions are executed in response to various on-chain activities. For example, arbitrage transactions are executed in response to prices deviations on decentralized exchanges. Other examples include staggered airdrops which are sent as a response to corresponding times. Despit the importance and prevelance of these transaction types, there is currently no way to succinctly monitor changes in on-chain state and execute a callback function without the use of centralized bots and dedicated infrastructure. In short, blockchains need ***event handlers***. 
+
+
+
 - The problem is even more pronounced when the end users are protocols – for example, if there is a governance proposal that takes multiple steps to execute, e.g. send tokens across to IBC, wait for the IBC txn to be confirmed, and provide liquidity on Osmosis, then this necessitates the existence of a centralized executor, bringing with it custodian and execution risks
 
 ## Solution
