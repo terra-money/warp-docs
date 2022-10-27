@@ -6,7 +6,6 @@ import Admonition from '@theme/Admonition';
 
 # Conditions
 
-
 Conditions represent event definitions. A condition is a recursive data type that allows for multiple conditions within it, which all need to resolve to true for the Job to allow execution. This complex data type includes several underlying types.
 
 A condition is either a combination of conditions or a single expression. This is the recursive part of conditions, as they can be composed of themselves. These conditions can be nested and chained using regular boolean expressions (and, or, not).
@@ -44,8 +43,6 @@ A value is the most primitive type of input that we can have in an expression. W
 ## General expressions
 
 <CH.Section>
-
-
 
 General expressions or _`GenExpr`_ are used to compare two values using a [_`left:`_](focus://2) value, an operator [_`op:`_](focus://3), and a [_`right:`_](focus://4) value. The operators of general expressions vary depending on the value type. 
 
@@ -111,7 +108,7 @@ pub struct TimeExpr {
 ```
 
 
-## QueryExpr: Query expressions
+## Query expressions
 
 Query expressions are complex expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains a selector, a query JSON, a contract address, and a name. 
 
