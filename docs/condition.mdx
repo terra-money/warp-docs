@@ -7,6 +7,8 @@ sidebar_position: 4
 Conditions define the set of circumstances under which a job can be triggered. 
 Once all the specific parameters of a condition are met, the job tied to the condition becomes active, and the message contained in the job can be executed.
 
+A condition can either be a combination of conditions or a single expression. This is the "recursive" aspect of conditions, as they can be composed of themselves. Conditions can be nested and chained using regular boolean expressions (and, or, not).
+
 ## Expressions
 
 Expressions define the logic of a condition, evaluating to either `true` or `false`. All conditions are made up of at least one expression. Expressions can be combined using boolean operators to specify complex conditions. When all expressions of a condition evaluate to `true`, the condition is met, and the Job can be triggered. 
