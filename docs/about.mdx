@@ -4,3 +4,27 @@ sidebar_position: 2
 
 # How it works
 
+## Jobs
+
+Jobs are the backbone of the Warp protocol. Users submit jobs and keepers execute them.
+
+```rust
+pub struct Job {
+	// unique identifier for each Job
+	pub id: Uint64,
+	// job creator address
+  pub owner: Addr,
+	// UTC timestamp for when the job was submitted
+  pub publish_time: Uint64,
+	// name given to the Job
+  pub name: String,
+	// status of the job (pending, executed, failed, cancelled)
+  pub status: JobStatus,
+	// condition set dictating when the Job should be executed
+  pub condition: Condition,
+	// message to execute when conditions resolve to true
+  pub msg: WasmMsg,
+	// reward to distribute to the keeper when the Job has been executed
+  pub reward: Uint128,
+}
+```
