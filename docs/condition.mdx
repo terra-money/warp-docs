@@ -37,7 +37,7 @@ pub enum Expr {
 
 ## Values
 
-A value is the most primitive type of input used in an expression. In double-sided [general expressions](#general-expressions), the value can either be a primitive type or a query that gets a primitive type. 
+A value is the simplest type of input used in an expression. In double-sided [general expressions](#general-expressions), the value can either be a primitive type or a query that gets a primitive type. 
 
 ## General expressions
 
@@ -66,7 +66,7 @@ Only values of the same _`Type`_ can be compared when writing an expression.
 
 ### String operators
 
-The following operators are used in general expressions that compare strings. 
+The following operators are used in general expressions when comparing strings. 
 
 ```rust keeper.rs
 #[cw_serde]
@@ -81,7 +81,7 @@ pub enum StringOp {
 
 ### Number operators
 
-The following operators are used in general expressions that compare integers or decimals. 
+The following operators are used in general expressions when comparing integers or decimals. 
 
 ```rust keeper.rs
 #[cw_serde]
@@ -124,7 +124,7 @@ Query expressions can be used as one or both of the values in a [general express
 
 ### Selectors
 
-Selector strings are used in query expressions to select the JSON path of the query response. This string is essentially the path that Warp needs to take within that particular query response to get the value that needs comparing. 
+Selector strings are used in query expressions to select the JSON path of the query response. You can think of a selector string as the path that Warp needs to take within that particular query response to get the value that needs comparing. 
 
 **Example**:
 
