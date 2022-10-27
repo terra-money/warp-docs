@@ -8,7 +8,7 @@ import Admonition from '@theme/Admonition';
 
 Conditions represent event definitions, and they outline the circumstances under which a job can be completed. A condition is a recursive data type that allows for multiple conditions within it, which all need to resolve to true for the Job to allow execution. This complex data type includes several underlying types.
 
-A condition is either a combination of conditions or a single expression. Conditions can be nested and chained using regular boolean operators, such as _`And`_, _`Or`_, or _`Not`_. 
+A condition is either a combination of conditions or a single expression. Conditions can be nested and chained using regular boolean operators, such as `And`, `Or`, or `Not`. 
 
 ```rust
 pub enum Condition {
@@ -129,7 +129,7 @@ Selector strings are used in query expressions to select the JSON path of the qu
 
 **Example**:
 
-To select _`"bend"`_ as the desired portion of the query response below, the selector would be _`$.address.city`_. The _`$`_ in the selector refers to the root object/element. 
+To select _`"bend"`_ as the desired portion of the query response below, the _`$.address.city`_ selector is used. The _`$`_ in the selector refers to the root object/element. 
 
 ```javascript example.json
 {
