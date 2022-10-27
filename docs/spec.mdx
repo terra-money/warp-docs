@@ -4,55 +4,6 @@ sidebar_position: 6
 
 import Admonition from '@theme/Admonition';
 
-
-# Tech Spec
-
-# State
-
-## Jobs
-
-Jobs are the backbone of the Warp protocol. Users submit jobs and keepers execute them.
-
-```rust
-pub struct Job {
-	// unique identifier for each Job
-	pub id: Uint64,
-	// job creator address
-  pub owner: Addr,
-	// UTC timestamp for when the job was submitted
-  pub publish_time: Uint64,
-	// name given to the Job
-  pub name: String,
-	// status of the job (pending, executed, failed, cancelled)
-  pub status: JobStatus,
-	// condition set dictating when the Job should be executed
-  pub condition: Condition,
-	// message to execute when conditions resolve to true
-  pub msg: WasmMsg,
-	// reward to distribute to the keeper when the Job has been executed
-  pub reward: Uint128,
-}
-```
-
-## Persistent Queries
-
-In order for the protocol to be useful, values should be able to be compared with any type of query. Query JSON messages tend to be quite long, however, so we found it useful to be able to store queries in persistent storage and simply reference them instead of rewriting them each time they need to be compared.
-
-```rust
-pub struct PersistentQuery {
-	//unique identifier for each PersistentQuery
-	pub id: Uint64,
-	//name given to the PersistentQuery
-	pub name: String,
-	// contract address that needs querying
-	pub contract_address: String,
-	// selector for the JSON path of the query response for comparison
-	pub selector: String,
-	// query message in JSON format
-	pub query_json: String,
-}
-```
-
 ## Conditions
 
 Conditions represent event definitions. A condition is a recursive data type that allows for multiple conditions within it, which all need to resolve to true for the Job to allow execution. This complex data type includes several underlying types.
@@ -72,9 +23,9 @@ pub enum Condition {
 
 ## Expressions
 
-Expressions contain comparisons of the most popular data types, such as integers, unsigned integers, timestamps, booleans, strings, and more.
+Expressions contain comparisons of popular data types, such as integers, unsigned integers, timestamps, booleans, strings, and more.
 
-```rust
+```rust keeper.rs
 pub enum Expr {
     String(GenExpr<Value<String>, StringOp>),
     Uint(GenExpr<Value<Uint256>, NumOp>),
@@ -86,7 +37,12 @@ pub enum Expr {
 }
 ```
 
-## General Expressions
+## Values
+
+A value is the most primitive type of input that we can have in an expression. Within double sided [general expressions](#general-expressions), the value can either be a primitive type or a query that gets a primitive type. 
+
+
+## General expressions
 
 <CH.Section>
 
@@ -107,11 +63,15 @@ pub struct GenExpr<Type, Op> {
 
 <Admonition type="tip" icon="✅" title="Comparing values">
 
-Only values of the same type can be compared when writing an expression. 
+Only values of the same _`Type`_ can be compared when writing an expression. 
 
 </Admonition>
 
-#### String operators
+
+
+### String operators
+
+The following operators are used in general expressions that compare strings. 
 
 ```rust keeper.rs
 #[cw_serde]
@@ -124,7 +84,9 @@ pub enum StringOp {
 }
 ```
 
-#### Integer and decimal operators
+### Number operators
+
+The following operators are used in general expressions that compare integers or decimals. 
 
 ```rust keeper.rs
 #[cw_serde]
@@ -138,22 +100,23 @@ pub enum NumOp {
 }
 ```
 
-### TimeExpr: TimeExpr(ession)
+## Time expressions
 
-Time expressions are like regular unsigned integer expressions, except here we only have a left value and the operator. The right value is filled by block height or the timestamp, depending on the choice of the user.
+Time expressions are like regular unsigned integer expressions, except they only contain a left value and a number operator. The right value is filled by a _`BlockHeight`_ or _`Timestamp`_`, depending on the value type.
 
-```rust
+```rust keeper.rs
 pub struct TimeExpr {
     pub comparator: Uint64,
     pub op: NumOp,
 }
 ```
 
-### QueryExpr: QueryExpr(ession)
 
-Query expressions are complex in that not only they contain a right, a left, and a comparator value, but they also need a query json as one or both of the values. This query json is the actual query that needs to be sent out to grab a value. Query expressions also need a selector string. This string is essentially the path that Warp needs to take within that particular query response to get the value that needs comparing.
+## QueryExpr: Query expressions
 
-```rust
+Query expressions are complex expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains a selector, a query JSON, a contract address, and a name. 
+
+```rust keeper.rs
 pub struct QueryExpr {
     pub selector: String,
     pub query: String,
@@ -162,9 +125,34 @@ pub struct QueryExpr {
 }
 ```
 
-### Value
+Query expressions can be used as one or both of the values in a [general expression](#general-expressions), or in [boolean expressions](#bool). When query expressions are used in a condition, the JSON of a query message is sent out, and the value specified by the selector string is returned as the value to be compared in the general expression. 
 
-A value is the most primitive type of input that we can have in an expression. Within double sided general expressions, the value can either be a primitive type or a query that gets a primitive type.
+### Selectors
+
+Selector strings are used in query expressions to select the JSON path of the query response. This string is essentially the path that Warp needs to take within that particular query response to get the value that needs comparing. 
+
+**Example**:
+
+To select _`"bend"`_ as the desired portion of the query response below, the selector would be _`$.address.city`_. The _`$`_ in the selector refers to the root object/element. 
+
+```javascript example.json
+{
+"address": {
+        "streetAddress": "high street",
+        "city": "bend",
+        "postalCode": "97701"
+}
+
+}
+```
+
+For a hands-on example of JSON paths and selectors, visit the [JSON path evaluator](https://jsonpath.com/).
+To learn more about JSON selectors, visit the [JSON path Github repo](https://github.com/json-path/JsonPath). 
+
+### Bool
+
+Queries can also be written as boolean expressions, in which a query selector is evaluated as a boolean. 
+
 
 # Execute
 
