@@ -1,0 +1,171 @@
+---
+sidebar_position: 6
+---
+
+import Admonition from '@theme/Admonition';
+
+
+# Tech Spec
+
+# State
+
+## Jobs
+
+Jobs are the backbone of the Warp protocol. Users submit jobs and keepers execute them.
+
+```rust
+pub struct Job {
+	// unique identifier for each Job
+	pub id: Uint64,
+	// job creator address
+  pub owner: Addr,
+	// UTC timestamp for when the job was submitted
+  pub publish_time: Uint64,
+	// name given to the Job
+  pub name: String,
+	// status of the job (pending, executed, failed, cancelled)
+  pub status: JobStatus,
+	// condition set dictating when the Job should be executed
+  pub condition: Condition,
+	// message to execute when conditions resolve to true
+  pub msg: WasmMsg,
+	// reward to distribute to the keeper when the Job has been executed
+  pub reward: Uint128,
+}
+```
+
+## Persistent Queries
+
+In order for the protocol to be useful, values should be able to be compared with any type of query. Query JSON messages tend to be quite long, however, so we found it useful to be able to store queries in persistent storage and simply reference them instead of rewriting them each time they need to be compared.
+
+```rust
+pub struct PersistentQuery {
+	//unique identifier for each PersistentQuery
+	pub id: Uint64,
+	//name given to the PersistentQuery
+	pub name: String,
+	// contract address that needs querying
+	pub contract_address: String,
+	// selector for the JSON path of the query response for comparison
+	pub selector: String,
+	// query message in JSON format
+	pub query_json: String,
+}
+```
+
+## Conditions
+
+Conditions represent event definitions. A condition is a recursive data type that allows for multiple conditions within it, which all need to resolve to true for the Job to allow execution. This complex data type includes several underlying types.
+
+## Condition
+
+A condition is either a combination of conditions or a single expression. This is the recursive part of conditions, as they can be composed of themselves. These conditions can be nested and chained using regular boolean expressions (and, or, not).
+
+```rust
+pub enum Condition {
+    And(Vec<Box<Condition>>),
+    Or(Vec<Box<Condition>>),
+    Not(Box<Condition>),
+    Expr(Expr),
+}
+```
+
+## Expressions
+
+Expressions contain comparisons of the most popular data types, such as integers, unsigned integers, timestamps, booleans, strings, and more.
+
+```rust
+pub enum Expr {
+    String(GenExpr<Value<String>, StringOp>),
+    Uint(GenExpr<Value<Uint256>, NumOp>),
+    Int(GenExpr<Value<i128>, NumOp>),
+    Decimal(GenExpr<Value<Decimal256>, NumOp>),
+    Timestamp(TimeExpr),
+    BlockHeight(TimeExpr),
+    Bool(QueryExpr),
+}
+```
+
+## General Expressions
+
+<CH.Section>
+
+
+
+General expressions or _`GenExpr`_ are used to compare two values using a [_`left:`_](focus://2) value, an operator [_`op:`_](focus://3), and a [_`right:`_](focus://4) value. The operators of general expressions vary depending on the value type. 
+
+```rust keeper.rs
+pub struct GenExpr<Type, Op> {
+    pub left: Type,
+    pub op: Op,
+    pub right: Type,
+}
+```
+
+</CH.Section>
+
+
+<Admonition type="tip" icon="✅" title="Comparing values">
+
+Only values of the same type can be compared when writing an expression. 
+
+</Admonition>
+
+#### String operators
+
+```rust keeper.rs
+#[cw_serde]
+pub enum StringOp {
+    StartsWith,
+    EndsWith,
+    Contains,
+    Eq,
+    Neq,
+}
+```
+
+#### Integer and decimal operators
+
+```rust keeper.rs
+#[cw_serde]
+pub enum NumOp {
+    Eq,
+    Neq,
+    Lt,
+    Gt,
+    Gte,
+    Lte,
+}
+```
+
+### TimeExpr: TimeExpr(ession)
+
+Time expressions are like regular unsigned integer expressions, except here we only have a left value and the operator. The right value is filled by block height or the timestamp, depending on the choice of the user.
+
+```rust
+pub struct TimeExpr {
+    pub comparator: Uint64,
+    pub op: NumOp,
+}
+```
+
+### QueryExpr: QueryExpr(ession)
+
+Query expressions are complex in that not only they contain a right, a left, and a comparator value, but they also need a query json as one or both of the values. This query json is the actual query that needs to be sent out to grab a value. Query expressions also need a selector string. This string is essentially the path that Warp needs to take within that particular query response to get the value that needs comparing.
+
+```rust
+pub struct QueryExpr {
+    pub selector: String,
+    pub query: String,
+    pub contract: String,
+    pub name: String,
+}
+```
+
+### Value
+
+A value is the most primitive type of input that we can have in an expression. Within double sided general expressions, the value can either be a primitive type or a query that gets a primitive type.
+
+# Execute
+
+# Query
