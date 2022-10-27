@@ -3,37 +3,48 @@ sidebar_position: 1
 ---
 # Warp Docs
 
+# **Warp Protocol Executive Summary**
+
+***********************************Warp brings automation to the chain***********************************
+
 ## Problem
 
+Many types of blockchain transactions are responses to various changes on-chain. For instance, a user may swap two tokens on a DEX when the price reaches their desired level. A liquid staking token manager withdraws and compounds rewards when the number of rewards reaches a profitable level. An arbitrageur profits between multiple DEXes when the price is at a mismatch by swapping one or multiple tokens. 
 
-Most transactions are executed in response to various on-chain activities. For example, arbitrage transactions are executed in response to prices deviations on decentralized exchanges. Other examples include staggered airdrops which are sent as a response to corresponding times. Despit the importance and prevelance of these transaction types, there is currently no way to succinctly monitor changes in on-chain state and execute a callback function without the use of centralized bots and dedicated infrastructure. In short, blockchains need ***event handlers***. 
+In short, many users have a need to sign transactions as soon as the blockchain data aligns with their needs. Currently, there are only two main ways in which this can be done. For one, a single user can manually make trades when the price is right by signing transactions with their wallet. On the other hand, liquid staking token protocols and arbitrageurs tend to set up a node paired with bots that constantly scan the chain for changes and execute their transactions when their conditions hold true. Both of these mentioned solutions are incredibly resource intensive. A user either needs to delegate their attention or spin up expensive infrastructure to sign their transactions.
 
+The problem is even more pronounced when the end users are protocols. Imagine a flow where a governance proposal needs several steps to successfully execute. 
 
-The problem is even more pronounced when transactors are protocols. For example, if there is a governance proposal that takes multiple steps to execute, e.g. send tokens across to IBC, wait for the IBC txn to be confirmed, and provide liquidity on Osmosis, then this necessitates the existence of a centralized executor, bringing with it custodian and execution risks
+For example:
+
+- Send tokens across through IBC when proposal passes
+- Purchase tokens on Osmosis when the price reaches desired level
+- Create a pair on Osmosis when tokens are purchased
+- Provide liquidity on Osmosis with purchased tokens on new pair
+
+This necessitates a centralized service provider to fully accomplish all these steps, whether it be manual or with the help of a bot. As a result, the chain suffers from a single, centralized point of failure.
+
+Instead, what blockchains need is a **decentralized event handler**.
 
 ## Solution
 
-- Warp protocol is an incentivized event handler for the Cosmos ecosystem that observes on-chain events and executes an arbitrary callback function in response.
-- A user can register a callback function corresponding to a *trigger* of an event, offering a bounty to a relayer to execute the callback.
-- Internally, warp protocol maintains a priority queue of (reward, trigger, callback) tuples, where the priority is the reward in descending order.
-- Parameters can be passed into the callback – if the parameters are coins, they are stored in a vault contract, which can only be withdrawn by executing the callback each deposit is matched to, and returned to the vault in case of failure
+A successful event handler has the following implemented features:
 
-- Warp protocol is an incentivized event handler for the Cosmos ecosystem that observes onchain events and executes arbitrary callback functions in response. 
+- **Custom conditions:** A user should be able to compare any value on-chain with an expected result. The protocol should be fully generic and accept any comparisons without limiting users to certain presets. Submitted jobs should also be capable of nesting and contain multiple conditions in a single set. Examples include, but are not limited to:
+    - Ensuring that a block height or timestamp has passed
+    - See if a price level is below or above a desired level for any DEX
+    - Check if user’s balance is above or below an amount
+    - Check if a protocol’s yield is high enough to stake in
+    - All or any of the above
+- **Custom transactions:** A user must be able to submit any possible WasmMsg as a transaction. This should also not be limited to a preset message. Examples include, but are not limited to:
+    - Swapping tokens on a DEX
+    - Sending tokens to another wallet or chain
+    - Staking, unstaking, bonding, unbonding
+    - Compounding liquid staking derivative token
+    - Submitting governance proposal
+    - etc
+- ************************************************Permissionless execution:************************************************ Anybody should be able to sign a submitted transaction as long as the conditions for doing so are satisfied.
+- ********************************************Attractive incentives:******************************************** Users who execute the transactions should have attractive enough incentives for doing so. These incentives could come from rewards pinned by users who submit the transactions to Warp.
+- ********************************************************************************************Decentralized:******************************************************************************************** To ensure the protocol is as decentralized as possible, it should exist purely on-chain and allow anybody to act as an incentivized keeper to execute messages. Except for the permissionless message signing, there should be no off-chain keepers and bots maintaining the system. Anybody who desires can become a participant.
 
-
-
-
-## Conditions
-
-
-## How it works
-
-## Conditions and Jobs
-
-Conditions describe the set of circumstances 
-
-A job is an execute message 
-
-When a user creates a job, they submit a message and a contract address, as well as a reward amount for executing the job. 
-
-After being created, Jobs are placed in a queue until their conditions are met. Once the conditions of a job are met,  
+With such a system, it is possible to design a fully on-chain event handler. This event handler can serve as an on-chain automation layer for users that can remove the need for manual transactions and centralized keeper bots.
