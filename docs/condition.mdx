@@ -2,29 +2,29 @@
 sidebar_position: 4
 ---
 
+import Admonition from '@theme/Admonition';
+
 # Conditions
 
-Conditions define the set of circumstances under which a job can be triggered. 
-Once all the specific parameters of a condition are met, the job tied to the condition becomes active, and the message contained in the job can be executed.
 
-A condition can either be a combination of conditions or a single expression. This is the "recursive" aspect of conditions, as they can be composed of themselves. Conditions can be nested and chained using regular boolean expressions (and, or, not).
+Conditions represent event definitions. A condition is a recursive data type that allows for multiple conditions within it, which all need to resolve to true for the Job to allow execution. This complex data type includes several underlying types.
+
+A condition is either a combination of conditions or a single expression. This is the recursive part of conditions, as they can be composed of themselves. These conditions can be nested and chained using regular boolean expressions (and, or, not).
+
+```rust
+pub enum Condition {
+    And(Vec<Box<Condition>>),
+    Or(Vec<Box<Condition>>),
+    Not(Box<Condition>),
+    Expr(Expr),
+}
+```
 
 ## Expressions
 
-Expressions define the logic of a condition, evaluating to either `true` or `false`. All conditions are made up of at least one expression. Expressions can be combined using boolean operators to specify complex conditions. When all expressions of a condition evaluate to `true`, the condition is met, and the Job can be triggered. 
+Expressions contain comparisons of popular data types, such as integers, unsigned integers, timestamps, booleans, strings, and more.
 
-## Values
-
-Values are inputs that combine with operators to make up the logic of expressions. There are two basic value types:
-
-- Simple values, such as strings, integers, 
-
-### Simple values
-
-Simple values can be strings, integers, 
-
-```rust
-#[cw_serde]
+```rust keeper.rs
 pub enum Expr {
     String(GenExpr<Value<String>, StringOp>),
     Uint(GenExpr<Value<Uint256>, NumOp>),
@@ -36,23 +36,86 @@ pub enum Expr {
 }
 ```
 
-#### Strings
+## Values
 
-StringOp
-
-#### Integers and decimals
-
-NumOp
-
-#### Timestamp or Blockheight
-
-TimeExpr
+A value is the most primitive type of input that we can have in an expression. Within double sided [general expressions](#general-expressions), the value can either be a primitive type or a query that gets a primitive type. 
 
 
-### Queries
+## General expressions
 
-```rust
+<CH.Section>
+
+
+
+General expressions or _`GenExpr`_ are used to compare two values using a [_`left:`_](focus://2) value, an operator [_`op:`_](focus://3), and a [_`right:`_](focus://4) value. The operators of general expressions vary depending on the value type. 
+
+```rust keeper.rs
+pub struct GenExpr<Type, Op> {
+    pub left: Type,
+    pub op: Op,
+    pub right: Type,
+}
+```
+
+</CH.Section>
+
+
+<Admonition type="tip" icon="✅" title="Comparing values">
+
+Only values of the same _`Type`_ can be compared when writing an expression. 
+
+</Admonition>
+
+
+
+### String operators
+
+The following operators are used in general expressions that compare strings. 
+
+```rust keeper.rs
 #[cw_serde]
+pub enum StringOp {
+    StartsWith,
+    EndsWith,
+    Contains,
+    Eq,
+    Neq,
+}
+```
+
+### Number operators
+
+The following operators are used in general expressions that compare integers or decimals. 
+
+```rust keeper.rs
+#[cw_serde]
+pub enum NumOp {
+    Eq,
+    Neq,
+    Lt,
+    Gt,
+    Gte,
+    Lte,
+}
+```
+
+## Time expressions
+
+Time expressions are like regular unsigned integer expressions, except they only contain a left value and a number operator. The right value is filled by a _`BlockHeight`_ or _`Timestamp`_, depending on the value type.
+
+```rust keeper.rs
+pub struct TimeExpr {
+    pub comparator: Uint64,
+    pub op: NumOp,
+}
+```
+
+
+## QueryExpr: Query expressions
+
+Query expressions are complex expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains a selector, a query JSON, a contract address, and a name. 
+
+```rust keeper.rs
 pub struct QueryExpr {
     pub selector: String,
     pub query: String,
@@ -61,132 +124,30 @@ pub struct QueryExpr {
 }
 ```
 
-#### Bool
+Query expressions can be used as one or both of the values in a [general expression](#general-expressions), or in [boolean expressions](#bool). When query expressions are used in a condition, the JSON of a query message is sent out, and the value specified by the selector string is returned as the value to be compared in the general expression. 
 
-QueryExpr
+### Selectors
 
-## Expression syntax
+Selector strings are used in query expressions to select the JSON path of the query response. This string is essentially the path that Warp needs to take within that particular query response to get the value that needs comparing. 
 
-Values are combined into expressions using the following syntax. 
+**Example**:
 
-### Comparative expressions: 
+To select _`"bend"`_ as the desired portion of the query response below, the selector would be _`$.address.city`_. The _`$`_ in the selector refers to the root object/element. 
 
-Left: the first value that preceeds the operator
-
-operator: the operator used, depending on the value type. 
-
-right: the value after the operator
-
-### Boolean expressions
-
-Boolean expressions do not require operators as they evaluate to `true` or `false`. 
-
-## Combining expressions
-
-Expressions can be nested and combined using the _`and`_, _`or`_, and _`not`_ boolean operators to create a theoretically infinite variety of specific conditions to trigger a job.
-
-The boolean operators for creating a multiple expression include:
-
-- _`and`_: A condition is met if all expresions joined by _`and`_ evaluate as `true`. 
-
-- _`or`_:  A condition is met if either expression evaluates as `true`. 
-
-- _`not`_: If the expression after this operator evaluates as `true`, the condition is not met. 
-
-
-
-
-
-This trigger will be active under the following conditions:
-
-1. When a `string` of the `"query": "{\"query_test_string\":{\"str\":\"str\"}}",` equals the `"query": "{\"query_test_string\":{\"str\":\"str\"}}",` of the `"contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm"`
-
-OR 
-
-The parent conditions of this JSON trigger are listed . Conditions will always preceed their 
-
-
-Conditions come first in the JSON 
-
-<CH.Scrollycoding>
-
-## Conditions
-
-Conditions 
-
-```json Example.JSON focus=4,6,29,54 mark=4,6,29,54
+```javascript example.json
 {
-    "query_resolve_trigger": {
-        "trigger": {
-          "and": [
-            {
-              "or": [
-                {
-                  "expr": {
-                    "string": {
-                      "op": "eq",
-                      "left": {
-                        "query": {
-                          "query": "{\"query_test_string\":{\"str\":\"str\"}}",
-                          
-                          "selector": "$.str"
-                        }
-                      },
-                      "right": {
-                        "query": {
-                          "query": "{\"query_test_string\":{\"str\":\"str\"}}",
-                          "contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm",
-                          "selector": "$.str"
-                        }
-                      }
-                    }
-                  }
-                },
-                {
-                  "not": {
-                    "expr": {
-                      "int": {
-                        "op": "eq",
-                        "left": {
-                          "query": {
-                            "query": "{\"query_test_int\":{\"int\":\"1\"}}",
-                            "contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm",
-                            "selector": "$.int"
-                          }
-                        },
-                        "right": {
-                          "query": {
-                            "query": "{\"query_test_int\":{\"int\":\"1\"}}",
-                            "contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm",
-                            "selector": "$.int"
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              ]
-            },
-            {
-              "expr": {
-                "bool": {
-                  "query": "{\"query_test_bool\":{\"bool\":true}}",
-                  "contract": "terra19fxyg89an4d35w3mhfeuhdum7jq3atzt65sslk73myvtmu6m8nrq4rt8mm",
-                  "selector": "$.bool"
-                }
-              }
-            }
-          ]
-        }
-    }
+"address": {
+        "streetAddress": "high street",
+        "city": "bend",
+        "postalCode": "97701"
+}
+
 }
 ```
----
 
-## Operators
+For a hands-on example of JSON paths and selectors, visit the [JSON path evaluator](https://jsonpath.com/).
+To learn more about JSON selectors, visit the [JSON path Github repo](https://github.com/json-path/JsonPath). 
 
-```json Example.JSON
+### Bool
 
-```
-
-</CH.Scrollycoding>
+Queries can also be written as boolean expressions, in which a query selector is evaluated as a boolean. 
