@@ -4,7 +4,7 @@
 
 ## CreateJobMsg
 
-Creates the job using a name, [condition](../condition.mdx), execute Wasm message, and a reward. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. 
+Creates a job using a name, [condition](../condition.mdx), execute Wasm message, and a reward. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. 
 
 
 ```rust Rust
@@ -21,6 +21,8 @@ pub struct CreateJobMsg {
 
 ## DeleteJobMsg
 
+Allows the Job owner to delete a pending job. Deleted Job messages are still stored in the index and given a _`Canelled`_ status. 
+
 ```rust Rust
 #[cw_serde]
 pub struct DeleteJobMsg {
@@ -31,6 +33,8 @@ pub struct DeleteJobMsg {
 ---
 
 ## UpdateJobMsg
+
+Allows the job owner to update the reward of a job. 
 
 ```rust Rust
 #[cw_serde]
@@ -47,6 +51,8 @@ pub struct UpdateJobMsg {
 
 ## ExecuteJobMsg
 
+Allows a keeper to execute a pending job if the conditions are met. Upon execution of the job, the reward will be released to the keeper. 
+
 ```rust Rust
 #[cw_serde]
 pub struct ExecuteJobMsg {
@@ -59,6 +65,8 @@ pub struct ExecuteJobMsg {
 
 ## EvictJobMsg
 
+Allows jobs to be evicted if they fall beyond the eviction deadlinne, and changes their status to _`Cancelled`_. 
+
 ```rust Rust
 #[cw_serde]
 pub struct EvictJobMsg {
@@ -66,18 +74,5 @@ pub struct EvictJobMsg {
 }
 
 ```
-
----
-
-## TestMsg
-
-```rust Rust
-#[cw_serde]
-pub struct TestMsg {
-    id: Uint64,
-}
-
-```
-
 
 </CH.Scrollycoding>
