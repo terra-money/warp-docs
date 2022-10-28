@@ -4,6 +4,8 @@
 
 ## QueryJobActiveMsg
 
+Queries to see if a job is active. Returns a boolean response. 
+
 <CH.Code>
 
 ```rust Rust-struct
@@ -27,6 +29,8 @@ pub struct QueryJobActiveMsg {
 ---
 
 ## QueryJobMsg
+
+Returns the job information from a given job _`id`_. 
 
 <CH.Code>
 
@@ -54,6 +58,19 @@ pub struct JobResponse {
 ---
 
 ## QueryJobsMsg
+
+Queries and returns job information based on:
+
+- single or multiple job id's
+- a job's owner
+- a job's name
+- a job's status
+- jobs specified by a status and a boolean. 
+- all job's created after a specific time or blockheight. 
+
+At least one of the previous fields must be specified to return a valid response. 
+
+Response sizes can be limited using _`limit`_. 
 
 <CH.Code>
 
@@ -87,6 +104,8 @@ pub struct JobsResponse {
 ## QueryResolveJobMsg
 
 <CH.Code>
+
+Queries whether a condition has been resolved. Returns a boolean response. 
 
 ```rust Rust-struct
 #[cw_serde]
