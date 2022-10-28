@@ -1,7 +1,14 @@
 # Job state
 
+<CH.Scrollycoding>
 
-```rust
+## Owner side
+
+1. [An owner creates a job with an execute message, conditions, and a reward. Once created, the job enters the _`Pending`_ status.](focus://2)
+2. [While in the _`Pending`_ state, an owner can update a job's message or increase the reward amount of the job.](focus://7:9)
+3. [Owner's can also delete a job while in the _`Pending`_ state. When a job is deleted, its state becomes _`Cancelled`_.](focus://10[17:37],11[17:37],12[36:37],13[36:37],14[36:37],15[32:43],16[32:43],17[32:43])
+
+```rust Job-Status
 
      create_job()
           │
@@ -30,46 +37,17 @@
 
 ```
 
+---
+
+## Keeper side
 
 
+4. If a job has been in the queue too long, Keepers can choose to evict the job from the queue. Evicted jobs become _`Failed`_. 
+5. A keeper can attempt to execute any job with a _`Pending`_ status if they believe the job's conditions have been met. 
+6. If the job's conditions aren't yet met, the job remains in the queue, and it's status is unchanged. 
+6. If the job's conditions are met, the job's execute message gets sent, and the rewards included for executing the job are sent to the keeper. The job's status becomes _`Executed`_. 
 
+```rust Job-Status
 
-```rust
-
-     create_job()
-
-          │
-          │
-          │
-          
-      ┌───────┐
-┌───► │Pending│ ◄───────┐
-│     └───────┘         │
-│                       │
-│         │
-│         ├─────┬──► update_job()
-│         │     │
-│         │     │
-│         │     │
-│         │     │
-│         │     └──► delete_job() ─┐
-│         │                        │
-│         │                        │
-│         │                        ▼
-│         │                    ┌─────────┐
-│         ├─────► evict_job()  │Cancelled│
-│         │                    └─────────┘
-│         │           │
-│         │           ▼
-│         │        ┌──────┐
-│         ▼        │Failed│
-│                  └──────┘
-└── execute_job()
-
-          │
-          │
-          ▼
-      ┌────────┐
-      │Executed│
-      └────────┘
 ```
+</CH.Scrollycoding>
