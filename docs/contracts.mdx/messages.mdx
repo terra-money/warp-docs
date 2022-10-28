@@ -1,1 +1,83 @@
-# Messages
+# Execute messages
+
+<CH.Scrollycoding>
+
+## CreateJobMsg
+
+Creates the job using a name, [condition](../condition.mdx), execute Wasm message, and a reward. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. 
+
+
+```rust Rust
+#[cw_serde]
+pub struct CreateJobMsg {
+    pub name: String,
+    pub condition: Condition,
+    pub msg: String,
+    pub reward: Uint128,
+}
+```
+
+---
+
+## DeleteJobMsg
+
+```rust Rust
+#[cw_serde]
+pub struct DeleteJobMsg {
+    pub id: Uint64,
+}
+```
+
+---
+
+## UpdateJobMsg
+
+```rust Rust
+#[cw_serde]
+pub struct UpdateJobMsg {
+    pub id: Uint64,
+    pub name: Option<String>,
+    pub condition: Option<Condition>,
+    pub added_reward: Option<Uint128>,
+}
+
+```
+
+---
+
+## ExecuteJobMsg
+
+```rust Rust
+#[cw_serde]
+pub struct ExecuteJobMsg {
+    pub id: Uint64,
+}
+
+```
+
+---
+
+## EvictJobMsg
+
+```rust Rust
+#[cw_serde]
+pub struct EvictJobMsg {
+    pub id: Uint64,
+}
+
+```
+
+---
+
+## TestMsg
+
+```rust Rust
+#[cw_serde]
+pub struct TestMsg {
+    id: Uint64,
+}
+
+```
+
+
+</CH.Scrollycoding>
