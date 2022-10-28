@@ -1,1 +1,192 @@
-# Queries
+# Query messages
+
+<CH.Scrollycoding>
+
+## QueryJobActiveMsg
+
+<CH.Code>
+
+```rust Rust-struct
+    #[cw_serde]
+pub struct QueryJobActiveMsg {
+    pub id: Uint64,
+}
+
+```
+
+---
+
+```rust Response
+
+    #[returns(bool)]
+
+```
+
+</CH.Code>
+
+---
+
+## QueryJobMsg
+
+<CH.Code>
+
+
+
+```rust Rust-struct
+#[cw_serde]
+pub struct QueryJobMsg {
+    pub id: Uint64,
+}
+```
+
+---
+
+```rust Response
+#[cw_serde]
+pub struct JobResponse {
+    pub job: Job,
+}
+
+```
+
+</CH.Code>
+
+---
+
+## QueryJobsMsg
+
+<CH.Code>
+
+```rust Rust-struct
+#[cw_serde]
+pub struct QueryJobsMsg {
+    pub ids: Option<Vec<Uint64>>,
+    pub owner: Option<Addr>,
+    pub name: Option<String>,
+    pub job_status: Option<JobStatus>,
+    pub condition_status: Option<bool>,
+    pub start_after: Option<(u128, u64)>,
+    pub limit: Option<u32>,
+}
+```
+
+---
+
+```rust Response
+#[cw_serde]
+pub struct JobsResponse {
+    pub jobs: Vec<Job>,
+}
+
+```
+
+</CH.Code>
+
+---
+
+## QueryResolveJobMsg
+
+<CH.Code>
+
+```rust Rust-struct
+#[cw_serde]
+pub struct QueryResolveJobMsg {
+    pub condition: Condition,
+}
+```
+
+---
+
+```rust Response
+
+    #[returns(bool)]
+
+```
+
+
+</CH.Code>
+
+---
+
+## QueryTestStringMsg
+
+<CH.Code>
+
+```rust Rust-struct
+#[cw_serde]
+pub struct QueryTestStringMsg {
+    pub str: String,
+}
+```
+
+---
+
+```rust Response
+
+#[cw_serde]
+pub struct StringTestResp {
+    pub str: String,
+}
+
+```
+
+</CH.Code>
+
+---
+
+## QueryTestIntMsg
+
+<CH.Code>
+
+
+```rust Rust-struct
+#[cw_serde]
+pub struct QueryTestIntMsg {
+    pub int: Uint128,
+}
+```
+
+---
+
+```rust Response
+
+#[cw_serde]
+pub struct IntTestResp {
+    pub int: Uint128,
+}
+
+```
+
+
+</CH.Code>
+
+---
+
+## QueryTestBoolMsg
+
+<CH.Code>
+
+
+```rust Rust-struct
+#[cw_serde]
+pub struct QueryTestBoolMsg {
+    pub bool: bool,
+}
+```
+
+---
+
+```rust Response
+
+#[cw_serde]
+pub struct BoolTestResp {
+    pub bool: bool,
+}
+
+```
+
+
+</CH.Code>
+
+</CH.Scrollycoding>
+
