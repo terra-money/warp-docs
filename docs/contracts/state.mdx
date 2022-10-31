@@ -19,22 +19,22 @@
 ┌───► │Pending├─┬──► update_job()
 │     └───┬───┘ │
 │         │     │
-│         │     └──► delete_job() ─┐
-│         │                        │
-│         │                        │
-│         │                        ▼
-│         ├─────► evict_job()  ┌─────────┐
-│         │                    │Cancelled│
-│         ▼           │        └─────────┘
-└── execute_job()     ▼
-                   ┌──────┐
-          │        │Failed│
-          │        └──────┘
-          ▼
+│         │     └──► delete_job() ───┐
+│         │                          │
+│         │                          ▼
+│         │                     ┌─────────┐
+│         ├─────► evict_job()─► │Cancelled│
+│         │                     └─────────┘
+│         ▼
+└── execute_job() ──────┐
+                        ▼
+          │          ┌──────┐
+          │          │Failed│
+          ▼          └──────┘
       ┌────────┐
       │Executed│
       └────────┘
-
+                            
 ```
 
 ---
@@ -42,7 +42,7 @@
 ## Keeper side
 
 
-4. If a job has been in the queue too long, Keepers can choose to evict the job from the queue. Evicted jobs become _`Failed`_. 
+4. If a job has been in the queue too long, Keepers can choose to evict the job from the queue. Evicted jobs become _`Cancelled`_. 
 5. A keeper can attempt to execute any job with a _`Pending`_ status if they believe the job's conditions have been met. 
 6. If the job's conditions aren't yet met, the job remains in the queue, and it's status is unchanged. 
 6. If the job's conditions are met, the job's execute message gets sent, and the rewards included for executing the job are sent to the keeper. The job's status becomes _`Executed`_. 
