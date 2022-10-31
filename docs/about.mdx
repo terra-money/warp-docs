@@ -4,9 +4,13 @@ sidebar_position: 2
 
 # How it works
 
-## Jobs
+This is a basic overview of Warp. For a more in-depth look at 
 
-Jobs are the backbone of the Warp protocol. Users submit jobs and keepers execute them.
+# Jobs
+
+Jobs are the main feature of Warp. Users submit WASM messages along with specified [conditions](#conditions), and a reward. When the conditions are met, [keepers](#keepers) send the message and recieve the reward. 
+
+When a job is created, users must specify a job name, a reward amount, an execute message, and a contract address for the message. The job message is signed by the owner at the time of job creation, to be executed later by keepers. 
 
 ```rust
 pub struct Job {
@@ -28,3 +32,33 @@ pub struct Job {
   pub reward: Uint128,
 }
 ```
+
+## Conditions
+
+Each job must be submitted with conditions, or a set of circumstances under which the job should be executed. Conditions are made up of expressions which can be simple, such as specifying a blockheight, or complex, in which multiple conditions are nested and joined using boolean operators. Query responses can also be used in expressions to specify a condition. When all the expressions  in a condition evaluate to _`true`_, the condition is met, and the job can be completed. 
+
+To learn more about how conditions work, visit the [Conditions page](condition.mdx).
+
+## The queue
+
+```rust
+pub enum JobStatus {
+    Pending,
+    Executed,
+    Failed,
+    Cancelled,
+}
+```
+
+Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). 
+
+For more on job state, the queue, and a basic workflow, visit the [State page](./contracts/state.rs).
+
+## Keepers
+
+A keeper is any party that maintains the automation functions of a smart contract. Keepers are incentivized by Warp users to execute smart contract functions on their behalf, in exchange for a reward. Keepers query the chain and evaluate a job's condition. Once the conditions for a job is met, a keeper can submit the execute message contained in the job. 
+
+## Fees 
+
+The purpose of fees is to increase the reliability of the enitire Warp system. 
+
