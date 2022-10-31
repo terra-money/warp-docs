@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # How it works
 
-This is a basic overview of Warp. For a more in-depth look at 
+This is a basic overview of Warp. For a more in-depth look at Warp smart contracts, visit the [Contracts](./contracts/README.mdx) section.
 
 # Jobs
 
@@ -41,6 +41,10 @@ To learn more about how conditions work, visit the [Conditions page](condition.m
 
 ## The queue
 
+
+
+Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). 
+
 ```rust
 pub enum JobStatus {
     Pending,
@@ -49,8 +53,6 @@ pub enum JobStatus {
     Cancelled,
 }
 ```
-
-Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). 
 
 For more on job state, the queue, and a basic workflow, visit the [State page](./contracts/state.rs).
 
