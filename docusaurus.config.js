@@ -1,7 +1,7 @@
 // @ts-check
 const lightCodeTheme = require("./light.theme.js");
 const darkCodeTheme = require("./dark.theme.js");
-const theme = require("shiki/themes/material-default.json");
+const theme = require("shiki/themes/material-palenight.json");
 const { remarkCodeHike } = require("@code-hike/mdx");
 /** @type {import('@docusaurus/types').Config} */
 module.exports = async function config() {
