@@ -4,9 +4,9 @@ sidebar_position: 2
 
 # How it works
 
-This is a basic overview of Warp. For a more in-depth look at Warp smart contracts, visit the [Contracts](./contracts/README.mdx) section.
+The following section is a basic overview of how Warp works. For a more in-depth look at Warp smart contracts, visit the [Contracts](./contracts/README.mdx) section. To learn how to use Warp, visit the tutorial. 
 
-# Jobs
+## Jobs
 
 Jobs are the main feature of Warp. Users submit WASM messages along with specified [conditions](#conditions), and a reward. When the conditions are met, [keepers](#keepers) send the message and recieve the reward. 
 
@@ -33,15 +33,17 @@ pub struct Job {
 }
 ```
 
-## Conditions
+### Conditions
 
 Each job must be submitted with conditions, or a set of circumstances under which the job should be executed. Conditions are made up of expressions which can be simple, such as specifying a blockheight, or complex, in which multiple conditions are nested and joined using boolean operators. Query responses can also be used in expressions to specify a condition. When all the expressions  in a condition evaluate to _`true`_, the condition is met, and the job can be completed. 
 
-To learn more about how conditions work, visit the [Conditions page](condition.mdx).
+To learn more about how conditions work, visit the [Conditions page](./condition.mdx).
 
-## The queue
+### Accounts
 
+In order to transact funds, a job must have access to a wallet. Warp accounts are smart contract wallets that allow users to transact with Warp. Warp accounts function similar to a Cosmos wallet account. For example, users can use their account to send, deposit, delegate, undelegate, or recieve funds. Any transactions using jobs are executed through a user's account. Warp accounts can only be controlled by a user's wallet and the jobs that they create. 
 
+### The queue
 
 Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). 
 
@@ -60,7 +62,12 @@ For more on job state, the queue, and a basic workflow, visit the [State page](.
 
 A keeper is any party that maintains the automation functions of a smart contract. Keepers are incentivized by Warp users to execute smart contract functions on their behalf, in exchange for a reward. Keepers query the chain and evaluate a job's condition. Once the conditions for a job is met, a keeper can submit the execute message contained in the job. 
 
-## Fees 
+### Rewards 
 
 The purpose of fees is to increase the reliability of the enitire Warp system. 
 
+## Example
+
+The following illustration demonstrates how a job is executed. 
+
+![](/img/warp/job.png)
