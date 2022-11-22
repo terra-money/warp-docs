@@ -153,15 +153,15 @@ pub struct BlockExpr {
 
 <CH.Scrollycoding rows={20}>
 
-Query expressions are complex expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains a selector, a query JSON, a contract address, and a name. 
+Query expressions are expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains a selector, a query request, and a name. Any [type of query supported by Cosmos](https://docs.rs/cosmwasm-std/latest/cosmwasm_std/enum.QueryRequest.html) can be used in a condition. 
 
 ```rust condition.rs
 pub struct QueryExpr {
     pub selector: String,
-    pub query: String,
-    pub contract: String,
+    pub query: QueryRequest<String>,
     pub name: String,
 }
+
 ```
 
 ---
