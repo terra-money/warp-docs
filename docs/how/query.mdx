@@ -6,12 +6,12 @@ sidebar_position: 3
 
 This section details query expressions and their structure. For general information on writing expressions, visit the [Conditions and expressions](./condition.mdx) page. 
 
-Query expressions are expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains a selector, a query request, and a name. Any [type of query supported by Cosmos](https://docs.rs/cosmwasm-std/latest/cosmwasm_std/enum.QueryRequest.html) can be used in a condition. 
+Query expressions are expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains [a selector](#selectors), a [query request](#query-request), and a name. Any [type of query supported by Cosmos](https://docs.rs/cosmwasm-std/latest/cosmwasm_std/enum.QueryRequest.html) can be used in a condition. 
 
 
 
   
-Query expressions can be used as one or both of the values in a [general expression](./condition.mdx#general-expressions), or in [boolean expressions](condition.mdx#bool). When query expressions are used in a condition, the JSON of a query message is sent out, and the value specified by the [selector string](#selectors) is returned as the value to be compared in the general expression. 
+Query expressions can be used as one or both of the values in a [general expression](./condition.mdx#general-expressions), or in [boolean expressions](condition.mdx#bool). When query expressions are used in a condition, the JSON of a query message is sent out, and the value specified by the [selector string](#selectors) is returned as the value to be compared in the [general expression](./condition.mdx#general-expressions). 
 
 ```rust condition.rs
 pub struct QueryExpr {
