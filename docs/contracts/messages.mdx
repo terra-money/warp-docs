@@ -1,30 +1,29 @@
 # Execute messages
 
+## Jobs
 <CH.Scrollycoding>
 
-## CreateJobMsg
+### CreateJobMsg
 
-Creates a job using a name, [condition](../condition.mdx), execute Wasm message, and a reward. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. 
+Creates a job using a name, [condition](../how/condition.mdx), execute messages, and a reward. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. Jobs can also contain a _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context. 
 
 
 ```rust Rust
-#[cw_serde]
 pub struct CreateJobMsg {
     pub name: String,
     pub condition: Condition,
-    pub msg: String,
+    pub msgs: Vec<String>,
     pub reward: Uint128,
 }
 ```
 
 ---
 
-## DeleteJobMsg
+### DeleteJobMsg
 
 Allows the Job owner to delete a pending job. Deleted Job messages are still stored in the index and given a _`Canelled`_ status. 
 
 ```rust Rust
-#[cw_serde]
 pub struct DeleteJobMsg {
     pub id: Uint64,
 }
@@ -32,47 +31,65 @@ pub struct DeleteJobMsg {
 
 ---
 
-## UpdateJobMsg
+### UpdateJobMsg
 
-Allows the job owner to update the reward of a job. 
+Allows the job owner to update a job. 
 
 ```rust Rust
-#[cw_serde]
 pub struct UpdateJobMsg {
     pub id: Uint64,
     pub name: Option<String>,
     pub condition: Option<Condition>,
     pub added_reward: Option<Uint128>,
 }
-
 ```
 
 ---
 
-## ExecuteJobMsg
+### ExecuteJobMsg
 
 Allows a keeper to execute a pending job if the conditions are met. Upon execution of the job, the reward will be released to the keeper. 
 
 ```rust Rust
-#[cw_serde]
 pub struct ExecuteJobMsg {
     pub id: Uint64,
 }
 
 ```
 
----
+</CH.Scrollycoding>
 
-## EvictJobMsg
+## Accounts
 
-Allows jobs to be evicted if they fall beyond the eviction deadlinne, and changes their status to _`Cancelled`_. 
+<CH.Scrollycoding>
+
+### CreateAccountMsg
+
+Create a Warp account.
 
 ```rust Rust
-#[cw_serde]
-pub struct EvictJobMsg {
-    pub id: Uint64,
-}
-
+pub struct CreateAccountMsg {}
 ```
 
 </CH.Scrollycoding>
+
+
+## Config
+
+<CH.Scrollycoding>
+
+### UpdateConfigMsg
+
+Update the config message. 
+
+```rust Rust
+pub struct UpdateConfigMsg {
+    pub owner: Option<Addr>,
+    pub warp_token_address: Option<String>,
+    pub minimum_reward: Option<Uint128>,
+    pub creation_fee_percentage: Option<Uint128>,
+    pub cancellation_fee_percentage: Option<Uint128>,
+}
+```
+</CH.Scrollycoding>
+
