@@ -9,7 +9,7 @@ This section details query expressions and their structure. For general informat
 Query expressions are expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains a selector, a query request, and a name. Any [type of query supported by Cosmos](https://docs.rs/cosmwasm-std/latest/cosmwasm_std/enum.QueryRequest.html) can be used in a condition. 
 
 
-<CH.Scrollycoding rows={20}>
+
   
 Query expressions can be used as one or both of the values in a [general expression](./condition.mdx#general-expressions), or in [boolean expressions](condition.mdx#bool). When query expressions are used in a condition, the JSON of a query message is sent out, and the value specified by the [selector string](#selectors) is returned as the value to be compared in the general expression. 
 
@@ -22,9 +22,9 @@ pub struct QueryExpr {
 
 ```
 
-</CH.Scrollycoding>
 
-<CH.Scrollycoding>
+
+
 ## QueryRequest
 
 Warp conditions support any query type available using the _`QueryRequest`_ struct, which outlines all possible query calls. The possible query types are _`Bank`_, _`Custom`_, _`Staking`_, _`Stargate`_, _`IBC`_, and _`Wasm`_. 
@@ -52,13 +52,9 @@ pub enum QueryRequest<C> {
     Wasm(WasmQuery),
 }
 ```
----
 
-</CH.Scrollycoding>
 
 ## Bank Queries
-
-<CH.Scrollycoding rows={20}>
 
 
 Bank queries are used to query information from the Cosmos bank module. 
@@ -79,7 +75,6 @@ pub enum BankQuery {
     AllBalances { address: String },
 }
 ```
----
 
 ### Supply
 
@@ -110,7 +105,6 @@ Returns the total supply of a denomination.
 ```
 </CH.Code>
 
----
 
 ### Balance
 
@@ -142,7 +136,6 @@ Queries the amount of a specific denomination for an address.
 ```
 </CH.Code>
 
----
 
 ### AllBalances
 
@@ -172,13 +165,7 @@ This query calls into the native bank module for all denominations. Note that th
 </CH.Code>
 
 
-</CH.Scrollycoding>
-
 ## Staking Queries
-
-
-
-<CH.Scrollycoding rows={20}>
 
 
 Staking queries are used to query information from the Cosmos staking module. 
@@ -210,7 +197,6 @@ pub enum StakingQuery {
 }
 ```
 
----
 ### BondedDenom
 
 Returns all bonded denominations. Terra only uses _`uluna`_. 
@@ -231,7 +217,6 @@ Returns all bonded denominations. Terra only uses _`uluna`_.
 ```
 </CH.Code>
 
----
 
 ### AllDelegations
 
@@ -265,7 +250,6 @@ Returns all delegations of a delegator.
 ```
 </CH.Code>
 
----
 
 ### Delegation
 
@@ -307,7 +291,6 @@ Returns detailed delegation information.
 ```
 </CH.Code>
 
----
 
 ### AllValidators
 
@@ -345,7 +328,6 @@ Returns the entire active validator set.
 ```
 </CH.Code>
 
----
 
 ### Validator
 
@@ -374,14 +356,7 @@ Returns the validator at the given address.
 ```
 </CH.Code>
 
-
-</CH.Scrollycoding>
-
-
-
 ## Wasm Queries
-
-<CH.Scrollycoding rows={20}>
 
 Wasm queries are used to query information from the Cosmos Wasm module. 
 
@@ -407,7 +382,6 @@ pub enum WasmQuery {
 }
 ```
 
----
 
 ### Smart
 
@@ -422,7 +396,7 @@ Queries the public API of another contract at a known address (with known ABI). 
 }
 ```
 
----
+
 
 ### Raw
 
@@ -437,7 +411,7 @@ Queries the raw kv-store of the contract. Returns the raw, unparsed data stored 
   }
 }
 ```
----
+
 
 ### ContractInfo
 
@@ -485,7 +459,7 @@ impl ContractInfoResponse {
 
 </CH.Code>
 
-</CH.Scrollycoding>
+
 
 
 ## Selectors
