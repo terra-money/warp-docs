@@ -1,32 +1,6 @@
 # Query messages
 
-<CH.Scrollycoding>
-
-## QueryJobActiveMsg
-
-Queries to see if a job is active. Returns a boolean response. 
-
-<CH.Code>
-
-```rust Rust-struct
-    #[cw_serde]
-pub struct QueryJobActiveMsg {
-    pub id: Uint64,
-}
-
-```
-
----
-
-```rust Response
-
-    #[returns(bool)]
-
-```
-
-</CH.Code>
-
----
+<CH.Scrollycoding rows={10}>
 
 ## QueryJobMsg
 
@@ -37,7 +11,6 @@ Returns the job information from a given job _`id`_.
 
 
 ```rust Rust-struct
-#[cw_serde]
 pub struct QueryJobMsg {
     pub id: Uint64,
 }
@@ -46,7 +19,6 @@ pub struct QueryJobMsg {
 ---
 
 ```rust Response
-#[cw_serde]
 pub struct JobResponse {
     pub job: Job,
 }
@@ -62,6 +34,7 @@ pub struct JobResponse {
 Queries and returns job information based on:
 
 - single or multiple job id's
+- Active/inactive jobs
 - a job's owner
 - a job's name
 - a job's status
@@ -75,14 +48,14 @@ Response sizes can be limited using _`limit`_.
 <CH.Code>
 
 ```rust Rust-struct
-#[cw_serde]
 pub struct QueryJobsMsg {
     pub ids: Option<Vec<Uint64>>,
+    pub active: Option<bool>,
     pub owner: Option<Addr>,
     pub name: Option<String>,
     pub job_status: Option<JobStatus>,
     pub condition_status: Option<bool>,
-    pub start_after: Option<(u128, u64)>,
+    pub start_after: Option<JobIndex>,
     pub limit: Option<u32>,
 }
 ```
@@ -90,9 +63,9 @@ pub struct QueryJobsMsg {
 ---
 
 ```rust Response
-#[cw_serde]
 pub struct JobsResponse {
     pub jobs: Vec<Job>,
+    pub total_count: usize,
 }
 
 ```
@@ -101,15 +74,39 @@ pub struct JobsResponse {
 
 ---
 
-## QueryResolveJobMsg
+## QueryResolve JobConditionMsg
+
+Queries whether a job's condition has been resolved by specifying the job id. Returns a boolean response. 
 
 <CH.Code>
 
-Queries whether a condition has been resolved. Returns a boolean response. 
+```rust Rust-struct
+pub struct QueryResolveJobConditionMsg {
+    pub id: Uint64,
+}
+```
+
+---
+
+```rust Response
+
+    #[returns(bool)]
+
+```
+
+
+</CH.Code>
+
+---
+
+## QueryResolve ConditionMsg
+
+Queries whether a condition has been resolved by submitting the condition. Returns a boolean response. 
+
+<CH.Code>
 
 ```rust Rust-struct
-#[cw_serde]
-pub struct QueryResolveJobMsg {
+pub struct QueryResolveConditionMsg {
     pub condition: Condition,
 }
 ```
@@ -127,24 +124,23 @@ pub struct QueryResolveJobMsg {
 
 ---
 
-## QueryTestStringMsg
+## SimulateQueryMsg
+
+Simulates a query given a [query request](../how/condition.mdx#queryrequest) message. 
 
 <CH.Code>
 
 ```rust Rust-struct
-#[cw_serde]
-pub struct QueryTestStringMsg {
-    pub str: String,
+pub struct SimulateQueryMsg {
+    pub query: QueryRequest<String>,
 }
 ```
 
 ---
 
 ```rust Response
-
-#[cw_serde]
-pub struct StringTestResp {
-    pub str: String,
+pub struct SimulateResponse {
+    pub response: String,
 }
 
 ```
@@ -153,27 +149,29 @@ pub struct StringTestResp {
 
 ---
 
-## QueryTestIntMsg
+## QueryAccountMsg
+
+Queries an account by owner. Returns the owner and account addresses. 
 
 <CH.Code>
 
-
 ```rust Rust-struct
-#[cw_serde]
-pub struct QueryTestIntMsg {
-    pub int: Uint128,
+pub struct QueryAccountMsg {
+    pub owner: String,
 }
 ```
 
 ---
 
 ```rust Response
-
-#[cw_serde]
-pub struct IntTestResp {
-    pub int: Uint128,
+pub struct AccountResponse {
+    pub account: Account,
 }
 
+pub struct Account {
+    pub owner: Addr,
+    pub account: Addr,
+}
 ```
 
 
@@ -181,29 +179,55 @@ pub struct IntTestResp {
 
 ---
 
-## QueryTestBoolMsg
+## QueryAccountsMsg
+
+Queries accounts. Response sizes can be limited using _`limit`_. 
+
 
 <CH.Code>
 
-
 ```rust Rust-struct
-#[cw_serde]
-pub struct QueryTestBoolMsg {
-    pub bool: bool,
+pub struct QueryAccountsMsg {
+    pub start_after: Option<String>,
+    pub limit: Option<u32>,
 }
 ```
 
 ---
 
 ```rust Response
-
-#[cw_serde]
-pub struct BoolTestResp {
-    pub bool: bool,
+pub struct AccountsResponse {
+    pub accounts: Vec<Account>,
 }
+
+pub struct Account {
+    pub owner: Addr,
+    pub account: Addr,
+}
+```
+
+
+</CH.Code>
+
+---
+
+## QueryAccountsMsg
+
+Queries the config.
+
+<CH.Code>
+```rust Rust-struct
+pub struct QueryConfigMsg {}
 
 ```
 
+---
+
+```rust Response
+pub struct ConfigResponse {
+    pub config: Config,
+}
+```
 
 </CH.Code>
 
