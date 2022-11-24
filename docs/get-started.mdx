@@ -51,7 +51,7 @@ Now that your account is created, you can deposit funds to use them in a job.
 
 2. On the right side of the screen, click the **+ New** button.
 
-3. Enter a Job Name, a Reward for executing the job, and a Job message. This message can be any WASM message that you want to execute. Remember that you will need to add funds to your account before you can transact them in a job message. Be sure that your reward amount is more than the gas cost of the message. 
+3. Enter a Job Name, a Reward for executing the job, and a Job message. This message can be any Cosmos message that you want to execute. Remember that you will need to add funds to your account before you can transact them in a job message. Be sure that your reward amount is more than the gas cost of the message. 
 
 4.  Click **Next**. 
 
@@ -74,3 +74,83 @@ Visit the [Conditions and expressions](how/condition.mdx) page to learn how cond
 
 Congratulations! You just created a job! When the conditions have been met, a keeper will execute your job and claim their reward. 
 
+## Example: Limit Order
+
+For this example, we will be using the Astroport Router on the Pisco Testnet to complete a limit order swap. Here, we want to swap 1.5 of our axlUSDC for 1 Luna.
+
+1. Using steps 1-2 from the above example, begin creating a job.
+
+2. Input the swap message as shown below. Here, you'll notice that we want to receive a minimum of 1 Luna for an offer amount of 1.5 axlUSDC.
+
+```json JSON
+{
+    "wasm": {
+        "execute": {
+            "contract_addr": "terra1na348k6rvwxje9jj6ftpsapfeyaejxjeq6tuzdmzysps20l6z23smnlv64",
+            "msg": {
+                "execute_swap_operations": {
+                    "max_spread": "0.15",
+                    "minimum_receive": "9500000000",
+                    "offer_amount": "1500000",
+                    "operations": [
+                    {
+                        "astro_swap": {
+                        "ask_asset_info": {
+                            "token": {
+                                "contract_addr": "terra167dsqkh2alurx997wmycw9ydkyu54gyswe3ygmrs4lwume3vmwks8ruqnv"
+                            }
+                        },
+                        "offer_asset_info": {
+                            "native_token": {
+                                "denom": "uluna"
+                            }
+                        }
+                        }
+                    }
+                    ]
+                }
+            },
+            "funds": []
+        }
+    }
+}
+```
+
+3. Input your job name and reward amount as usual and click **Next**.
+
+4. For the condition, click the **+** symbol and select **Expression -> Int**.
+
+5. On the left side of the expression, click the puzzle button and select Query.
+
+6. Once the query modal appears, input the name, JSON message, and the query selector. The query selector can be found by previewing the query result in the Warp UI.
+
+```json JSON
+{
+  "wasm": {
+    "smart": {
+      "contract_addr": "terra1na348k6rvwxje9jj6ftpsapfeyaejxjeq6tuzdmzysps20l6z23smnlv64",
+      "msg": {
+            "simulate_swap_operations": {
+                "offer_amount": "1000000",
+                "operations": [
+                {
+                    "astro_swap": {
+                    "ask_asset_info": {
+                        "token": {
+                        "contract_addr": "terra167dsqkh2alurx997wmycw9ydkyu54gyswe3ygmrs4lwume3vmwks8ruqnv"
+                        }
+                    },
+                    "offer_asset_info": {
+                        "native_token": {
+                            "denom": "uluna"
+                        }
+                    }
+                    }
+                }
+                ]
+            }
+        }
+    }
+  }
+}
+```
