@@ -35,7 +35,7 @@ const homeCards = [
     summary: 'Learn about query expressions.'
   },
   {
-    href: '/migration-guides.html',
+    href: '/how/state.html',
     //lightSvg: '/img/icons/swap-1.svg',
     darkSvg: '/img/cards/diagram-2-fill.svg',
     header: 'Job state',
