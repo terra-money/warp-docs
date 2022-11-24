@@ -358,7 +358,7 @@ Returns the validator at the given address.
 
 ## Wasm Queries
 
-Wasm queries are used to query information from the Cosmos Wasm module. 
+Wasm queries are used to query information from the Cosmos Wasm module. For WASM queries, you **must** know the format of your Response.
 
 ```rust wasm.rs
 pub enum WasmQuery {
@@ -385,15 +385,18 @@ pub enum WasmQuery {
 
 ### Smart
 
-Queries the public API of another contract at a known address (with known ABI). The return value is wrapped in a ContractResult that is JSON encoded. The _`msg`_ is the json-encoded _`QueryMsg`_ struct. 
+Queries the public API of another contract at a known address (with known ABI). The return value is wrapped in a ContractResult that is JSON encoded. The _`msg`_ is the json-encoded _`QueryMsg`_ struct.
 
 ```js JSON 
 {
-  "smart": {
-    "contract_addr": "<String>",
-        "msg": "<Binary>"
+  "wasm": {
+    "smart": {
+      "contract_addr": "<String>",
+          "msg": "<Binary>"
+    }
   }
 }
+
 ```
 
 
@@ -405,9 +408,11 @@ Queries the raw kv-store of the contract. Returns the raw, unparsed data stored 
 
 ```js JSON 
 {
-  "raw": {
-    "contract_addr": "<String>",
-        "key": "<Binary>"
+  "wasm": {
+    "raw": {
+      "contract_addr": "<String>",
+          "key": "<Binary>"
+    }
   }
 }
 ```
@@ -421,12 +426,15 @@ Returns a _`ContractInfoResponse`_ with metadata on the contract from the runtim
 
 ```js JSON 
 {
-  "raw": {
-    "contract_info": {
-        "contract_addr": "<String>"
-            }
-}
-}
+  "wasm": {
+    "raw": {
+      "contract_info": {
+          "contract_addr": "<String>"
+      }
+    }
+  }
+  }
+
 ```
 ---
 ```rust wasm.rs 
@@ -472,12 +480,11 @@ To select _`"bend"`_ as the desired portion of the query response below, the _`$
 
 ```javascript example.json
 {
-"address": {
-        "streetAddress": "high street",
-        "city": "bend",
-        "postalCode": "97701"
-}
-
+  "address": {
+          "streetAddress": "high street",
+          "city": "bend",
+          "postalCode": "97701"
+  }
 }
 ```
 
