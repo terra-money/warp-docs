@@ -1,0 +1,153 @@
+---
+sidebar_position: 5
+---
+
+# Example
+
+This example will walk you through creating a basic Warp job and condition. For more general information on how Warp works, visit the [Overview page](./how/overview.mdx). For a tutorial on how to use the Warp App, visit the [Get started page](./get-started.mdx).
+
+## The workflow 
+
+1. [Create a Warp account](./get-started.mdx). This is a smart contract that only you and your Warp jobs have permission to access. 
+
+2. [Add any assets](./get-started.mdx#create-an-account) (in this case, USDC) to your account. 
+
+3. [Create a job](./get-started.mdx#create-a-job) with the swap parameters such as price per unit, how much USDC you're willing to spend, etc. For this example, suppose that you want to spend 15 USDC. You can see the [job message in the example below](#the-job-message). 
+
+4. Using a [query message](#the-query), Create the [condition](#the-condition), where you specify that for your 15 USDC, you want to receive at least 10 Luna (1.5 USDC per unit). 
+
+5. Submit the job, which includes your transaction, condition, and a reward. The reward is the amount that you will pay the keeper for executing your transaction on your behalf when the price is right. The reward will likely be equal to the gas cost for executing your job plus a little extra for the keeper’s effort. 
+
+6. Now onto the [keeper](./how/overview#keepers) side of things.
+The keepers scan the transaction pool and see which transactions have conditions that resolve to true.
+
+7. Once the price of Luna is under 1.5 USDC, the keeper sees that your job condition is now valid. 
+
+8. At this point, the keeper (which can be anyone, including yourself) executes the transaction, swapping the tokens. Now the Luna is in your Warp account, which you can access and withdraw. 
+
+## The specifics
+
+### The Query
+
+This example will use Astroport to execute the job's swap. You can use the router, as it allows you to use a single contract for multiple assets instead of having to keep track of pool addresses. For more information on queries, visit the [Query expressions page](./how/query.mdx). 
+
+<CH.Scrollycoding>
+
+The following Query is the message for the Astroport Router. 
+
+```js Query
+{
+    "simulate_swap_operations": {
+      "max_spread": "0.15",
+      "minimum_receive": "1000000",
+      "offer_amount": "1500000",
+      "operations": [
+        {
+          "astro_swap": {
+            "ask_asset_info": {
+              "native_token": {
+                "denom": "uluna"
+              }
+            },
+            "offer_asset_info": {
+              "native_token": {
+                "denom": "ibc/B3504E092456BA618CC28AC671A71FB08C6CA0FD0BE7C8A5B5A3E2DD933CC9E4"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+```
+
+---
+```js Query focus=5,9:11
+
+```
+
+_`1500000`_ uUSDC is the amount to be swapped. 
+
+---
+
+_`1000000`_ uLuna is the amount to be received. 
+
+Note that when writing the condition, you will specify that the _`$.amount`_ [selector](./how/query.mdx#selectors) must be at least 1000000. That way, the swap is only executed when the price is correct. 
+
+
+```js Query focus=4,14:16
+
+```
+
+</CH.Scrollycoding>
+
+
+### The Job message
+
+<CH.Scrollycoding>
+
+
+The job message for the swap is as follows. For more information on jobs, visit the [Overview page](./how/overview.mdx)
+
+```js Job
+{
+    "execute_swap_operations": {
+      "max_spread": "0.15",
+      "minimum_receive": "1000000",
+      "offer_amount": "1500000",
+      "operations": [
+        {
+          "astro_swap": {
+            "ask_asset_info": {
+              "native_token": {
+                "denom": "uluna"
+              }
+            },
+            "offer_asset_info": {
+              "native_token": {
+                "denom": "ibc/B3504E092456BA618CC28AC671A71FB08C6CA0FD0BE7C8A5B5A3E2DD933CC9E4"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+```
+
+---
+
+As you can see, the transaction is very similar to the simulation query. 
+
+This message is input along with a name and a reward when [creating a job](./get-started#create-a-job) in the Warp app. 
+
+```js Job focus=4,5,9:11,14:16
+
+```
+</CH.Scrollycoding>
+
+### The Condition
+
+You want to swap 15 USCD to get 10 Luna. 
+
+Your condition is: 
+
+> if the swap query returns at least 10 Luna for 15 USDC, execute the job message. That way, you will receive no less than 10 Luna. 
+
+To specify this condition using the interface, create a simple expression. For more information on conditions, visit the [Conditions page](./how/condition.mdx). 
+
+1. Select **Expression** from the interface. On the Left side, select **Query** and input the query message. 
+
+2. The [selector](./how/query.mdx#selectors) will be _`$.amount`_, which specifies that the part of the query response you want to evaluate is the _`amount`_ field. 
+
+3. The operator will be GTE (greater than or equal to). 
+
+4. On the right side of the expression, input _`10000000`_, which is the minimum amount of Luna you want to receive. 
+
+5. When the keeper evaluates the condition, they will run the query to see if the _`amount`_ portion of the response is greater than or equal to _`10000000`_. If the condition is met, they can execute the job message and collect their reward. 
+
+6. Upon successful execution of your job, you will receive 15 Luna in your account. 
+
+Congratulations! You just made a limit swap using Warp!
+
+
