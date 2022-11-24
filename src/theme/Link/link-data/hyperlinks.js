@@ -1,19 +1,19 @@
 const hyperlinks = [
   {
-    href: 'https://station.terra.money/',
-    innerHTML: 'Terra Station',
+    href: 'https://warp.money/',
+    innerHTML: 'Warp Home',
   },
   {
-    href: 'https://status.terra.money/',
-    innerHTML: 'Terra Status',
+    href: 'https://beta.warp.money/',
+    innerHTML: 'Warp App',
   },
   {
     href: 'https://finder.terra.money/',
     innerHTML: 'Terra Finder',
   },
   {
-    href: 'https://agora.terra.money/',
-    innerHTML: 'Terra Agora',
+    href: 'https://docs.terra.money/',
+    innerHTML: 'Terra Docs',
   },
 ]
 
