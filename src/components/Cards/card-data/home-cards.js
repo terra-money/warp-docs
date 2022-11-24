@@ -1,45 +1,45 @@
 const homeCards = [
   {
-    href: '/develop/get-started.html',
-    lightSvg: '/img/icons/buildanapp02.svg',
-    darkSvg: '/img/icons/dark/buildanapp02.svg',
-    header: 'Start building',
-    summary: 'Click here to learn how to build on Terra.'
+    href: '/how/overview.html',
+    //lightSvg: '/img/icons/buildanapp02.svg',
+    darkSvg: '/img/cards/question-circle.svg',
+    header: 'What is Warp?',
+    summary: 'Learn about jobs, conditions, and keepers.'
   },
   {
-    href: '/learn/terra-station.html',
-    lightSvg: '/img/icons/station/station.svg',
-    darkSvg: '/img/icons/dark/station.svg',
-    header: 'Get started with Station',
-    summary: 'Create a wallet and stake Luna for rewards.'
+    href: '/get-started.html',
+    //lightSvg: '/img/icons/station/station.svg',
+    darkSvg: '/img/cards/started.svg',
+    header: 'Get started',
+    summary: 'Create a job and start using Warp.'
   },
   {
-    href: '/develop/which-tools.html',
-    lightSvg: '/img/icons/buildanapp01.svg',
-    darkSvg: '/img/icons/dark/buildanapp01.svg',
-    header: 'Tool guide',
-    summary: 'Not sure which tools to use? Start here.'
+    href: '/example.html',
+    //lightSvg: '/img/icons/buildanapp01.svg',
+    darkSvg: '/img/cards/gear.svg',
+    header: 'Job example',
+    summary: 'Use a hands-on example to create a job.'
   },
   {
-    href: '/develop/terrain/mint-an-nft.html',
-    lightSvg: '/img/icons/mintnft.svg',
-    darkSvg: '/img/icons/dark/mintnft.svg',
-    header: 'Mint an NFT',
-    summary: 'Follow the minting tutorial to mint your own NFT.'
+    href: '/how/condition.html',
+    //lightSvg: '/img/icons/mintnft.svg',
+    darkSvg: '/img/cards/pencil-square.svg',
+    header: 'Conditions',
+    summary: 'Learn how to write conditions.'
   },
   {
-    href: '/learn/protocol.html',
-    lightSvg: '/img/icons/terra.svg',
-    darkSvg: '/img/icons/dark/terra.svg',
-    header: 'Learn about Terra',
-    summary: 'Learn about Luna, rewards, staking, and governance.'
+    href: '/how/query.html',
+    //lightSvg: '/img/icons/terra.svg',
+    darkSvg: '/img/cards/chat-left.svg',
+    header: 'Queries',
+    summary: 'Learn about query expressions.'
   },
   {
     href: '/migration-guides.html',
-    lightSvg: '/img/icons/swap-1.svg',
-    darkSvg: '/img/icons/dark/swap-1.svg',
-    header: 'Terra migration guides',
-    summary: 'Move from Terra Classic to the new Terra chain.'
+    //lightSvg: '/img/icons/swap-1.svg',
+    darkSvg: '/img/cards/diagram-2-fill.svg',
+    header: 'Job state',
+    summary: 'See how the queue works.'
   },
 ]
 
