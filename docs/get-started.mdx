@@ -91,7 +91,6 @@ For this example, we will be using the Astroport Router on the Pisco Testnet to 
                 "execute_swap_operations": {
                     "max_spread": "0.15",
                     "minimum_receive": "9500000000",
-                    "offer_amount": "1500000",
                     "operations": [
                     {
                         "astro_swap": {
@@ -110,7 +109,7 @@ For this example, we will be using the Astroport Router on the Pisco Testnet to 
                     ]
                 }
             },
-            "funds": []
+            "funds": [{"denom":"uluna","amount":"1000000"}]
         }
     }
 }
