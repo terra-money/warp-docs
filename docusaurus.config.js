@@ -74,15 +74,21 @@ module.exports = async function config() {
           respectPrefersColorScheme: false,
         },
         navbar: {
-          title: "Warp Docs",
-          //logo: {
-            //alt: "Warp Docs",
-            //src: "img/logo_light.svg",
-            //srcDark: "img/logo_dark.svg",
-          //},
+          logo: {
+            alt: "Warp Docs",
+            src: "img/logo/wdotcircle.svg",
+            srcDark: "img/logo/wdotsquare.svg",
+          },
           items: [
             {
-              href: "https://beta.warp.money", //front-end URL
+              href: "/get-started", //front-end URL
+              position: "right",
+              label: "Get started",
+              className: "header-home-link",
+              "aria-label": "Get started",
+            },
+            {
+              href: "https://beta.warp.money",
               position: "right",
               label: "Warp App",
               className: "header-terra-link",
@@ -94,6 +100,7 @@ module.exports = async function config() {
               className: "header-github-link",
               "aria-label": "GitHub repository",
             },
+      
           ],
         },
         footer: {},
