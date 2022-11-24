@@ -1,4 +1,8 @@
-@import './custom.css';
+// Utilities
+@import "./variables";
+
+// Styles
+@import './custom.scss';
 @import './fonts.scss';
 @import './asideMenu.scss';
 @import './navbar.scss';
