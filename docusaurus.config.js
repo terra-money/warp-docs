@@ -10,7 +10,7 @@ module.exports = async function config() {
   return {
     title: "Warp Docs",
     tagline: "The official docs for Warp",
-    url: "https://docs.terra.money",
+    url: "https://docs.warp.money",
     baseUrl: "/",
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
@@ -45,7 +45,7 @@ module.exports = async function config() {
             routeBasePath: "/", // Serve the docs at the site's root
             // Please change this to your repo.
             // Remove this to remove the "edit this page" links.
-            editUrl: "https://github.com/terra-money/docs/blob/main/",
+            editUrl: "https://github.com/terra-money/warp-docs/tree/main",
           },
           blog: false,
           theme: {
@@ -56,22 +56,6 @@ module.exports = async function config() {
             ],
           },
         }),
-      ],
-      ["docusaurus-plugin-matomo", {}],
-      [
-        "redocusaurus",
-        {
-          specs: [
-            {
-              id: "complete",
-              spec: "https://phoenix-lcd.terra.dev/swagger/swagger.yaml",
-              route: "/api/",
-            },
-          ],
-          theme: {
-            primaryColor: "#1890ff",
-          },
-        },
       ],
     ],
     themes: ["mdx-v2"],
@@ -84,29 +68,28 @@ module.exports = async function config() {
             autoCollapseCategories: false,
           },
         },
-        algolia:{
-          appId: 'Z6EOSIPZCY',
-          apiKey: '532be63cd62ff0e733ccd844e799e8bb',
-          indexName: 'terra-project',
-          contextualSearch: true,
+        colorMode: {
+          defaultMode: 'dark',
+          disableSwitch: false,
+          respectPrefersColorScheme: false,
         },
         navbar: {
           title: "Warp Docs",
           //logo: {
-            //alt: "Terra Docs",
+            //alt: "Warp Docs",
             //src: "img/logo_light.svg",
             //srcDark: "img/logo_dark.svg",
           //},
           items: [
             {
-              href: "https://terra.money", //front-end URL
+              href: "https://beta.warp.money", //front-end URL
               position: "right",
-              label: "terra.money",
+              label: "Warp App",
               className: "header-terra-link",
-              "aria-label": "Terra Money",
+              "aria-label": "Warp App",
             },
             {
-              href: "https://github.com/terra-money/docs",
+              href: "https://github.com/terra-money/warp-docs",
               position: "right",
               className: "header-github-link",
               "aria-label": "GitHub repository",
@@ -117,12 +100,6 @@ module.exports = async function config() {
         prism: {
           theme: lightCodeTheme,
           darkTheme: darkCodeTheme,
-        },
-        matomo: {
-          matomoUrl: "https://terradocs.matomo.cloud/",
-          siteId: "2",
-          phpLoader: "matomo.php",
-          jsLoader: "matomo.js",
         },
       }),
       stylesheets: [
