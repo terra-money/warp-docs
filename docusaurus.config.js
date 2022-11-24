@@ -70,7 +70,7 @@ module.exports = async function config() {
         },
         colorMode: {
           defaultMode: 'dark',
-          disableSwitch: false,
+          disableSwitch: true,
           respectPrefersColorScheme: false,
         },
         navbar: {
