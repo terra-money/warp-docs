@@ -1,11 +1,5 @@
 const socialLinks = [
   {
-    href: 'https://medium.com/terra-money',
-    alt: 'Terra Medium',
-    lightSvg: '/img/icons/links/medium.svg',
-    darkSvg: '/img/icons/dark/links/medium.svg',
-  },
-  {
     href: 'https://terra.sc/discord',
     alt: 'Terra Discord',
     lightSvg: '/img/icons/links/discord.svg',
