@@ -71,7 +71,7 @@
 
   &::before {
     content: '';
-    background-image: url($white-terra);
+    background-image: url($warp-logo);
     background-position: center center;
     background-size: cover;
     height: 18px;
@@ -96,7 +96,7 @@
   }
 
   &:hover::before {
-    background-image: url($colorful-terra);
+    background-image: url($warp-logo);
   }
 
   &:hover::after {
@@ -113,41 +113,44 @@
   svg {
     display: none !important;
   }
+}
 
-  @media (max-width: 997px) {
-    padding: 0px;
-    font-size: 0px;
-    display: flex;
+.header-home-link {
+  font-family: 'Gotham';
+  display: flex;
+  align-items: center;
+  background-color: $hyperlink-color;
+  color: $navbar-button-hover;
+  border-radius: 60px;
+  font-size: 12px;
+  margin-right: 4px;
+  padding: 5px 12px;
+  transition: all var(--ifm-transition-fast)
+    var(--ifm-transition-timing-default);
+
+  &:hover {
     background: $navbar-button;
-    border: 1px solid $border;
-    width: 30px;
-    height: 30px;
-    transition: all var(--ifm-transition-fast)
-      var(--ifm-transition-timing-default);
+    color: $light-primary;
+    box-shadow: inset 0 0 0 1.75px $light-primary;
+  }
 
-    &::before {
-      content: '';
-      background: url($small-colorful-terra);
-      background-repeat: no-repeat no-repeat;
-      background-position: center center;
-      background-size: unset;
-      width: 25px;
-      height: 25px;
-      margin: 0 auto;
-    }
+  &:hover::before {
+    background-image: url($warp-logo);
+  }
 
-    &:hover::before {
-      background-image: url($small-colorful-terra);
-    }
+  &:hover::after {
+    background-image: url($blue-arrow);
+    animation: bounce 0.75s infinite;
+  }
 
-    &::after {
-      display: none;
+  @keyframes bounce {
+    50% {
+      transform: translateX(1px);
     }
+  }
 
-    &:hover {
-      box-shadow: inset 0 0 0 1.75px $light-primary;
-      background: $navbar-button-hover;
-    }
+  svg {
+    display: none !important;
   }
 }
 
@@ -250,12 +253,12 @@
     background-color: $dark-navbar-button-color;
 
     &::before {
-      background-image: url($white-luna);
+      background-image: url($warp-logo);
       background-repeat: no-repeat no-repeat;
     }
 
     &:hover::before {
-      background-image: url($colorful-luna);
+      background-image: url($warp-logo);
     }
 
     &:hover::after {
@@ -284,11 +287,50 @@
       border: 1px solid $dark-border;
 
       &::before {
-        background-image: url($small-colorful-luna);
+        background-image: url($warp-logo);
       }
 
       &:hover::before {
-        background-image: url($small-colorful-luna);
+        background-image: url($warp-logo);
+      }
+
+      &:hover {
+        box-shadow: inset 0 0 0 1.75px $navbar-white;
+        background: $dark-navbar-button-hover;
+      }
+    }
+  }
+
+  .header-home-link {
+    background-color: $dark-navbar-button-color;
+
+    &:hover::after {
+      background-image: url($light-blue-arrow) !important;
+    }
+
+    &:hover {
+      background-color: $dark-navbar-button-hover;
+      box-shadow: inset 0 0 0 1.75px $dark-hyperlink-color;
+      color: $dark-hyperlink-color !important;
+    }
+
+    @media (max-width: 550px) {
+      background: $dark-navbar-button;
+      border: 1px solid $dark-border;
+
+      &:hover {
+        box-shadow: inset 0 0 0 1.75px $navbar-white;
+        background: $dark-navbar-button-hover;
+        transform: none;
+      }
+    }
+
+    @media (max-width: 997px) {
+      background: $dark-navbar-button;
+      border: 1px solid $dark-border;
+
+      &:hover::before {
+        background-image: url($warp-logo);
       }
 
       &:hover {
