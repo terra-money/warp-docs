@@ -20,17 +20,17 @@ pub struct Job {
   pub id: Uint64,
   // job creator address
   pub owner: Addr,
-	// UTC timestamp for when the job was submitted
+  // UTC timestamp for when the job was submitted
   pub last_update_time: Uint64,
-	// name given to the Job
+  // name given to the Job
   pub name: String,
-	// status of the job (pending, executed, failed, canceled)
+  // status of the job (pending, executed, failed, canceled)
   pub status: JobStatus,
-	// condition set dictating when the Job should be executed
+  // condition set dictating when the Job should be executed
   pub condition: Condition,
-	// message to execute when conditions resolve to true
+  // message to execute when conditions resolve to true
   pub msg: Vec<CosmosMsg>,
-	// reward to distribute to the keeper when the Job has been executed
+  // reward to distribute to the keeper when the Job has been executed
   pub reward: Uint128,
 }
 ```
