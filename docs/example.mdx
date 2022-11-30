@@ -165,3 +165,28 @@ We specify that the minimum uASTRO received should be _`9500000000`_, or 9500 \$
 ```
 </CH.Scrollycoding>
 
+### The Condition
+
+You want to swap 1 Luna to get 9500 ASTRO. 
+
+Your condition is: 
+
+> if the swap query returns at least 9500 \$ASTRO for 1 Luna, execute the job message. That way, you will receive no less than 9500 \$ASTRO tokens. 
+
+To specify this condition using the interface, create a simple expression. For more information on conditions, visit the [Conditions page](./how/condition.mdx). 
+
+1. Select **Expression** from the interface. On the Left side, select **Query** and input the query message. 
+
+2. The [selector](./how/query.mdx#selectors) will be _`$.amount`_, which specifies that the part of the query response you want to evaluate is the _`amount`_ field. 
+
+3. The operator will be GTE (greater than or equal to). 
+
+4. On the right side of the expression, input _`9500000000`_, which is the minimum amount of \$ASTRO you want to receive. 
+
+5. When the keeper evaluates the condition, they will run the query to see if the _`amount`_ portion of the response is greater than or equal to _`9500000000`_. If the condition is met, they can execute the job message and collect their reward. 
+
+6. Upon successful execution of your job, you will receive 9500 \$ASTRO in your account. 
+
+Congratulations! You just made a limit swap using Warp!
+
+
