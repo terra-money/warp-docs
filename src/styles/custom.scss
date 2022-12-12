@@ -62,7 +62,19 @@
 }
 
 .ch-scrollycoding-sticker {
-  flex: 1.5;
+  position: sticky;
+  top: 10vh;
+  display: flex;
+  align-self: start;
+  flex-flow: column;
+  justify-content: center;
+  max-width: 50%;
+}
+
+.ch-scrollycoding-content {
+  box-sizing: border-box;
+  flex: 1;
+  max-width: 50%;
 }
 
 /* ================DARK MODE STYLING================ */
