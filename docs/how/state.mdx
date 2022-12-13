@@ -1,0 +1,55 @@
+# Job state
+
+<CH.Scrollycoding>
+
+## Owner side
+
+1. An owner creates a job with an execute message, conditions, and a reward. Upon successful creation, the job enters the [_`Pending`_ status.](focus://2)
+2. While in the _`Pending`_ state, an owner can [update](focus://7:9) a job's message or increase the reward amount of the job.
+3. Owner's can also [delete a job while in the _`Pending`_ state. When a job is deleted, its state becomes _`Cancelled`_.](focus://10[17:39],11[17:39],12[38:39],13[38:39],14[33:44],15[33:44],16[33:44])
+
+```rust Job-Status
+
+     create_job()
+          │
+          │◄─────────────┐
+          │              │
+          ▼              │
+      ┌───────┐          │
+┌───► │Pending├─┬──► update_job()
+│     └───┬───┘ │
+│         │     │
+│         │     └──► delete_job() ───┐
+│         │                          │
+│         │                          ▼
+│         │                     ┌─────────┐
+│         │                     │Cancelled│
+│         │                     └─────────┘
+│         ▼
+└── execute_job() ──────┐
+                        ▼
+          │          ┌──────┐
+          │          │Failed│
+          ▼          └──────┘
+      ┌────────┐
+      │Executed│
+      └────────┘
+                            
+```
+
+---
+
+## Keeper side
+
+
+4. A keeper can attempt to execute any job with a [_`Pending`_](focus://7:9) status if they believe the job's conditions have been met. 
+5. If the job's conditions aren't yet met, the job remains in the queue, and its status is unchanged. 
+6. If a job fails during execution, its status becomes [_`Failed`_](focus://20[22:30],21[22:30],22[22:30]). 
+7. If the job's conditions are met, the job's execute message gets sent, and the rewards included for executing the job are sent to the keeper. The job's status becomes [_`Executed`_](focus://23[7:17],24[7:17],25[7:17]). 
+
+```rust Job-Status
+
+```
+</CH.Scrollycoding>
+
+
