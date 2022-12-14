@@ -68,13 +68,25 @@
   align-self: start;
   flex-flow: column;
   justify-content: center;
-  max-width: 50%;
+  max-width: 70%;
+  width: unset;
+  min-width:50%;
+  max-height: unset;
 }
 
+.ch-editor-frame {
+height: unset !important;
+max-height: 80vh !important;
+}
+
+.ch-code-scroll-parent {
+ min-height: 100px;
+ height:100%;
+}
 .ch-scrollycoding-content {
   box-sizing: border-box;
   flex: 1;
-  max-width: 50%;
+
 }
 
 /* ================DARK MODE STYLING================ */
