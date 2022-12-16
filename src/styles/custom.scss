@@ -5,6 +5,11 @@
   min-width: 22.875rem;
 }
 
+// No word-wrap for TOC contents
+.table-of-contents__link.toc-highlight {
+  word-wrap: normal;
+}
+
 // MDX image styling
 [class^='readme-img'] {
   margin: auto;
