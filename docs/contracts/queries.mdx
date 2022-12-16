@@ -2,9 +2,19 @@
 
 The following messages are used for querying Warp jobs, conditions, queries, and accounts. 
 
+## Source Code
+
+The source for Warp can be found on Github:
+
+- Webapp: https://github.com/terra-money/warp-web-app
+- Contracts: https://github.com/terra-money/warp-contracts
+- SDK: https://github.com/terra-money/warp-sdk
+
+## Queries
+
 <CH.Scrollycoding rows="focus">
 
-## QueryJobMsg
+### QueryJobMsg
 
 Returns the job information from a given job _`id`_. 
 
@@ -31,7 +41,7 @@ pub struct JobResponse {
 
 ---
 
-## QueryJobsMsg
+### QueryJobsMsg
 
 Queries and returns job information based on:
 
@@ -76,7 +86,7 @@ pub struct JobsResponse {
 
 ---
 
-## QueryResolve JobConditionMsg
+### QueryResolve<wbr/>JobConditionMsg
 
 Queries whether a job's condition has been resolved by specifying the job id. Returns a boolean response. 
 
@@ -101,7 +111,7 @@ pub struct QueryResolveJobConditionMsg {
 
 ---
 
-## QueryResolve ConditionMsg
+### Query<wbr/>Resolve<wbr/>ConditionMsg
 
 Queries whether a condition has been resolved by submitting the condition. Returns a boolean response. 
 
@@ -126,7 +136,7 @@ pub struct QueryResolveConditionMsg {
 
 ---
 
-## SimulateQueryMsg
+### SimulateQueryMsg
 
 Simulates a query given a [query request](../how/condition.mdx#queryrequest) message. 
 
@@ -151,7 +161,7 @@ pub struct SimulateResponse {
 
 ---
 
-## QueryAccountMsg
+### Query<wbr/>AccountMsg
 
 Queries an account by owner. Returns the owner and account addresses. 
 
@@ -181,7 +191,7 @@ pub struct Account {
 
 ---
 
-## QueryAccountsMsg
+### Query<wbr/>AccountsMsg
 
 Queries accounts. Response sizes can be limited using _`limit`_. 
 
@@ -213,7 +223,7 @@ pub struct Account {
 
 ---
 
-## QueryAccountsMsg
+### Query<wbr/>AccountsMsg
 
 Queries the config.
 
