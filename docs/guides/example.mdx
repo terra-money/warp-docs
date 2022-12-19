@@ -4,15 +4,15 @@ sidebar_position: 2
 
 # Example
 
-This example will walk you through creating a basic Warp job and condition. For general information on how Warp works, visit the [Overview page](../how/overview.mdx). For a tutorial on how to use the Warp App, visit the [Get started page](get-started.mdx).
+This example will walk you through creating a basic Warp job and condition. For general information on how Warp works, visit the [Overview page](../how/overview.mdx). For a tutorial on how to use the Warp App, visit the [Get started page](../get-started.mdx).
 
 ## The workflow
 
-1. [Create a Warp account](get-started.mdx). [Accounts](../how/overview.mdx#warp-accounts) are smart contracts that only you and your Warp jobs have permission to access.
+1. [Create a Warp account](../get-started.mdx). [Accounts](../how/overview.mdx#warp-accounts) are smart contracts that only you and your Warp jobs have permission to access.
 
-2. [Add any assets](get-started.mdx#create-an-account) (in this case, Luna) to your account.
+2. [Add any assets](../get-started.mdx#create-an-account) (in this case, Luna) to your account.
 
-3. [Create a job](get-started.mdx#create-a-job) with the swap parameters such as price per unit, how much Luna you're willing to spend, etc. For this example, suppose that you want to spend 1 Luna to receive at minimum 9500 ASTRO. You can see the [job message in the example below](#the-job-message).
+3. [Create a job](../get-started.mdx#create-a-job) with the swap parameters such as price per unit, how much Luna you're willing to spend, etc. For this example, suppose that you want to spend 1 Luna to receive a minimum of 9500 Astro. You can see the [job message in the example below](#the-job-message).
 
 4. Using a [query message](#the-query), Create the [condition](#the-condition), where you specify that for your 1 Luna, you want to receive at least 9500 Astro Luna (~0.00010526 Luna per unit).
 
@@ -21,9 +21,9 @@ This example will walk you through creating a basic Warp job and condition. For 
 6. Now onto the [keeper](./how/overview#keepers) side of things.
    The keepers scan the transaction pool and see which transactions have conditions that resolve to true.
 
-7. Once swapping 1 Luna yields you at least 9500 \$ASTRO, the keeper sees that your job condition is now valid.
+7. Once swapping 1 Luna yields you at least 9500 \$Astro, the keeper sees that your job condition is now valid.
 
-8. At this point, the keeper (which can be anyone, including yourself) executes the transaction, swapping the tokens. Now the ASTRO is in your Warp account, which you can access and withdraw.
+8. At this point, the keeper (which can be anyone, including yourself) executes the transaction, swapping the tokens. Now the Astro is in your Warp account, which you can access and withdraw.
 
 ## The specifics
 
@@ -89,6 +89,7 @@ _`1000000`_ uLuna (1 Luna) is the amount to be swapped.
 Once you compose the query, you must be aware of the format of its corresponding response:
 
 <CH.Scrollycoding>
+
 The following is an example response from the above query:
 
 ```js Response
@@ -158,7 +159,7 @@ We specify that we would like to send _`1000000`_ uLuna (1 Luna) for the swap in
 
 ---
 
-We specify that the minimum uASTRO received should be _`9500000000`_, or 9500 \$ASTRO tokens. _`terra167dsqkh2alurx997wmycw9ydkyu54gyswe3ygmrs4lwume3vmwks8ruqnv`_ is the \$ASTRO tokena address.
+We specify that the minimum uAstro received should be _`9500000000`_, or 9500 \$Astro tokens. _`terra167dsqkh2alurx997wmycw9ydkyu54gyswe3ygmrs4lwume3vmwks8ruqnv`_ is the \$Astro token address.
 
 ```js Job focus=8,12:16
 ```
@@ -167,11 +168,11 @@ We specify that the minimum uASTRO received should be _`9500000000`_, or 9500 \$
 
 ### The Condition
 
-You want to swap 1 Luna to get 9500 ASTRO.
+You want to swap 1 Luna to get 9500 Astro.
 
 Your condition is:
 
-> if the swap query returns at least 9500 \$ASTRO for 1 Luna, execute the job message. That way, you will receive no less than 9500 \$ASTRO tokens.
+> if the swap query returns at least 9500 \$Astro for 1 Luna, execute the job message. That way, you will receive no less than 9500 \$Astro tokens.
 
 To specify this condition using the interface, create a simple expression. For more information on conditions, visit the [Conditions page](../how/condition.mdx).
 
@@ -181,10 +182,12 @@ To specify this condition using the interface, create a simple expression. For m
 
 3. The operator will be GTE (greater than or equal to).
 
-4. On the right side of the expression, input _`9500000000`_, which is the minimum amount of \$ASTRO you want to receive.
+4. On the right side of the expression, input _`9500000000`_, which is the minimum amount of \$Astro you want to receive.
 
 5. When the keeper evaluates the condition, they will run the query to see if the _`amount`_ portion of the response is greater than or equal to _`9500000000`_. If the condition is met, they can execute the job message and collect their reward.
 
-6. Upon successful execution of your job, you will receive 9500 \$ASTRO in your account.
+6. Upon successful execution of your job, you will receive 9500 \$Astro in your account.
 
 Congratulations! You just made a limit swap using Warp!
+
+
