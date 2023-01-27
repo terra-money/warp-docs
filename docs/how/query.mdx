@@ -80,7 +80,30 @@ pub enum BankQuery {
 
 Returns the total supply of a denomination. 
 
+<CH.Code>
 
+```js JSON 
+{
+  "bank": {
+    "supply": {
+      "demom": "<String>"
+    }
+  }
+}
+```
+---
+```js Response 
+{
+  "supply": [
+    {
+      "denom": "uluna",
+      "amount": "266507"
+    }
+  ]
+}
+
+```
+</CH.Code>
 
 
 ### Balance
