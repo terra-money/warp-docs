@@ -1,14 +1,16 @@
 ---
 sidebar_position: 4
 ---
-# Variables 
+# Variables
 
-use cosmwasm_schema::cw_serde;
-use cosmwasm_std::{Decimal256, QueryRequest, Uint256};
+To make creating jobs easier, variables can be specified and inserted into job or query templates. After creating variables, you can add them as inputs using their reference value in the form of _`$warp.variable.{name}`_. You can use variables with templates to create complex reusable jobs. 
 
-use super::condition::{DecimalFnOp, IntFnOp, NumExprOp, NumValue};
 
-#[cw_serde]
+## VariableKind
+
+The following are the different kinds of variable inputs that can be used. 
+
+```rust variable.rs
 pub enum VariableKind {
     String,
     Uint,
@@ -19,81 +21,13 @@ pub enum VariableKind {
     Amount,
     Asset,
 }
+```
 
-#[cw_serde]
-pub enum VariableValue {
-    Static(String),
-    Query(QueryExpr),
-    External(ExternalExpr),
-}
+## Static variables
 
-#[cw_serde]
-pub struct ExternalExpr {
-    pub url: String, // rest stuff for URL request:
-    pub method: Option<Method>, 
-    pub headers: Option<Vec<String>>,
-    pub body: Option<String>,
-    pub selector: String, // selecting within the returned json
-}
+Static variables are the simplest form of variable, specified as a value. Static variable values can be updated using an [_`UpdateFn`_](#update-functions-and-loops). 
 
-#[cw_serde]
-pub enum Method { // rest stuff
-    Get,
-    Post,
-    Put,
-    Patch,
-    Delete,
-}
-
-#[cw_serde]
-pub struct QueryExpr {
-    pub selector: String,
-    pub query: QueryRequest<String>,
-}
-
-#[cw_serde]
-pub enum ExprOp {
-    Add,
-    Sub,
-    Div,
-    Mul,
-    Mod,
-}
-
-#[cw_serde]
-pub enum FnOp {
-    Abs,
-    Neg,
-    Floor,
-    Sqrt,
-    Ceil,
-}
-
-#[cw_serde]
-pub enum UpdateFnValue { //you can update using an expression to loop things
-    Uint(NumValue<Uint256, NumExprOp, IntFnOp>),
-    Int(NumValue<i128, NumExprOp, IntFnOp>),
-    Decimal(NumValue<Decimal256, NumExprOp, DecimalFnOp>),
-    Timestamp(NumValue<i128, NumExprOp, IntFnOp>),
-    BlockHeight(NumValue<i128, NumExprOp, IntFnOp>), // num value can reference a variable, or an expression which can be a query
-    Bool(String), //ref
-}
-
-#[cw_serde]
-pub struct UpdateFn { // specify when you create the job
-    pub on_success: Option<UpdateFnValue>,
-    pub on_error: Option<UpdateFnValue>,
-}
-
-// Variable is specified as a reference value (string) in form of $warp.variable.{name}
-// - variables are supplied along with the input (msg, query, template)
-#[cw_serde]
-pub enum Variable {
-    Static(StaticVariable),
-    External(ExternalVariable),
-    Query(QueryVariable),
-}
-
+```rust variable.rs
 #[cw_serde]
 pub struct StaticVariable {
     pub kind: VariableKind,
@@ -101,20 +35,14 @@ pub struct StaticVariable {
     pub value: String,
     pub update_fn: Option<UpdateFn>,
 }
-
-#[cw_serde] //get btc blockheight, succeeds, reinitialize (get variable again), or perform operator. 
-
-pub struct ExternalVariable { // from an api, 
-    pub kind: VariableKind,
-    pub name: String,
-    pub init_fn: ExternalExpr, //getting the external reference
-    pub reinitialize: bool, //yes/no
-    pub value: Option<String>, //none if uninitialized
-    pub update_fn: Option<UpdateFn>, //updates without reinitializing externally
-}
+```
 
 
-#[cw_serde]
+## Query variables
+
+Query variables allow you to select a value from the response of a specified query. Queries require a query message and a selector, which is used to select the correct portion of the query response. Query variables can be [updated](#update-functions-and-loops) or specified to be [reinitialized](#reinitialization). 
+
+```rust variable.rs
 pub struct QueryVariable {
     pub kind: VariableKind,
     pub name: String,
@@ -123,3 +51,59 @@ pub struct QueryVariable {
     pub value: Option<String>, //none if uninitialized
     pub update_fn: Option<UpdateFn>,
 }
+
+pub struct QueryExpr {
+    pub selector: String,
+    pub query: QueryRequest<String>,
+}
+```
+
+## External Variables
+
+External variables are fetched from external sources such as APIs. They require an external reference input, which includes a URL, a method (_`Get`_, _`Post`_, _`Push`_, _`Pass`_, _`Delete`_), a header, a body, and a [JSON selector](./query.mdx#selectors). External variables can be [updated](#update-functions-and-loops) or specified to be [reinitialized](#reinitialization). 
+
+```rust variable.rs
+pub struct ExternalVariable { 
+    pub kind: VariableKind,
+    pub name: String,
+    pub init_fn: ExternalExpr,
+    pub reinitialize: bool,
+    pub value: Option<String>, //none if uninitialized
+    pub update_fn: Option<UpdateFn>, 
+}
+
+
+pub struct ExternalExpr {
+    pub url: String, 
+    pub method: Option<Method>, 
+    pub headers: Option<Vec<String>>,
+    pub body: Option<String>,
+    pub selector: String, 
+}
+```
+
+## Update functions and loops
+
+Variables can be updated using an update function, which can change the value of the variable upon the success or failure of a job. By specifying whether a variable should update after completion, jobs can be looped. You can specify how a value should be updated upon success and upon failure, and you can use an update function to update the value. Update functions can include a _`NumValue`_ and an operator to update the value. [A _`NumValue`_ can also reference an expression or variable such as a query](./condition.mdx#values), allowing for further looping and update capability. 
+
+```rust variable.rs
+
+pub enum UpdateFnValue { 
+    Uint(NumValue<Uint256, NumExprOp, IntFnOp>),
+    Int(NumValue<i128, NumExprOp, IntFnOp>),
+    Decimal(NumValue<Decimal256, NumExprOp, DecimalFnOp>),
+    Timestamp(NumValue<i128, NumExprOp, IntFnOp>),
+    BlockHeight(NumValue<i128, NumExprOp, IntFnOp>), 
+    Bool(String), 
+}
+
+#[cw_serde]
+pub struct UpdateFn { 
+    pub on_success: Option<UpdateFnValue>,
+    pub on_error: Option<UpdateFnValue>,
+}
+```
+
+### Reinitialize
+
+Expression and Query variables contain a _`reinitialize`_ boolean, which specifies whether the query or external variable should be fetched again. Variables cannot be updated using an [_`UpdateFn`_](#update-functions-and-loops) if the _`reinitialize`_ boolean is _`True`_. 
