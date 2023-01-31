@@ -3,3 +3,56 @@ sidebar_position: 5
 ---
 
 # Templates
+
+Templates allow job and condition logic to be generalized and reused. Combined with variables, templates make complex jobs and conditions easy for any user. 
+
+## Template kind
+
+Templates can be used for queries or for job messages. 
+
+```rust template.rs
+#[cw_serde]
+pub enum TemplateKind {
+    Query,
+    Msg,
+}
+```
+
+
+```rust template.rs
+pub struct Template {
+    pub id: Uint64,
+    pub owner: Addr,
+    pub name: String,
+    pub vars: Vec<Variable>,
+    pub kind: TemplateKind,
+    pub msg: String,
+    pub condition: Option<Condition>,
+    pub formatted_str: String,
+}
+```
+
+## submit, edit, delete
+```rust template.rs
+pub struct SubmitTemplateMsg {
+    pub name: String,
+    pub kind: TemplateKind,
+    pub msg: String,
+    pub condition: Option<Condition>,
+    pub formatted_str: String,
+    pub vars: Vec<Variable>,
+}```
+
+
+```rust template.rs
+pub struct EditTemplateMsg {
+    pub id: Uint64,
+    pub name: Option<String>,
+}```
+
+
+```rust template.rs
+pub struct DeleteTemplateMsg {
+    pub id: Uint64,
+}```
+
