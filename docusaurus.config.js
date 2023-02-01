@@ -62,6 +62,7 @@ module.exports = async function config() {
     themeConfig:
       /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
       ({
+        image: 'img/Twitter Profile.png',
         docs: {
           sidebar: {
             hideable: false,
