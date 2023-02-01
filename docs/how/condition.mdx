@@ -6,8 +6,7 @@ import Admonition from '@theme/Admonition';
 
 # Conditions and expressions
 
-Conditions represent event definitions, and they outline the circumstances under which a job can be completed. A condition is a recursive data type that allows for multiple conditions within it, all of which need to resolve to true for the Job to allow execution. This complex data type includes several underlying types. For more general information on conditions, visit the [concepts section](overview.mdx#conditions). To view an example of a condition, visit the [Example page](../guides/example.mdx)
-
+Conditions represent event definitions, and they outline the circumstances under which a job can be completed. A condition is a recursive data type that allows for multiple conditions within it, all of which need to resolve to true for the Job to allow execution. This complex data type includes several underlying types. For more general information on conditions, visit the [concepts section](overview.mdx#conditions). To view an example of a condition message, visit the [Example page](../guides/example.mdx). For information about conditions in templates, visit the [template tutorial](../guides/template.mdx). 
 
 
 Conditions can be either a single expression, or they can be nested and chained using regular boolean operators, such as `And`, `Or`, or `Not`. 
@@ -174,27 +173,10 @@ pub struct BlockExpr {
 ```
 
 
-## Query expressions
+## Queries
 
-
-
-Query expressions are expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains a selector, a query request, and a name. Any [type of query supported by Cosmos](https://docs.rs/cosmwasm-std/latest/cosmwasm_std/enum.QueryRequest.html) can be used in a condition. 
-
-Query expressions can be used as one or both of the values in a [general expression](#general-expressions), or in [boolean expressions](#bool). When query expressions are used in a condition, the JSON of a query message is sent out, and the value specified by the selector string is returned as the value to be compared in the general expression. 
-
-For more information on writing queries and using selectors, visit the [Query page](query.mdx).
-
-```rust condition.rs
-pub struct QueryExpr {
-    pub selector: String,
-    pub query: QueryRequest<String>,
-    pub name: String,
-}
-
-```
+Queries can be used in expressions as variables. For more information on queries, visit the [Query page](./query.mdx).
 
 ### Bool
 
 Queries can also be written as boolean expressions, in which a [query selector] is evaluated as a boolean. 
-
-

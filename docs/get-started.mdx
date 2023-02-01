@@ -6,8 +6,7 @@ import Admonition from '@theme/Admonition';
 
 # → Get started
 
-Follow this guide to create an account and start writing jobs and conditions. For more general information on how Warp works, visit the [Overview page](./how/overview.mdx). To see an example of a Warp job and condition, visit the [Example page](./guides/example.mdx).
-
+Follow this guide to create an account and start writing jobs and conditions. For more general information on how Warp works, visit the [Overview page](./how/overview.mdx). To learn how to create a template, follow the [template tutorial](./guides/template.mdx). To see an example of a Warp job and condition without a template, visit the [Example page](./guides/example.mdx).
 
 ## Prerequisites
 
@@ -42,9 +41,31 @@ Before proceeding, understand that you will need to sign a transaction with your
 
 2. Click **Create account** and sign the transaction by inputting your password on the Station Browser Extension. 
 
-Now that your account is created, you can deposit funds to use them in a job. 
+3. Deposit some funds into your Warp account to use in jobs or pay for execution rewards. 
 
-## Create a job
+## Create a job using a premade template
+
+[Templates](./guides/template.mdx) help make jobs reusable and easier to create. Use the following steps to create a job from a premade template. 
+
+1. On the left menu, click the "**+**" symbol to open the creation menu. 
+
+2. Select **Job** and then select **Basic mode**. 
+
+3. Enter a job name and select a template from the **Template** dropdown. 
+
+4. Enter values into the required fields and specify a reward for execution. 
+
+5. Double-check your inputs and click **Save**.
+
+6. Sign the transaction using the Station extension.
+
+Congratulations, you've just created a job!
+
+## Create a template
+
+Follow the [template creation guide](./guides/template.mdx) to learn how to make a limit order template. 
+
+## Create a job from scratch
 
 <Admonition type="tip" title="Job example">
 
@@ -52,9 +73,9 @@ For a hands-on example of a Warp job and condition, visit the [Example page](gui
 
 </Admonition>
 
-1. On the left menu, click on the second icon from the top to take you to the job page. 
+1. On the left menu, click the "**+**" symbol to open the creation menu. 
 
-2. On the right side of the screen, click the **+ New** button.
+2. Select **Job** and then select **Advanced mode**. 
 
 3. Enter a Job Name, a Reward for executing the job, and a Job message. This message can be any WASM message that you want to execute. Remember that you will need to add funds to your account before you can transact them in a job message. Be sure that your reward amount is more than the gas cost of the message. 
 

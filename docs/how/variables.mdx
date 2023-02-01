@@ -1,0 +1,108 @@
+---
+sidebar_position: 4
+---
+# Variables
+
+Variables are placeholders for arbitrary data that can be inserted into Warp jobs and conditions. To make creating jobs easier, variables can be specified and input into job or query templates. After creating variables, you can add them to messages using their reference value in the form of _`$warp.variable.variable-name`_. You can use variables with templates to create complex reusable jobs. Variables created in the Warp app are stored in your browser and are not written to the blockchain until they are inserted into templates. 
+
+## VariableKind
+
+The following are the different variable input types that can be used. 
+
+```rust variable.rs
+pub enum VariableKind {
+    String,
+    Uint,
+    Int,
+    Decimal,
+    Timestamp,
+    Bool,
+    Amount,
+    Asset,
+}
+```
+
+## Static variables
+
+Static variables are the simplest form of variable and are created with a value. Static variable values can be updated in loops using an [_`UpdateFn`_](#update-functions-and-loops). 
+
+```rust variable.rs
+#[cw_serde]
+pub struct StaticVariable {
+    pub kind: VariableKind,
+    pub name: String,
+    pub value: String,
+    pub update_fn: Option<UpdateFn>,
+}
+```
+
+
+## Query variables
+
+Query variables allow you to select a value from the response of a specified query. Queries require a query message and a [selector](./query.mdx#selector), which is used to select the correct portion of the query response. When looping, query variables can be [updated](#update-functions-and-loops) or specified to be [reinitialized](#reinitialization). 
+
+```rust variable.rs
+pub struct QueryVariable {
+    pub kind: VariableKind,
+    pub name: String,
+    pub init_fn: QueryExpr,
+    pub reinitialize: bool,
+    pub value: Option<String>, //none if uninitialized
+    pub update_fn: Option<UpdateFn>,
+}
+
+pub struct QueryExpr {
+    pub selector: String,
+    pub query: QueryRequest<String>,
+}
+```
+
+## External Variables
+
+External variables are fetched from external sources such as APIs. They require an external reference input, which includes a URL, a method (_`Get`_, _`Post`_, _`Push`_, _`Pass`_, _`Delete`_), a header, a body, and a [JSON selector](./query.mdx#selectors). External variables can be [updated](#update-functions-and-loops) or specified to be [reinitialized](#reinitialization). 
+
+```rust variable.rs
+pub struct ExternalVariable { 
+    pub kind: VariableKind,
+    pub name: String,
+    pub init_fn: ExternalExpr,
+    pub reinitialize: bool,
+    pub value: Option<String>, //none if uninitialized
+    pub update_fn: Option<UpdateFn>, 
+}
+
+
+pub struct ExternalExpr {
+    pub url: String, 
+    pub method: Option<Method>, 
+    pub headers: Option<Vec<String>>,
+    pub body: Option<String>,
+    pub selector: String, 
+}
+```
+
+## Update functions and loops
+
+Variables can be updated using an update function, which can change the value of the variable upon the success or failure of a job. By specifying whether a variable should update after completion, jobs can be looped. You can specify how a value should be updated upon success or upon failure, and you can use an update function to update the value. Update functions can include a _`NumValue`_ and an operator to update the value. [A _`NumValue`_ can also reference an expression or variable such as a query](./condition.mdx#values), allowing for further looping and update capability. 
+
+```rust variable.rs
+
+pub enum UpdateFnValue { 
+    Uint(NumValue<Uint256, NumExprOp, IntFnOp>),
+    Int(NumValue<i128, NumExprOp, IntFnOp>),
+    Decimal(NumValue<Decimal256, NumExprOp, DecimalFnOp>),
+    Timestamp(NumValue<i128, NumExprOp, IntFnOp>),
+    BlockHeight(NumValue<i128, NumExprOp, IntFnOp>), 
+    Bool(String), 
+}
+
+#[cw_serde]
+pub struct UpdateFn { 
+    pub on_success: Option<UpdateFnValue>,
+    pub on_error: Option<UpdateFnValue>,
+}
+```
+
+### Reinitialize
+
+Expression and Query variables contain a _`reinitialize`_ boolean, which specifies whether the query or external variable should be fetched again. If this boolean is set to _`true`_, the job will be run again after completion (on success or failure) and the data will be fetched again upon each subsequent job. Vasssriables cannot be updated using an [_`UpdateFn`_](#update-functions-and-loops) if the _`reinitialize`_ boolean is _`true`_. 

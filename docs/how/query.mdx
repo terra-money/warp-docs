@@ -2,16 +2,13 @@
 sidebar_position: 3
 ---
 
-# Query expressions
+# Queries
 
-This section details query expressions and their structure. For general information on writing conditions, visit the [Conditions and expressions](./condition.mdx) page. To view an example of a query expression, visit the [Example page](../guides/example.mdx)
+This section details queries and their structure. For general information on writing conditions, visit the [Conditions and expressions](./condition.mdx) page. To view an example of a query variable in a template, visit the [template guide](../guides/template.mdx). 
 
-Query expressions are expressions that select a value from a query message. The structure of a _`QueryExpr`_ contains [a selector](#selectors), a [query request](#query-request), and a name. Any [type of query supported by Cosmos](https://docs.rs/cosmwasm-std/latest/cosmwasm_std/enum.QueryRequest.html) can be used in a condition. 
+Queries are written as variables that select a value from a query message. The structure of a QueryVariable contains [a selector](#selectors), a [query request](#query-request), and a name. Any [type of query supported by Cosmos](https://docs.rs/cosmwasm-std/latest/cosmwasm_std/enum.QueryRequest.html) can be used in a condition. For more information on query variables and update functions, visit the [Variables page](./variables.mdx). 
 
-
-
-  
-Query expressions can be used as one or both of the values in a [general expression](./condition.mdx#general-expressions), or in [boolean expressions](condition.mdx#bool). When query expressions are used in a condition, the JSON of a query message is sent out, and the value specified by the [selector string](#selectors) is returned as the value to be compared in the [general expression](./condition.mdx#general-expressions). 
+[Query variables](./variables.mdx#query-variables) can be used as one or both of the values in a [general expression](./condition.mdx#general-expressions), or in [boolean expressions](condition.mdx#bool). When query expressions are used in a condition, the JSON of a query message is sent out, and the value specified by the [selector string](#selectors) is returned as the value to be compared in the [general expression](./condition.mdx#general-expressions). 
 
 ```rust condition.rs
 pub struct QueryExpr {
@@ -21,8 +18,6 @@ pub struct QueryExpr {
 }
 
 ```
-
-
 
 
 ## QueryRequest
@@ -465,8 +460,6 @@ impl ContractInfoResponse {
 ```
 
 </CH.Code>
-
-
 
 
 ## Selectors

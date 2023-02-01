@@ -1,0 +1,275 @@
+---
+sidebar_position: 1
+---
+
+# How to make a template
+
+This tutorial will walk you through making a limit order template to swap Luna for Astro. It is recommended that you read the [from-scratch job example guide](./example.mdx) so that you understand the basics of the job, condition, and how a swap works with Warp. The following tutorial shows you how to make a template of the example job using [variables](../how/variables.mdx). 
+
+## Prerequisites
+
+- Follow the [Get started guide](../get-started.mdx) to set up a Warp account before proceeding. 
+- Make sure you are connected to your Station wallet and on the **testnet** network. 
+
+## Set up the job template 
+
+1. Open the [Warp app](https://beta.warp.money/) in your browser and connect your wallet. 
+
+2. On the left menu, click the "**+**" symbol to open the creation menu. 
+
+3. Select **Template**. 
+
+<img className="readme-img-md" src="/img/template/1-item.png" />
+
+4. There are two types of templates you can create. Basic templates are used for templating job messages or queries. Advanced templates include conditions, as well as job messages. For this tutorial, select the **Advanced mode**. 
+
+<img className="readme-img-md" src="/img/template/2-new-job.png" />
+
+5. Enter "Swap template" as your template name. For **Template Type**, select **job**. 
+
+<img className="readme-img-lg" src="/img/template/3-new-template.png" />
+
+## Create your variables
+
+Similar to variables in programming languages, Warp variables are placeholders for inputs. In this tutorial, you are creating a template to swap Luna for Astro, so your two variables will be _`send_amount`_ and _`receive_amount`_. 
+
+1. The collapsible variables menu is located on the right side of the screen. If it is not expanded, click the **Variables** tab. 
+
+<img className="readme-img-sm" src="/img/template/4-variables.png" />
+
+2. Click **New** and select **Static** to create a static variable. 
+
+3. Type _`send_amount`_ in the **Variable name** section. Select **amount** as the **Variable type**. For the **Value**, input _`100`_ . This value is an arbitrary default amount shown to the user and can be changed later. 
+
+<img className="readme-img-md" src="/img/template/5-new-variable.png" />
+
+4. Click Save. 
+
+5. Create another variable with the name _`receive_amount`_. Select **amount** as the **Variable type**. For the **Value,** input _`100`_.
+
+4. Click Save. 
+
+Now that your variables have been made, continue to the next section to write your template description. 
+
+##  Type the job template
+
+Warp templates offer a human-readable description of the job. This is where you will include your variables. 
+
+If you type the `{` character in the description field, the Warp app will show which variables you have created, and you can select the correct one to input into your description. In descriptions, Warp variables must be surrounded by braces. 
+
+Because we are creating a template to swap Luna for Astro, our template description is as follows:
+
+```
+Swap {send_amount} $LUNA for {receive_amount} $ASTRO
+```
+
+Where _`{send_amount}`_ is the amount of Luna you are offering, and _`{receive_amount}`_ is the amount of Astro you will receive. 
+
+After typing the info, continue to the next step. 
+
+<img className="readme-img-lg" src="/img/template/6-template-fill.png" />
+
+## Input the Job message
+
+Now you can include your job message in the template. 
+
+1. Select the **Message** button. 
+
+<CH.Scrollycoding>
+
+2.  Copy and paste The following WASM message into the text field. This is the swap message for swapping Luna for Astro.
+
+
+```javascript Message
+{
+    "wasm": {
+        "execute": {
+            "contract_addr": "terra1na348k6rvwxje9jj6ftpsapfeyaejxjeq6tuzdmzysps20l6z23smnlv64",
+            "msg": {
+                "execute_swap_operations": {
+                    "max_spread": "0.15",
+                    "minimum_receive": "9500000000",
+                    "operations": [
+                    {
+                        "astro_swap": {
+                          "ask_asset_info": {
+                              "token": {
+                                  "contract_addr": "terra167dsqkh2alurx997wmycw9ydkyu54gyswe3ygmrs4lwume3vmwks8ruqnv"
+                              }
+                          },
+                          "offer_asset_info": {
+                              "native_token": {
+                                  "denom": "uluna"
+                              }
+                          }
+                        }
+                    }
+                    ]
+                }
+            },
+            "funds": [{"denom":"uluna","amount":"1000000"}]
+        }
+    }
+}
+```
+
+---
+
+3. In order to input your template variables into the message, you'll need to change the fund amount to the _`{send_amount}`_ variable. The format for adding reference values in messages is _`$warp.variable.variable-name`_. 
+
+In line 27, change _`1000000`_ to _`$warp.variable.send_amount`_.
+
+
+```javascript Message mark=27[50:75] focus=27
+{
+    "wasm": {
+        "execute": {
+            "contract_addr": "terra1na348k6rvwxje9jj6ftpsapfeyaejxjeq6tuzdmzysps20l6z23smnlv64",
+            "msg": {
+                "execute_swap_operations": {
+                    "max_spread": "0.15",
+                    "minimum_receive": "9500000000",
+                    "operations": [
+                    {
+                        "astro_swap": {
+                          "ask_asset_info": {
+                              "token": {
+                                  "contract_addr": "terra167dsqkh2alurx997wmycw9ydkyu54gyswe3ygmrs4lwume3vmwks8ruqnv"
+                              }
+                          },
+                          "offer_asset_info": {
+                              "native_token": {
+                                  "denom": "uluna"
+                              }
+                          }
+                        }
+                    }
+                    ]
+                }
+            },
+            "funds": [{"denom":"uluna","amount":"$warp.variable.send_amount"}]
+        }
+    }
+}
+```
+
+</CH.Scrollycoding>
+
+Now you can create your condition. 
+
+## Add the condition
+
+In order for the assets to swap at the desired price, the condition for the swap will be based on a query for the price of the assets. When the _`{send_amount}`_ of Luna can be swapped for the _`{receive_amount}`_ of Astro, a keeper will run the job. 
+
+To create a condition based on a query, create an integer expression by following the steps below. 
+
+1. Click **Add Condition** to open the conditon screen. 
+
+<img className="readme-img-lg" src="/img/template/7-condition.png" />
+
+2. Click the "**+**" symbol and then click **Expression**
+
+3. Click **Int** to create an integer expression.
+
+4. The left side of the expression will be the query. Queries are only available as variables. On the left side of the expression, click the puzzle piece and select **Variable**.
+
+5. Click **New variable** and then select **Query**. 
+
+<img className="readme-img-md" src="/img/template/8-select-variable.png" />
+
+6. Name this new variable _`simulate-receive-amount`_. Under **Variable type** select **uint**. 
+
+<CH.Scrollycoding>
+
+7. Click **Message** and copy and paste the following query message.
+
+```javascript Query
+{
+  "wasm": {
+    "smart": {
+      "contract_addr": "terra1na348k6rvwxje9jj6ftpsapfeyaejxjeq6tuzdmzysps20l6z23smnlv64",
+      "msg": {
+            "simulate_swap_operations": {
+                "offer_amount": "1000000",
+                "operations": [
+                {
+                    "astro_swap": {
+                      "ask_asset_info": {
+                          "token": {
+                          "contract_addr": "terra167dsqkh2alurx997wmycw9ydkyu54gyswe3ygmrs4lwume3vmwks8ruqnv"
+                          }
+                      },
+                      "offer_asset_info": {
+                          "native_token": {
+                              "denom": "uluna"
+                          }
+                      }
+                    }
+                }
+                ]
+            }
+        }
+    }
+  }
+}
+```
+
+---
+
+8. Like before, you will need to alter the message to input _`$warp.variable.send_amount`_ as the offer amount in line 7. 
+
+```javascript Query focus=7 mark=7[34:60]
+{
+  "wasm": {
+    "smart": {
+      "contract_addr": "terra1na348k6rvwxje9jj6ftpsapfeyaejxjeq6tuzdmzysps20l6z23smnlv64",
+      "msg": {
+            "simulate_swap_operations": {
+                "offer_amount": "$warp.variable.send_amount",
+                "operations": [
+                {
+                    "astro_swap": {
+                      "ask_asset_info": {
+                          "token": {
+                          "contract_addr": "terra167dsqkh2alurx997wmycw9ydkyu54gyswe3ygmrs4lwume3vmwks8ruqnv"
+                          }
+                      },
+                      "offer_asset_info": {
+                          "native_token": {
+                              "denom": "uluna"
+                          }
+                      }
+                    }
+                }
+                ]
+            }
+        }
+    }
+  }
+}
+```
+
+</CH.Scrollycoding>
+
+9. In the [**Query Selector** field](../how/query.mdx#selectors), input _`$.amount`_ . This is the part of the query response you will use in your condition. Click **Save**.
+
+<img className="readme-img-lg" src="/img/template/9-query-variable.png" />
+
+10. Now you can complete your condition. In the middle operator box, select **gte**, which specifies that the query amount response will be greater than or equal to the right side of the equation. 
+
+<img className="readme-img-lg" src="/img/template/10-condition-right.png" />
+
+11.  On the right side of the equation, click the puzzle piece and select **Variable**. Select the **receive_amount** variable from earlier. 
+
+<img className="readme-img-md" src="/img/template/11-select-variable.png" />
+
+Your finished condition now states that you want the job to execute when the simulated amount of the query is greater than or equal to the amount you wish to receive. 
+
+<img className="readme-img-lg" src="/img/template/12-condition-finished.png" />
+
+
+12. Click **Save** to save the template. 
+
+13. Sign and send the template creation message in the Station extension.
+
+Congratulations, your first template is complete! You can use this template by accessing the template menu in the Left navigation bar. Try out your template and swap some [testnet Luna](https://faucet.terra.money)!

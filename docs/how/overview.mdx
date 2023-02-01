@@ -35,13 +35,17 @@ pub struct Job {
 }
 ```
 
-To learn more about the workflow of jobs, see the [Job example](#example), or visit the [Job state](./state.mdx) page.
+To learn more about the workflow of jobs, visit the [Job state](./state.mdx) page. To learn about creating a job template, visit the [Template tutorial](../guides/template.mdx).
 
 ## Conditions
 
 Each job must be submitted with conditions, which are a set of circumstances under which the job should be executed. Conditions are made up of expressions which can be simple, such as specifying a blockheight, or complex, in which multiple conditions are nested and joined using boolean operators. Query responses can also be used in expressions to specify a condition. When all the expressions in a condition evaluate to _`true`_, the condition is met, and the job can be completed. 
 
 To learn more about how conditions work, visit the [Conditions page](./condition.mdx).
+
+## Templates and variables
+
+[Templates](./templates.mdx) and [variables](./variables.mdx) allow Warp users to create reusable, looping jobs. Templates create a job structure, and they contain variables that can be [updated by a user](../get-started.mdx#create-a-job-using-a-premade-template) or specified to update automatically through [looping](./variables.mdx#update-functions-and-loops). To learn how to create variables and job templates, follow the [Template tutorial](../guides/template.mdx). 
 
 ## Warp accounts
 
@@ -65,6 +69,7 @@ For more on job state, the queue, and a basic workflow, visit the [Job state pag
 ## Keepers
 
 A keeper is any party that maintains the automation functions of a smart contract. Keepers are incentivized by Warp users to execute smart contract functions on their behalf, in exchange for a reward. Keepers query the chain and evaluate a job's condition. Once the conditions for a job are met, a keeper can submit the execute message contained in the job. To learn how to run a keeper, visit the [Keeper guide](../guides/keeper.mdx)
+
 ## Rewards 
 
 Rewards are given by job owners to keepers in exchange for executing their jobs. Because Warp is a decentralized event handler, rewards are an incentive for unknown keepers to execute jobs, without the need for a centralized intermediary. There is no set price for rewards. Rewards are provided in Luna and are priced organically, based on computing power costs and incentives for the keeper. 
