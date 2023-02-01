@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Templates
 
-Templates allow job and condition logic to be generalized and reused. Combined with variables, templates make complex jobs and conditions easy for any user. 
+Templates allow job and condition logic to be generalized and reused. Combined with variables, templates make complex jobs and conditions easy for any user. Templates are written to the blockchain upon their creation and can be accessed by users looking to perform tasks. To learn how to create a template, follow the [Template tutorial](../guides/template.mdx).
 
 ## Template kind
 
@@ -18,7 +18,7 @@ pub enum TemplateKind {
 }
 ```
 
-
+The following is the structure of a template. 
 
 ```rust template.rs
 pub struct Template {
@@ -33,7 +33,12 @@ pub struct Template {
 }
 ```
 
-## submit, edit, delete
+## Messages
+
+### Submit
+
+The following is the structure of a template creation message. 
+
 ```rust template.rs
 pub struct SubmitTemplateMsg {
     pub name: String,
@@ -42,19 +47,27 @@ pub struct SubmitTemplateMsg {
     pub condition: Option<Condition>,
     pub formatted_str: String,
     pub vars: Vec<Variable>,
-}```
+}
+```
 
+### Edit
+
+You can edit templates using the following message. 
 
 ```rust template.rs
 pub struct EditTemplateMsg {
     pub id: Uint64,
     pub name: Option<String>,
-}```
+}
+```
 
+### Delete
 
+Templates can also be deleted. 
 
 ```rust template.rs
 pub struct DeleteTemplateMsg {
     pub id: Uint64,
-}```
+}
+```
 
