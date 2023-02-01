@@ -8,7 +8,7 @@ Templates allow job and condition logic to be generalized and reused. Combined w
 
 ## Template kind
 
-Templates can be used for queries or for job messages. 
+Templates can be used for queries or for job messages. Job templates can contain a single job message, or a job message and a condition. 
 
 ```rust template.rs
 #[cw_serde]
@@ -17,6 +17,7 @@ pub enum TemplateKind {
     Msg,
 }
 ```
+
 
 
 ```rust template.rs
@@ -49,6 +50,7 @@ pub struct EditTemplateMsg {
     pub id: Uint64,
     pub name: Option<String>,
 }```
+
 
 
 ```rust template.rs
