@@ -49,7 +49,15 @@ To learn more about how conditions work, visit the [Conditions page](./condition
 
 ## Warp accounts
 
-In order to transact funds, a job must have access to a wallet. Warp accounts are smart contract wallets that allow users to transact with Warp. Warp accounts function similarly to a Cosmos wallet account. For example, users can use their account to send, deposit, delegate, undelegate, or receive funds by interacting with their accounts as a smart contract. Using the Warp app, users can deposit or withdraw funds from their Warp accounts. Any transactions using jobs are executed through a user's account. Warp accounts can only be controlled by a user's wallet and the jobs that they create. 
+In order to transact funds, a job must have access to a wallet. Warp accounts are smart contract wallets that allow users to transact with Warp. Warp accounts function similarly to a Cosmos wallet account. For example, users can use their accounts to send, deposit, delegate, undelegate, or receive funds by interacting with their accounts as a smart contract. Using the Warp app, users can deposit or withdraw funds from their Warp accounts. Any transactions using jobs are executed through a user's account. Warp accounts can only be controlled by a user's wallet and the jobs that they create. 
+
+## Keepers
+
+A keeper is any party that maintains the automation functions of a smart contract. Keepers are incentivized by Warp users to execute smart contract functions on their behalf, in exchange for a reward. Keepers query the chain and evaluate a job's condition. Once the conditions for a job are met, a keeper can submit the execute message contained in the job. To learn how to run a keeper, visit the [Keeper guide](../guides/keeper.mdx). 
+
+## Rewards 
+
+Rewards are given by job owners to keepers in exchange for executing their jobs. Because Warp is a decentralized event handler, rewards are an incentive for unknown keepers to execute jobs, without the need for a centralized intermediary. The minimum reward value is _`0.02`_ Luna. Rewards are provided in Luna and are priced organically, based on computing power costs and incentives for the keeper. 
 
 ## The queue
 
@@ -61,18 +69,16 @@ pub enum JobStatus {
     Executed,
     Failed,
     Cancelled,
+    Evicted,
 }
 ```
 
-For more on job state, the queue, and a basic workflow, visit the [Job state page](./state.mdx).
+For more on Job state, the queue, and a basic workflow, visit the [Job state page](./state.mdx).
 
-## Keepers
+## Eviction
 
-A keeper is any party that maintains the automation functions of a smart contract. Keepers are incentivized by Warp users to execute smart contract functions on their behalf, in exchange for a reward. Keepers query the chain and evaluate a job's condition. Once the conditions for a job are met, a keeper can submit the execute message contained in the job. To learn how to run a keeper, visit the [Keeper guide](../guides/keeper.mdx)
+In order to keep a job active, _`0.01`_ Luna will be withdrawn from the job creator's Warp account every 24 hours. Keepers called "Evictors" will check each job in the queue daily, and collect the  _`0.01`_ Luna as a reward. When the Job creator's account no longer holds enough Luna, the job will be evicted and removed from the queue. The Evictor will receive  _`0.01`_ Luna from the Job's reward, and the Creator will be refunded the Job reward amount, minus the eviction fee. 
 
-## Rewards 
-
-Rewards are given by job owners to keepers in exchange for executing their jobs. Because Warp is a decentralized event handler, rewards are an incentive for unknown keepers to execute jobs, without the need for a centralized intermediary. There is no set price for rewards. Rewards are provided in Luna and are priced organically, based on computing power costs and incentives for the keeper. 
 
 ## Example
 
