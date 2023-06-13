@@ -16,30 +16,44 @@ Any tokens sent as part of a job's message must be present in the user's [Warp a
 
 ```rust
 pub struct Job {
-  // unique identifier for each Job
-  pub id: Uint64,
-  // job creator address
-  pub owner: Addr,
-  // UTC timestamp for when the job was submitted
-  pub last_update_time: Uint64,
-  // name given to the Job
-  pub name: String,
-  // status of the job (pending, executed, failed, canceled)
-  pub status: JobStatus,
-  // condition set dictating when the Job should be executed
-  pub condition: Condition,
-  // message to execute when conditions resolve to true
-  pub msg: Vec<CosmosMsg>,
-  // reward to distribute to the keeper when the Job has been executed
-  pub reward: Uint128,
+    // unique identifier for each Job
+    pub id: Uint64,
+    // job creator address
+    pub owner: Addr,
+    // UTC timestamp for when the Job was submitted
+    pub last_update_time: Uint64,
+    // name given to the Job
+    pub name: String,
+    // a description of the Job
+    pub description: String,
+    // a label for the Job
+    pub labels: Vec<String>,
+    // status of the Job (pending, executed, failed, canceled)
+    pub status: JobStatus,
+    // condition set dictating when the Job should be executed
+    pub condition: Condition,
+    // a Job message to be executed when the conditions are met
+    pub msgs: Vec<String>,
+    // variables to be used in a condition or Job message
+    pub vars: Vec<Variable>,
+    // whether the Job is recurring
+    pub recurring: bool,
+    // whether to requeue the Job after being evicted
+    pub requeue_on_evict: bool,
+    // reward to distribute to the keeper when the Job has been executed
+    pub reward: Uint128,
+    // assets that can be withdrawn back to the account after Job completion
+    pub assets_to_withdraw: Vec<AssetInfo>,
 }
 ```
+
+A creation fee is added to every job, which is 5% of a Job's reward amount. This fee is collected and burned upon Job creation. 
 
 To learn more about the workflow of jobs, visit the [Job state](./state.mdx) page. To learn about creating a job template, visit the [Template tutorial](../guides/template.mdx).
 
 ## Conditions
 
-Each job must be submitted with conditions, which are a set of circumstances under which the job should be executed. Conditions are made up of expressions which can be simple, such as specifying a blockheight, or complex, in which multiple conditions are nested and joined using boolean operators. Query responses can also be used in expressions to specify a condition. When all the expressions in a condition evaluate to _`true`_, the condition is met, and the job can be completed. 
+Each job must be submitted with conditions, which are a set of circumstances under which the job should be executed. Conditions are made up of expressions that can be simple, such as specifying a blockheight, or complex, in which multiple conditions are nested and joined using boolean operators. Query responses can also be used in expressions to specify a condition. When all the expressions in a condition evaluate to _`true`_, the condition is met, and the job can be completed. 
 
 To learn more about how conditions work, visit the [Conditions page](./condition.mdx).
 
@@ -50,6 +64,8 @@ To learn more about how conditions work, visit the [Conditions page](./condition
 ## Warp accounts
 
 In order to transact funds, a job must have access to a wallet. Warp accounts are smart contract wallets that allow users to transact with Warp. Warp accounts function similarly to a Cosmos wallet account. For example, users can use their accounts to send, deposit, delegate, undelegate, or receive funds by interacting with their accounts as a smart contract. Using the Warp app, users can deposit or withdraw funds from their Warp accounts. Any transactions using jobs are executed through a user's account. Warp accounts can only be controlled by a user's wallet and the jobs that they create. 
+
+Warp allows for atomic account and Job creation: you can create an account, send funds to the account, and create a job all in one transaction. During Job creation, you can also specify which assets you want to be fully withdrawn back to your account after Job completion. 
 
 ## Keepers
 
@@ -77,7 +93,7 @@ For more on Job state, the queue, and a basic workflow, visit the [Job state pag
 
 ## Eviction
 
-In order to keep a job active, _`0.01`_ Luna will be withdrawn from the job creator's Warp account every 24 hours. Keepers called "Evictors" will check each job in the queue daily, and collect the  _`0.01`_ Luna as a reward. When the Job creator's account no longer holds enough Luna, the job will be evicted and removed from the queue. The Evictor will receive  _`0.01`_ Luna from the Job's reward, and the Creator will be refunded the Job reward amount, minus the eviction fee. 
+In order to keep a job active, 5% of a job's reward amount will be withdrawn from the job creator's Warp account every 24 hours. Keepers called "Evictors" will check each job in the queue daily, and collect the 5% fee as a reward. When the Job creator's account no longer holds enough Luna, the job will be evicted and removed from the queue. The Evictor will receive the 5% eviction fee from the Job's reward, and the Creator will be refunded the Job reward amount, minus the eviction fee. 
 
 
 ## Example
