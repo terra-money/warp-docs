@@ -16,7 +16,7 @@ pub enum Condition {
     And(Vec<Box<Condition>>),
     Or(Vec<Box<Condition>>),
     Not(Box<Condition>),
-    Expr(Expr),
+    Expr(Box<Expr>),
 }
 ```
 
@@ -35,7 +35,7 @@ pub enum Expr {
     Decimal(GenExpr<NumValue<Decimal256, NumExprOp, DecimalFnOp>, NumOp>),
     Timestamp(TimeExpr),
     BlockHeight(BlockExpr),
-    Bool(QueryExpr),
+    Bool(String),
 }
 ```
 
@@ -49,14 +49,20 @@ A value is the simplest type of input used in an expression. In double-sided [ge
 ```rust condition.rs
 pub enum Value<T> {
     Simple(T),
-    Query(QueryExpr),
+    Ref(String),
 }
 
 pub enum NumValue<T, ExprOp, FnOp> {
     Simple(T),
     Expr(NumExprValue<T, ExprOp, FnOp>),
-    Query(QueryExpr),
+    Ref(String),
     Fn(NumFnValue<T, ExprOp, FnOp>),
+    Env(NumEnvValue),
+}
+
+pub enum NumEnvValue {
+    Time,
+    BlockHeight,
 }
 
 pub struct NumExprValue<T, ExprOp, FnOp> {
@@ -142,7 +148,7 @@ Time expressions are like regular unsigned integer expressions, except they only
 ```rust condition.rs
 pub struct TimeExpr {
     pub comparator: Uint64,
-    pub op: TimeOp, 
+    pub op: TimeOp,
 }
 ```
 
