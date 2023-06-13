@@ -14,17 +14,15 @@ Queries are written as variables that select a value from a query message. The s
 pub struct QueryExpr {
     pub selector: String,
     pub query: QueryRequest<String>,
-    pub name: String,
 }
 
 ```
-
 
 ## QueryRequest
 
 Warp conditions support any query type available using the _`QueryRequest`_ struct, which outlines all possible query calls. The possible query types are _`Bank`_, _`Custom`_, _`Staking`_, _`Stargate`_, _`IBC`_, and _`Wasm`_. 
 
-```rust warp_controller.s
+```rust mod.rs
 pub enum QueryRequest<C> {
     Bank(BankQuery),
     Custom(C),
@@ -48,9 +46,7 @@ pub enum QueryRequest<C> {
 }
 ```
 
-
 ## Bank Queries
-
 
 Bank queries are used to query information from the Cosmos bank module. 
 
