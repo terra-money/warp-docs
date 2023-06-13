@@ -62,13 +62,13 @@ pub struct QueryExpr {
 External variables are fetched from external sources such as APIs. They require an external reference input, which includes a URL, a method (_`Get`_, _`Post`_, _`Push`_, _`Pass`_, _`Delete`_), a header, a body, and a [JSON selector](./query.mdx#selectors). External variables can be [updated](#update-functions-and-loops) or specified to be [reinitialized](#reinitialization). 
 
 ```rust variable.rs
-pub struct ExternalVariable { 
+pub struct ExternalVariable {
     pub kind: VariableKind,
     pub name: String,
     pub init_fn: ExternalExpr,
     pub reinitialize: bool,
     pub value: Option<String>, //none if uninitialized
-    pub update_fn: Option<UpdateFn>, 
+    pub update_fn: Option<UpdateFn>,
 }
 
 
@@ -87,14 +87,15 @@ Variables can be updated using an update function, which can change the value of
 
 ```rust variable.rs
 
-pub enum UpdateFnValue { 
+pub enum UpdateFnValue {
     Uint(NumValue<Uint256, NumExprOp, IntFnOp>),
     Int(NumValue<i128, NumExprOp, IntFnOp>),
     Decimal(NumValue<Decimal256, NumExprOp, DecimalFnOp>),
     Timestamp(NumValue<i128, NumExprOp, IntFnOp>),
-    BlockHeight(NumValue<i128, NumExprOp, IntFnOp>), 
+    BlockHeight(NumValue<i128, NumExprOp, IntFnOp>),
     Bool(String), 
 }
+
 
 #[cw_serde]
 pub struct UpdateFn { 
