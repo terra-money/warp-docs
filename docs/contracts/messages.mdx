@@ -15,15 +15,39 @@ The source for Warp can be found on Github:
 
 ### CreateJobMsg
 
-Creates a job using a name, [condition](../how/condition.mdx), execute messages, and a reward. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. Jobs can also contain a _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context. 
+Creates a job using a name, [condition](../how/condition.mdx), execute messages, a reward, and other properties. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. Jobs can also contain a _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context. 
 
 
 ```rust Rust
-pub struct CreateJobMsg {
+pub struct Job {
+    // unique identifier for each Job
+    pub id: Uint64,
+    // job creator address
+    pub owner: Addr,
+    // UTC timestamp for when the Job was submitted
+    pub last_update_time: Uint64,
+    // name given to the Job
     pub name: String,
+    // a description of the Job
+    pub description: String,
+    // a label for the Job
+    pub labels: Vec<String>,
+    // status of the Job (pending, executed, failed, canceled)
+    pub status: JobStatus,
+    // condition set dictating when the Job should be executed
     pub condition: Condition,
+    // a Job message to be executed when the conditions are met
     pub msgs: Vec<String>,
+    // variables to be used in a condition or Job message
+    pub vars: Vec<Variable>,
+    // whether the Job is recurring
+    pub recurring: bool,
+    // whether to requeue the Job after being evicted
+    pub requeue_on_evict: bool,
+    // reward to distribute to the keeper when the Job has been executed
     pub reward: Uint128,
+    // assets that can be withdrawn back to the account after Job completion
+    pub assets_to_withdraw: Vec<AssetInfo>,
 }
 ```
 
@@ -43,13 +67,14 @@ pub struct DeleteJobMsg {
 
 ### UpdateJobMsg
 
-Allows the job owner to update a job. 
+Allows the job owner to update Job properties or add more rewards. 
 
 ```rust Rust
 pub struct UpdateJobMsg {
     pub id: Uint64,
     pub name: Option<String>,
-    pub condition: Option<Condition>,
+    pub description: Option<String>,
+    pub labels: Option<Vec<String>>,
     pub added_reward: Option<Uint128>,
 }
 ```
@@ -58,14 +83,32 @@ pub struct UpdateJobMsg {
 
 ### ExecuteJobMsg
 
-Allows a keeper to execute a pending job if the conditions are met. Upon execution of the job, the reward will be released to the keeper. 
+Allows a keeper to execute a pending job if the conditions are met. Upon execution of the job, the reward will be released to the keeper. External inputs can be specified for Job execution. 
 
 ```rust Rust
 pub struct ExecuteJobMsg {
     pub id: Uint64,
+    pub external_inputs: Option<Vec<ExternalInput>>,
+}
+
+pub struct ExternalInput {
+    pub name: String,
+    pub input: String,
 }
 
 ```
+
+### EvictJobMsg
+
+[Evict](../how/overview.mdx#eviction) jobs in the queue and collect a 5% eviction fee. 
+
+```rust Rust
+pub struct EvictJobMsg {
+    pub id: Uint64,
+}
+```
+
+---
 
 </CH.Scrollycoding>
 
@@ -75,10 +118,12 @@ pub struct ExecuteJobMsg {
 
 ### CreateAccountMsg
 
-Create a Warp account.
+Create a Warp account. Warp accounts can be created with funds. You can also create an account, create a Job, and fund the account all in one message using [_`CreateJobMsg`_](#jobs).
 
 ```rust Rust
-pub struct CreateAccountMsg {}
+pub struct CreateAccountMsg {
+    pub funds: Option<Vec<Fund>>,
+}
 ```
 
 </CH.Scrollycoding>
@@ -90,15 +135,21 @@ pub struct CreateAccountMsg {}
 
 ### UpdateConfigMsg
 
-Update the config message. 
+Update the config message for Warp configuration. 
 
 ```rust Rust
 pub struct UpdateConfigMsg {
-    pub owner: Option<Addr>,
-    pub warp_token_address: Option<String>,
+    pub owner: Option<String>,
+    pub fee_collector: Option<String>,
     pub minimum_reward: Option<Uint128>,
-    pub creation_fee_percentage: Option<Uint128>,
-    pub cancellation_fee_percentage: Option<Uint128>,
+    pub creation_fee_percentage: Option<Uint64>,
+    pub cancellation_fee_percentage: Option<Uint64>,
+    pub template_fee: Option<Uint128>,
+    pub t_max: Option<Uint64>,
+    pub t_min: Option<Uint64>,
+    pub a_max: Option<Uint128>,
+    pub a_min: Option<Uint128>,
+    pub q_max: Option<Uint64>,
 }
 ```
 </CH.Scrollycoding>
