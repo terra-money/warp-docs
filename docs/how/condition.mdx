@@ -21,8 +21,6 @@ pub enum Condition {
 ```
 
 
-
-
 ## Expressions
 
 Expressions contain comparisons of popular data types, such as integers, unsigned integers, timestamps, booleans, strings, and more.
@@ -39,19 +37,22 @@ pub enum Expr {
 }
 ```
 
-
-
-
 ## Values
 
-A value is the simplest type of input used in an expression. In double-sided [general expressions](#general-expressions), the value can either be a primitive type or a query that gets a primitive type. 
+A value is the simplest type of input used in an expression. In double-sided [general expressions](#general-expressions), the value can either be a primitive type or a query that gets a primitive type.
 
 ```rust condition.rs
 pub enum Value<T> {
     Simple(T),
     Ref(String),
 }
+```
 
+### NumValue
+
+`NumValue` represents a numeric value that can be used in an expression with several variants:
+
+```rust condition.rs
 pub enum NumValue<T, ExprOp, FnOp> {
     Simple(T),
     Expr(NumExprValue<T, ExprOp, FnOp>),
@@ -64,22 +65,16 @@ pub enum NumEnvValue {
     Time,
     BlockHeight,
 }
-
-pub struct NumExprValue<T, ExprOp, FnOp> {
-    pub left: Box<NumValue<T, ExprOp, FnOp>>,
-    pub op: ExprOp,
-    pub right: Box<NumValue<T, ExprOp, FnOp>>,
-}
-
-pub struct NumFnValue<T, ExprOp, FnOp> {
-    pub op: FnOp,
-    pub right: Box<NumValue<T, ExprOp, FnOp>>,
-}
 ```
 
+- `Simple(T)`: a simple numeric value.
+- `Expr(NumExprValue<T, ExprOp, FnOp>)`: a numeric expression that can be evaluated to a numeric value. It contains a `NumExprValue` struct that has a left operand, an operator, and a right operand.
+- `Ref(String)`: represents a reference to a numeric value stored elsewhere.
+- `Fn(NumFnValue<T, ExprOp, FnOp>)`: represents a function that takes a numeric value as input and returns a numeric value as output. It contains a `NumFnValue` struct that has an operator and a right operand.
+- `Env(NumEnvValue)`: represents a special numeric value that is derived from the environment, such as the current block height or timestamp. It contains a `NumEnvValue` enum that specifies the type of environment value.
+
+
 ## General expressions
-
-
 
 General expressions or _`GenExpr`_ are used to compare two values using a:
 
@@ -97,14 +92,11 @@ pub struct GenExpr<Type, Op> {
 }
 ```
 
-
 <Admonition type="tip" icon="✅" title="Comparing values">
 
 Only values of the same _`Type`_ can be compared when writing an expression. 
 
 </Admonition>
-
-
 
 ### String operators
 
@@ -137,11 +129,7 @@ pub enum NumOp {
 }
 ```
 
-
-
 ## Time expressions
-
-
 
 Time expressions are like regular unsigned integer expressions, except they only contain a left value and an operator. The right value is filled by a _`BlockHeight`_ or _`Timestamp`_, depending on the value type.
 
@@ -151,8 +139,6 @@ pub struct TimeExpr {
     pub op: TimeOp,
 }
 ```
-
-
 
 ### Time operators
 
@@ -165,9 +151,7 @@ pub enum TimeOp {
 }
 ```
 
-
-
-### Blockheight
+### Block expressions
 
 Blockheights can be specified as a _`Unit64`_ and a [number operator](#number-operators). 
 
@@ -181,8 +165,8 @@ pub struct BlockExpr {
 
 ## Queries
 
-Queries can be used in expressions as variables. For more information on queries, visit the [Query page](./query.mdx).
+In addition to being used directly in expressions, queries can also be used as variables in the `Condition` and `Expr`. This allows for more complex expressions that can dynamically reference and compare different types of data. For more information on queries, visit the [Query page](./query.mdx).
 
 ### Bool
 
-Queries can also be written as boolean expressions, in which a [query selector] is evaluated as a boolean. 
+Queries can also be written as boolean expressions, in which a [query selector](./query.mdx#selectors) is evaluated as a boolean. 
