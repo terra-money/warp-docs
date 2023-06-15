@@ -106,4 +106,4 @@ pub struct UpdateFn {
 
 ### Reinitialize
 
-Expression and Query variables contain a _`reinitialize`_ boolean, which specifies whether the query or external variable should be fetched again. If this boolean is set to _`true`_, the job will be run again after completion (on success or failure) and the data will be fetched again upon each subsequent job. Vasssriables cannot be updated using an [_`UpdateFn`_](#update-functions-and-loops) if the _`reinitialize`_ boolean is _`true`_. 
+Expression and Query variables contain a _`reinitialize`_ boolean, which specifies whether the query or external variable should be fetched again. If this boolean is set to _`true`_, the job will be run again after completion (on success or failure) and the data will be fetched again upon each subsequent job. Variables cannot be updated using an [_`UpdateFn`_](#update-functions-and-loops) if the _`reinitialize`_ boolean is _`true`_. 
