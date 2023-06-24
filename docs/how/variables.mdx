@@ -19,6 +19,7 @@ pub enum VariableKind {
     Bool,
     Amount,
     Asset,
+    Json,
 }
 ```
 
@@ -83,7 +84,7 @@ pub struct ExternalExpr {
 
 ## Update functions and loops
 
-Variables can be updated using an update function, which can change the value of the variable upon the success or failure of a job. By specifying whether a variable should update after completion, jobs can be looped. You can specify how a value should be updated upon success or upon failure, and you can use an update function to update the value. Update functions can include a _`NumValue`_ and an operator to update the value. [A _`NumValue`_ can also reference an expression or variable such as a query](./condition.mdx#values), allowing for further looping and update capability. 
+Variables can be updated using an update function, which can change the value of the variable upon the success or failure of a job. By specifying whether a variable should update after completion, jobs can be looped. You can specify how a value should be updated upon success or upon failure, and you can use an update function to update the value. Update functions can include a _`NumValue`_ and an operator to update the value. [A _`NumValue`_ can also reference an expression or variable such as a query](./condition.mdx#values), allowing for further looping and update capability. Update functions and loops can only be applied if _`recurring`_ is set to _`true`_ in the [job message](../contracts/messages.mdx).  
 
 ```rust variable.rs
 
@@ -106,4 +107,12 @@ pub struct UpdateFn {
 
 ### Reinitialize
 
-Expression and Query variables contain a _`reinitialize`_ boolean, which specifies whether the query or external variable should be fetched again. If this boolean is set to _`true`_, the job will be run again after completion (on success or failure) and the data will be fetched again upon each subsequent job. Variables cannot be updated using an [_`UpdateFn`_](#update-functions-and-loops) if the _`reinitialize`_ boolean is _`true`_. 
+Expression and Query variables contain a _`reinitialize`_ boolean, which specifies whether the query or external variable should be fetched again. If this boolean is set to _`true`_, the job will be run again after completion (on success or failure) and the data will be fetched again upon each subsequent job. Variables cannot be updated using an [_`UpdateFn`_](#update-functions-and-loops) if the _`reinitialize`_ boolean is set to _`true`_ and if _`recurring`_ is set to _`true`_ in the [job message](../contracts/messages.mdx).  
+
+## Nesting variables
+
+rule for nesting: you can only nested varN with [varN-1, …, var0]
+
+{ vars: [var0, var1, …, varN] } in job - you can only reference/nest previous vars in sequence
+
+update structs/types on Variables
