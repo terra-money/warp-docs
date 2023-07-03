@@ -74,11 +74,11 @@ pub struct ExternalVariable {
 
 
 pub struct ExternalExpr {
-    pub url: String, 
-    pub method: Option<Method>, 
-    pub headers: Option<Vec<String>>,
+    pub url: String,
+    pub method: Option<Method>,
+    pub headers: Option<HashMap<String, String>>,
     pub body: Option<String>,
-    pub selector: String, 
+    pub selector: String,
 }
 ```
 
@@ -94,12 +94,11 @@ pub enum UpdateFnValue {
     Decimal(NumValue<Decimal256, NumExprOp, DecimalFnOp>),
     Timestamp(NumValue<i128, NumExprOp, IntFnOp>),
     BlockHeight(NumValue<i128, NumExprOp, IntFnOp>),
-    Bool(String), 
+    Bool(String), //ref
 }
 
 
-#[cw_serde]
-pub struct UpdateFn { 
+pub struct UpdateFn {
     pub on_success: Option<UpdateFnValue>,
     pub on_error: Option<UpdateFnValue>,
 }
@@ -111,8 +110,4 @@ Expression and Query variables contain a _`reinitialize`_ boolean, which specifi
 
 ## Nesting variables
 
-rule for nesting: you can only nested varN with [varN-1, …, var0]
-
-{ vars: [var0, var1, …, varN] } in job - you can only reference/nest previous vars in sequence
-
-update structs/types on Variables
+Variables can be nested or referenced, allowing a reference of a result of one variable to appear in a different variable. However, you can only nest or reference previous variables in a sequence. For example, in the following code, _`{ vars: [var0, var1, var2, var3,] }`_, _`var2`_ can only contain the variables that came before it, and cannot reference _`var3`_. 
