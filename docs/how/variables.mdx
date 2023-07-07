@@ -84,7 +84,7 @@ pub struct ExternalExpr {
 
 ## Update functions and loops
 
-Variables can be updated using an update function, which can change the value of the variable upon the success or failure of a job. By specifying whether a variable should update after completion, jobs can be looped. You can specify how a value should be updated upon success or upon failure, and you can use an update function to update the value. Update functions can include a _`NumValue`_ and an operator to update the value. [A _`NumValue`_ can also reference an expression or variable such as a query](./condition.mdx#values), allowing for further looping and update capability. Update functions and loops can only be applied if _`recurring`_ is set to _`true`_ in the [job message](../contracts/messages.mdx).  
+Variables can be updated using an update function, which can change the value of the variable upon the success or failure of a job. By specifying whether a variable should update after completion, jobs can be looped. You can specify how a value should be updated upon success or failure, and you can use an update function to update the value. Update functions can include a _`NumValue`_ and an operator to update the value. [A _`NumValue`_ can also reference an expression or variable such as a query](./condition.mdx#values), allowing for further looping and update capability. Update functions and loops can only be applied if _`recurring`_ is set to _`true`_ in the [job message](../contracts/messages.mdx).  
 
 ```rust variable.rs
 
