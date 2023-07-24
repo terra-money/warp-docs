@@ -21,19 +21,36 @@ Returns the job information from a given job _`id`_.
 <CH.Code>
 
 
-
-```rust Rust-struct
-pub struct QueryJobMsg {
-    pub id: Uint64,
+```js JSON
+{
+  "query_job": {
+    "id": "200"
+  }
 }
 ```
-
 ---
 
-```rust Response
-pub struct JobResponse {
-    pub job: Job,
+
+```js Response
+{
+  "job": {
+    "id": "number",
+    "owner": "string",
+    "last_update_time": "number",
+    "name": "string",
+    "description": "string",
+    "labels": ["string", "string", "..."],
+    "status": {<JobStatus>},
+    "condition": {<Condition>},
+    "msgs": ["string", "string", "..."],
+    "vars": [],
+    "recurring": "boolean",
+    "requeue_on_evict": "boolean",
+    "reward": "number",
+    "assets_to_withdraw": []
+  }
 }
+
 
 ```
 
@@ -51,7 +68,7 @@ Queries and returns job information based on:
 - a job's name
 - a job's status
 - jobs specified by a status and a boolean. 
-- all job's created after a specific time or blockheight. 
+- all job's created after a specific time or block height. 
 
 At least one of the previous fields must be specified to return a valid response. 
 
@@ -59,78 +76,48 @@ Response sizes can be limited using _`limit`_.
 
 <CH.Code>
 
-```rust Rust-struct
-pub struct QueryJobsMsg {
-    pub ids: Option<Vec<Uint64>>,
-    pub active: Option<bool>,
-    pub owner: Option<Addr>,
-    pub name: Option<String>,
-    pub job_status: Option<JobStatus>,
-    pub condition_status: Option<bool>,
-    pub start_after: Option<JobIndex>,
-    pub limit: Option<u32>,
+```js JSON
+{
+  "query_jobs": {
+    "ids": ["number", "number", "..."],
+    "active": "boolean",
+    "owner": "string",
+    "name": "string",
+    "job_status": "JobStatus object",
+    "condition_status": "boolean",
+    "start_after": "JobIndex object",
+    "limit": "number"
+  }
 }
 ```
 
 ---
 
-```rust Response
-pub struct JobsResponse {
-    pub jobs: Vec<Job>,
-    pub total_count: usize,
+```js Response
+{
+  "jobs": [
+    {
+      "id": "number",
+      "owner": "string",
+      "last_update_time": "number",
+      "name": "string",
+      "description": "string",
+      "labels": ["string", "string", "..."],
+      "status": "JobStatus object",
+      "condition": "Condition object",
+      "msgs": ["string", "string", "..."],
+      "vars": ["Variable object", "Variable object", "..."],
+      "recurring": "boolean",
+      "requeue_on_evict": "boolean",
+      "reward": "number",
+      "assets_to_withdraw": ["AssetInfo object", "AssetInfo object", "..."]
+    },
+    // ... more Job objects
+  ],
+  "total_count": "number"
 }
 
 ```
-
-</CH.Code>
-
----
-
-### QueryResolve<wbr/>JobConditionMsg
-
-Queries whether a job's condition has been resolved by specifying the job id. Returns a boolean response. 
-
-<CH.Code>
-
-```rust Rust-struct
-pub struct QueryResolveJobConditionMsg {
-    pub id: Uint64,
-}
-```
-
----
-
-```rust Response
-
-    #[returns(bool)]
-
-```
-
-
-</CH.Code>
-
----
-
-### Query<wbr/>Resolve<wbr/>ConditionMsg
-
-Queries whether a condition has been resolved by submitting the condition. Returns a boolean response. 
-
-<CH.Code>
-
-```rust Rust-struct
-pub struct QueryResolveConditionMsg {
-    pub condition: Condition,
-}
-```
-
----
-
-```rust Response
-
-    #[returns(bool)]
-
-```
-
 
 </CH.Code>
 
@@ -142,19 +129,23 @@ Simulates a query given a [query request](../how/condition.mdx#queryrequest) mes
 
 <CH.Code>
 
-```rust Rust-struct
-pub struct SimulateQueryMsg {
-    pub query: QueryRequest<String>,
+```js JSON
+{
+  "simulate_query": {
+    "query": "string"
+  }
 }
+
 ```
 
 ---
 
-```rust Response
-pub struct SimulateResponse {
-    pub response: String,
+```js Response
+{
+  "simulate_response": {
+    "response": "<resolved query expression>"
+  }
 }
-
 ```
 
 </CH.Code>
@@ -167,25 +158,25 @@ Queries an account by owner. Returns the owner and account addresses.
 
 <CH.Code>
 
-```rust Rust-struct
-pub struct QueryAccountMsg {
-    pub owner: String,
+```js JSON
+{
+  "query_account": {
+    "owner": "string"
+  }
 }
+
 ```
 
 ---
 
-```rust Response focus=1:8
-pub struct AccountResponse {
-    pub account: Account,
-}
-
-pub struct Account {
-    pub owner: Addr,
-    pub account: Addr,
+```js Response
+{
+  "account": {
+    "owner": "<owner address>",
+    "account": "<account address>"
+  }
 }
 ```
-
 
 </CH.Code>
 
@@ -195,49 +186,71 @@ pub struct Account {
 
 Queries accounts. Response sizes can be limited using _`limit`_. 
 
-
 <CH.Code>
 
-```rust Rust-struct
-pub struct QueryAccountsMsg {
-    pub start_after: Option<String>,
-    pub limit: Option<u32>,
+```js JSON
+{
+  "query_accounts": {
+    "start_after": "string",
+    "limit": "number"
+  }
 }
+
 ```
 
 ---
 
-```rust Response
-pub struct AccountsResponse {
-    pub accounts: Vec<Account>,
-}
-
-pub struct Account {
-    pub owner: Addr,
-    pub account: Addr,
+```js Response
+{
+  "accounts": [
+    {
+      "owner": "<owner address>",
+      "account": "<account address>"
+    },
+    {
+      "owner": "<owner address>",
+      "account": "<account address>"
+    },
+    ...
+  ]
 }
 ```
-
 
 </CH.Code>
 
 ---
 
-### Query<wbr/>AccountsMsg
+### Query<wbr/>ConfigMsg
 
-Queries the config.
+Queries the config. The response is the configuration for the Warp contract. 
 
 <CH.Code>
-```rust Rust-struct
-pub struct QueryConfigMsg {}
+
+```js JSON
+{
+  "query_config": {}
+}
 
 ```
 
 ---
 
-```rust Response
-pub struct ConfigResponse {
-    pub config: Config,
+```js Response
+{
+  "config": {
+    "owner": "<owner_address>",
+    "fee_denom": "<fee_denomination>",
+    "fee_collector": "<fee_collector_address>",
+    "warp_account_code_id": "<warp_account_code_id>",
+    "minimum_reward": "<minimum_reward>",
+    "creation_fee_percentage": "<creation_fee_percentage>",
+    "cancellation_fee_percentage": "<cancellation_fee_percentage>",
+    "t_max": "<t_max>",
+    "t_min": "<t_min>",
+    "a_max": "<a_max>",
+    "a_min": "<a_min>",
+    "q_max": "<q_max>"
+  }
 }
 ```
 
