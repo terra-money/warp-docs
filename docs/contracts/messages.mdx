@@ -17,21 +17,10 @@ The source for Warp can be found on Github:
 
 Creates a job using a name, [condition](../how/condition.mdx), execute messages, a reward, and other properties. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. Jobs can also contain _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context. 
 
+You can view an example of a _`CreateJobMsg`_ message on [Chainscope](https://chainsco.pe/terra2/address/terra1mg93d4g69tsf3x6sa9nkmkzc9wl38gdrygu0sewwcwj6l2a4089sdd7fgj/smart/ewogICJxdWVyeV9qb2IiOiB7ImlkIjoiMjAwIn0KfQ==).
+
 <CH.Code>
-```rust Rust
-pub struct pub struct CreateJobMsg {
-    pub name: String,
-    pub description: String,
-    pub labels: Vec<String>,
-    pub condition: Condition,
-    pub msgs: Vec<String>,
-    pub vars: Vec<Variable>,
-    pub recurring: bool,
-    pub requeue_on_evict: bool,
-    pub reward: Uint128,
-    pub assets_to_withdraw: Option<Vec<AssetInfo>>,
-} 
-```
+
 ```js JSON
 {
   "name": "<String>",
@@ -46,6 +35,22 @@ pub struct pub struct CreateJobMsg {
   "assets_to_withdraw": ["<AssetInfo>", "<AssetInfo>", "..."]
 }
 ```
+
+```rust Rust
+pub struct pub struct CreateJobMsg {
+    pub name: String,
+    pub description: String,
+    pub labels: Vec<String>,
+    pub condition: Condition,
+    pub msgs: Vec<String>,
+    pub vars: Vec<Variable>,
+    pub recurring: bool,
+    pub requeue_on_evict: bool,
+    pub reward: Uint128,
+    pub assets_to_withdraw: Option<Vec<AssetInfo>>,
+} 
+```
+
 </CH.Code>
 
 
@@ -55,17 +60,40 @@ pub struct pub struct CreateJobMsg {
 
 Allows the Job owner to delete a pending job. Deleted Job messages are still stored in the index and given a _`Cancelled`_ status. 
 
+<CH.Code>
+
+```js JSON
+{
+  "id": "<Uint64>"
+}
+```
+
 ```rust Rust
 pub struct DeleteJobMsg {
     pub id: Uint64,
 }
 ```
 
+</CH.Code>
+
+
 ---
 
 ### UpdateJobMsg
 
 Allows the job owner to update Job properties or add more rewards. 
+
+<CH.Code>
+
+```js JSON
+{
+  "id": "<Uint64>",
+  "name": "<Optional String>",
+  "description": "<Optional String>",
+  "labels": ["<Optional String 1>", "<Optional String 2>", "..."],
+  "added_reward": "<Optional Uint128>"
+}
+```
 
 ```rust Rust
 pub struct UpdateJobMsg {
@@ -77,11 +105,29 @@ pub struct UpdateJobMsg {
 }
 ```
 
+</CH.Code>
+
 ---
 
 ### ExecuteJobMsg
 
-Allows a keeper to execute a pending job if the conditions are met. Upon execution of the job, the reward will be released to the keeper. External inputs can be specified for Job execution. 
+Allows a keeper to execute a pending job if the conditions are met. Upon execution of the job, the reward will be released to the keeper. External inputs can be specified for the Job execution. 
+
+<CH.Code>
+
+
+```js JSON
+{
+  "id": "<Uint64>",
+  "external_inputs": [
+    {
+      "name": "<String>",
+      "value": "<String>"
+    },
+    // ...
+  ]
+}
+```
 
 ```rust Rust
 pub struct ExecuteJobMsg {
@@ -96,15 +142,28 @@ pub struct ExternalInput {
 
 ```
 
+</CH.Code>
+
+
 ### EvictJobMsg
 
 [Evict](../how/overview.mdx#eviction) jobs in the queue and collect a 5% eviction fee. 
+
+<CH.Code>
+
+```js JSON
+{
+    "job_id": <value>
+}
+```
 
 ```rust Rust
 pub struct EvictJobMsg {
     pub id: Uint64,
 }
 ```
+
+</CH.Code>
 
 ---
 
@@ -116,13 +175,36 @@ pub struct EvictJobMsg {
 
 ### CreateAccountMsg
 
-Create a Warp account. Warp accounts can be created with funds. You can also create an account, create a Job, and fund the account all in one message using [_`CreateJobMsg`_](#jobs).
+Create a Warp account. Warp accounts can be created with funds. When used along with the [_`CreateJobMsg`_](#jobs), you can create an account, create a Job, and fund the account all in one transaction.
+
+
+<CH.Code>
+
+```js JSON
+{
+  "funds": [
+    {
+      "Cw20": {
+        "contract_addr": "terra1...",
+        "amount": "100"
+      }
+    },
+    {
+      "Cw721": {
+        "contract_addr": "terra1...",
+        "token_id": "12345"
+      }
+    }
+  ]
+}
+```
 
 ```rust Rust
 pub struct CreateAccountMsg {
     pub funds: Option<Vec<Fund>>,
 }
 ```
+</CH.Code>
 
 </CH.Scrollycoding>
 
@@ -139,8 +221,15 @@ Update the config message for Warp configuration.
 pub struct UpdateConfigMsg {
     pub owner: Option<String>,
     pub fee_denom: Option<String>,
-    pub template_fee: Option<Uint128>,
     pub fee_collector: Option<String>,
+    pub minimum_reward: Option<Uint128>,
+    pub creation_fee_percentage: Option<Uint64>,
+    pub cancellation_fee_percentage: Option<Uint64>,
+    pub t_max: Option<Uint64>,
+    pub t_min: Option<Uint64>,
+    pub a_max: Option<Uint128>,
+    pub a_min: Option<Uint128>,
+    pub q_max: Option<Uint64>,
 }
 ```
 </CH.Scrollycoding>
