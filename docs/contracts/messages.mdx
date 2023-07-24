@@ -15,47 +15,45 @@ The source for Warp can be found on Github:
 
 ### CreateJobMsg
 
-Creates a job using a name, [condition](../how/condition.mdx), execute messages, a reward, and other properties. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. Jobs can also contain a _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context. 
+Creates a job using a name, [condition](../how/condition.mdx), execute messages, a reward, and other properties. Jobs are stored in an index. Successfully created jobs are given the _`Pending`_ status. Jobs can also contain _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context. 
 
-
+<CH.Code>
 ```rust Rust
-pub struct Job {
-    // unique identifier for each Job
-    pub id: Uint64,
-    // job creator address
-    pub owner: Addr,
-    // UTC timestamp for when the Job was submitted
-    pub last_update_time: Uint64,
-    // name given to the Job
+pub struct pub struct CreateJobMsg {
     pub name: String,
-    // a description of the Job
     pub description: String,
-    // a label for the Job
     pub labels: Vec<String>,
-    // status of the Job (pending, executed, failed, canceled)
-    pub status: JobStatus,
-    // condition set dictating when the Job should be executed
     pub condition: Condition,
-    // a Job message to be executed when the conditions are met
     pub msgs: Vec<String>,
-    // variables to be used in a condition or Job message
     pub vars: Vec<Variable>,
-    // whether the Job is recurring
     pub recurring: bool,
-    // whether to requeue the Job after being evicted
     pub requeue_on_evict: bool,
-    // reward to distribute to the keeper when the Job has been executed
     pub reward: Uint128,
-    // assets that can be withdrawn back to the account after Job completion
-    pub assets_to_withdraw: Vec<AssetInfo>,
+    pub assets_to_withdraw: Option<Vec<AssetInfo>>,
+} 
+```
+```js JSON
+{
+  "name": "<String>",
+  "description": "<String>",
+  "labels": ["<String>", "<String>", "..."],
+  "condition": "<Condition>",
+  "msgs": ["<String>", "<String>", "..."],
+  "vars": ["<Variable>", "<Variable>", "..."],
+  "recurring": "<bool>",
+  "requeue_on_evict": "<bool>",
+  "reward": "<Uint128>",
+  "assets_to_withdraw": ["<AssetInfo>", "<AssetInfo>", "..."]
 }
 ```
+</CH.Code>
+
 
 ---
 
 ### DeleteJobMsg
 
-Allows the Job owner to delete a pending job. Deleted Job messages are still stored in the index and given a _`Canelled`_ status. 
+Allows the Job owner to delete a pending job. Deleted Job messages are still stored in the index and given a _`Cancelled`_ status. 
 
 ```rust Rust
 pub struct DeleteJobMsg {
@@ -140,16 +138,9 @@ Update the config message for Warp configuration.
 ```rust Rust
 pub struct UpdateConfigMsg {
     pub owner: Option<String>,
-    pub fee_collector: Option<String>,
-    pub minimum_reward: Option<Uint128>,
-    pub creation_fee_percentage: Option<Uint64>,
-    pub cancellation_fee_percentage: Option<Uint64>,
+    pub fee_denom: Option<String>,
     pub template_fee: Option<Uint128>,
-    pub t_max: Option<Uint64>,
-    pub t_min: Option<Uint64>,
-    pub a_max: Option<Uint128>,
-    pub a_min: Option<Uint128>,
-    pub q_max: Option<Uint64>,
+    pub fee_collector: Option<String>,
 }
 ```
 </CH.Scrollycoding>
