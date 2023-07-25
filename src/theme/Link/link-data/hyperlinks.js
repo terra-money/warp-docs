@@ -4,7 +4,7 @@ const hyperlinks = [
     innerHTML: 'Warp Home',
   },
   {
-    href: 'https://beta.warp.money/',
+    href: 'https://app.warp.money/',
     innerHTML: 'Warp App',
   },
   {
