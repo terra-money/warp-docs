@@ -1,25 +1,38 @@
 ---
 sidebar_position: 2
 ---
+import Admonition from '@theme/Admonition';
 
 # Keeper guide
 
-For general information on keepers, visit the [Overview page](../how/overview.mdx)
+For general information on keepers, visit the [Overview page](../how/overview.mdx). 
+
+There are separate keeper bot scripts for Terra and Injective. The Terra script is stored under [`/bot.terra.ts`](https://github.com/terra-money/warp-sdk/blob/feature/cross-chain/src/bot.terra.ts) and the Injective script is stored in [`/bot.injective.ts`](https://github.com/terra-money/warp-sdk/blob/feature/cross-chain/src/bot.injective.ts). 
+
 
 ## Run a keeper
 
 Running a keeper is simple. Warp provides a [GitHub repository](https://github.com/terra-money/warp-sdk) that contains the logic for a simple keeper. Follow these steps to create a keeper. 
 
-1. Clone the repo.
+1. Clone the [repo](https://github.com/terra-money/warp-sdk).
 
-2. Add your mnemonic into the _`.env`_ file.
+2. Add your mnemonic to the _`.env`_ file.
 
-3. Run the following commands from the cloned repository:
+3. Run the following commands from the cloned repository depending on your chain. 
 
-```sh Commands
-yarn install
-yarn start
-```
+    For Terra: 
+
+    ```sh Terra
+    yarn install
+    yarn bot-terra
+    ```
+
+    For Injective:
+
+    ```sh Injective
+    yarn install
+    yarn bot-injective
+    ```
 
 Your keeper should be up and running. It will evaluate conditions in the queue and execute job messages whose conditions have been met. Once executed, your keeper will receive the rewards included with each job. 
 
