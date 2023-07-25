@@ -13,7 +13,7 @@ This tutorial will walk you through making a limit order template to swap Luna f
 
 ## Set up the job template 
 
-1. Open the [Warp app](https://beta.warp.money/) in your browser and connect your wallet. 
+1. Open the [Warp app](https://app.warp.money/) in your browser and connect your wallet. 
 
 2. On the left menu, click the "**+**" symbol to open the creation menu. 
 
@@ -21,11 +21,7 @@ This tutorial will walk you through making a limit order template to swap Luna f
 
 <img className="readme-img-md" src="/img/template/1-item.png" />
 
-4. There are two types of templates you can create. Basic templates are used for templating job messages or queries. Advanced templates include conditions, as well as job messages. For this tutorial, select the **Advanced mode**. 
-
-<img className="readme-img-md" src="/img/template/2-new-job.png" />
-
-5. Enter "Swap template" as your template name. For **Template Type**, select **job**. 
+4. Enter "Swap template" as your template name. For **Template Type**, select **job**. 
 
 <img className="readme-img-lg" src="/img/template/3-new-template.png" />
 
@@ -45,7 +41,7 @@ Similar to variables in programming languages, Warp variables are placeholders f
 
 4. Click Save. 
 
-5. Create another variable with the name _`receive_amount`_. Select **amount** as the **Variable type**. For the **Value,** input _`100`_.
+5. Create another static variable with the name _`receive_amount`_. Select **amount** as the **Variable type**. For the **Value,** input _`100`_.
 
 4. Click Save. 
 
@@ -117,7 +113,7 @@ Now you can include your job message in the template.
 
 3. In order to input your template variables into the message, you'll need to change the fund amount to the _`{send_amount}`_ variable. The format for adding reference values in messages is _`$warp.variable.variable-name`_. 
 
-In line 27, change _`1000000`_ to _`$warp.variable.send_amount`_.
+In line 27, change _`1000000`_ to _`$warp.variable.send_amount`_, then click **Save**. 
 
 
 ```javascript Message mark=27[50:75] focus=27
@@ -181,7 +177,7 @@ To create a condition based on a query, create an integer expression by followin
 
 <CH.Scrollycoding>
 
-7. Click **Message** and copy and paste the following query.
+7. Under **Message**, copy and paste the following query.
 
 ```javascript Query
 {
