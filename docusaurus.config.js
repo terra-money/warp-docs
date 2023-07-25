@@ -99,7 +99,7 @@ module.exports = async function config() {
               "aria-label": "Get started",
             },
             {
-              href: "https://beta.warp.money",
+              href: "https://app.warp.money",
               position: "right",
               label: "Warp App",
               className: "header-terra-link",
