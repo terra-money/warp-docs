@@ -26,7 +26,7 @@ This code outlines a job that harvests rewards for the Eris protocol every day. 
 
 `If the current time is greater than the next execution time, execute the harvest message.`
 
- The job is set as `recurring`, meaning that it will be requeued after execution. 
+The job is set as `recurring`, meaning that it will be requeued after execution. 
 
 ```js Example.ts
 import { LCDClient, LCDClientConfig, MnemonicKey, Wallet } from '@terra-money/feather.js';
@@ -117,7 +117,7 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 
 ## The variable
 
-1. Because this job is recurring, it requires a [variable](../how/variables.mdx) that needs to be updated upon every harvest and increment the harvest time by 1 day. Just like in other programming languages, you can provide variables in the Warp SDK that can be [updated](../how/variables.mdx#update-functions-and-loops). 
+1. Because this job needs to be run every day, it requires a [variable](../how/variables.mdx). Every time the job is run successfully, the execution time variable will be incremented 1 day. Just like in other programming languages, you can provide variables in the Warp SDK that can be [updated](../how/variables.mdx#update-functions-and-loops). 
 
 
 ```js Example.ts focus=21:28
@@ -157,14 +157,14 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 ```
 ---
 
-6. Next, the variable is given an initial `value`. This will be set to the time and date of the first harvest. The timestamp composer is called using `ts.date`, which takes in a JavaScript `Date` object as a parameter and returns a timestamp.
+6. Next, the variable is given an initial `value`. This value will be set to the time and date of the first harvest. The timestamp composer is called using `ts.date`, which takes in a JavaScript `Date` object as a parameter and returns a timestamp.
 
 ```js Example.ts focus=21:28 mark=25
 
 ```
 ---
 
-7. This job is recurring and contains a variable that needs to be [updated](../how/variables.mdx#update-functions-and-loops). The `.onSuccess()` method dictates that upon completion of a successful job, the `next_execution` timestamp value will be increased by 1 day by using an update function. 
+7. This code is the logic for updating the `next_execution`  variable. The `.onSuccess()` method dictates that upon completion of a successful job, the `next_execution` timestamp value will be increased by 1 day by using an [update function](../how/variables.mdx#update-functions-and-loops). 
 
 ```js Example.ts focus=21:28 mark=26
 
@@ -172,7 +172,7 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 
 ---
 
-8. Similarly, if the job should return an error upon execution, the timestamp value will be increased by an hour, and the job will be run, incrementing every hour upon failure until it is successful. 
+8. Similarly, if the job returns an error upon execution, the timestamp value will be increased by an hour, and the job will run again.  
 
 ```js Example.ts focus=21:28 mark=27
 
@@ -180,7 +180,7 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 
 ---
 
-9. The `.compose()` method is called at the end of a chain of method calls on a composer object to indicate that the composer object is complete.
+9. The `.compose()` method is called at the end of a chain of method calls indicating that the composer object is complete.
 
 ```js Example.ts focus=21:28 mark=28
 
@@ -220,7 +220,7 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 
 ---
 
-3. The job is set to be recurring, which means it will be re-added to the queue after execution and the `next_execution` variable will be updated. 
+3. The job is set to be [recurring](../how/variables.mdx#update-functions-and-loops), which means it will be re-added to the queue after execution and the `next_execution` variable will be updated. 
 
 ```js Example.ts focus=32:43 mark=37
 
@@ -240,6 +240,7 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 ```js Example.ts focus=32:43 mark=39
 
 ```
+
 ---
 
 6. The [condition](#the-condition) created earlier is specified in the job. 
