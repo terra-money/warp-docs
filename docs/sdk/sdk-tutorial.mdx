@@ -1,0 +1,286 @@
+---
+sidebar_position: 3
+hide_table_of_contents: true
+---
+# SDK tutorial
+
+The [Warp SDK](https://github.com/terra-money/warp-sdk) provides a simple way to interact with the Warp protocol's contracts. Developers can use the Warp SDK to easily create jobs, conditions, and variables in a typesafe environment. 
+
+The Warp SDK can be thought of as a new programming language, introducing condition, variable, and job syntax. You can use the autocomplete functions in your IDE to help you get the most out of the Warp SDK. 
+
+## Installation
+
+To install the Warp SDK, run the following in your project's root. You may also need to install feather.js, Terra's JavaScript SDK, or the SDK of the chain you are using. 
+
+```sh
+npm install -S @terra-money/warp-sdk
+```
+
+## Example
+
+The following example will walk you through the creation of variables, conditions, and jobs using the SDK. 
+
+<CH.Scrollycoding>
+
+This code outlines a job that harvests rewards for the Eris protocol every day. The basic logic of the job can be stated as follows:
+
+`If the current time is greater than the next execution time, execute the harvest message.`
+
+ The job is set as `recurring`, meaning that it will be requeued after execution. 
+
+```js Example.ts
+import { LCDClient, LCDClientConfig, MnemonicKey, Wallet } from '@terra-money/feather.js';
+import { uint, cond, fn, msg, variable, job, ts, WarpSdk } from '@terra-money/warp-sdk';
+
+const piscoLcdClientConfig: LCDClientConfig = {
+  lcd: 'https://pisco-lcd.terra.dev',
+  chainID: 'pisco-1',
+  gasAdjustment: 1.75,
+  gasPrices: { uluna: 0.15 },
+  prefix: 'terra',
+};
+
+const lcd = new LCDClient({
+  'pisco-1': piscoLcdClientConfig,
+});
+
+const wallet = new Wallet(lcd, new MnemonicKey({ mnemonic: '<your mnemonic here>' }));
+
+const sdk = new WarpSdk(wallet, piscoLcdClientConfig);
+const sender = wallet.key.accAddress(piscoLcdClientConfig.prefix);
+
+const nextExecution = variable
+  .static()
+  .kind('uint')
+  .name('next_execution')
+  .value(ts.date(new Date('2023-04-10T12:30:00.000Z')))
+  .onSuccess(fn.uint(uint.expr(uint.simple(ts.days(1)), 'add', uint.env('time'))))
+  .onError(fn.uint(uint.expr(uint.simple(ts.hours(1)), 'add', uint.env('time'))))
+  .compose();
+
+const condition = cond.uint(uint.env('time'), 'gt', uint.ref(nextExecution));
+
+const createJobMsg = job
+  .create()
+  .name('eris-harvest')
+  .description('This job harvests rewards for eris protocol vaults each day.')
+  .labels([])
+  .recurring(true)
+  .requeueOnEvict(true)
+  .reward('50000')
+  .cond(condition)
+  .var(nextExecution)
+  .msg(msg.execute('terra10788fkzah89xrdm27zkj5yvhj9x3494lxawzm5qq3vvxcqz2yzaqyd3enk', { harvest: {} }))
+  .compose();
+
+sdk.createJob(sender, createJobMsg).then((response) => {
+  console.log(response);
+});
+
+```
+
+---
+
+### Setup
+
+1. The first 2 lines import the [feather.js SDK](https://github.com/terra-money/feather.js) and the [Warp SDK](https://github.com/terra-money/warp-sdk). These libraries provide all the functionality for your job. 
+
+```js Example.ts focus=1:2
+
+```
+
+---
+
+2. This code initializes the Terra testnet LCD. Terra’s [Light Client Daemon](https://docs.terra.money/develop/feather-js/getting-started#2-initialize-the-lcd) allows you to connect to the blockchain, make queries, create wallets, and submit transactions. The configuration specifies the network information needed for Terra's Pisco testnet. 
+
+```js Example.ts focus=4:14
+
+```
+
+---
+
+3. Add a wallet object and connect your account by entering your mnemonic. In production, it's better to store your mnemonic key data in your environment by using `process.env.SECRET_MNEMONIC` or `process.env.SECRET_PRIV_KEY`. This practice is more secure than a hard-coded string.
+
+```js Example.ts focus=16
+
+```
+
+---
+
+4. The Warp SDK is initialized and the `sender` of the job is specified as the connected wallet account. 
+
+```js Example.ts focus=18:19
+
+```
+
+---
+
+## The variable
+
+1. Because this job is recurring, it requires a [variable](../how/variables.mdx) that needs to be updated upon every harvest and increment the harvest time by 1 day. Just like in other programming languages, you can provide variables in the Warp SDK that can be [updated](../how/variables.mdx#update-functions-and-loops). 
+
+
+```js Example.ts focus=21:28
+
+```
+
+---
+
+2. _`nextExecution`_ is declared as a [variable](../how/variables.mdx), which initializes the SDK's variable composer. Type a period after `variable` to view the available method options using your IDE's autocompletion. 
+
+
+```js Example.ts focus=21:28 mark=21
+
+```
+
+---
+
+3. This variable is [`static`](../how/variables.mdx#static-variables) because we want it to be an updatable value. The other two types of variables are [query](../how/variables.mdx#query-variables) and [external](../how/variables.mdx#external-variables), which aren't needed for this job. 
+
+```js Example.ts focus=21:28 mark=22
+
+```
+
+---
+
+4. The [`kind`](../how/variables.mdx#variablekind) for this variable is an unsigned integer (`uint`). 
+
+```js Example.ts focus=21:28 mark=23
+
+```
+---
+
+5. This variable is named `next_execution`. 
+
+```js Example.ts focus=21:28 mark=24
+
+```
+---
+
+6. Next, the variable is given an initial `value`. This will be set to the time and date of the first harvest. The timestamp composer is called using `ts.date`, which takes in a JavaScript `Date` object as a parameter and returns a timestamp.
+
+```js Example.ts focus=21:28 mark=25
+
+```
+---
+
+7. This job is recurring and contains a variable that needs to be [updated](../how/variables.mdx#update-functions-and-loops). The `.onSuccess()` method dictates that upon completion of a successful job, the `next_execution` timestamp value will be increased by 1 day by using an update function. 
+
+```js Example.ts focus=21:28 mark=26
+
+```
+
+---
+
+8. Similarly, if the job should return an error upon execution, the timestamp value will be increased by an hour, and the job will be run, incrementing every hour upon failure until it is successful. 
+
+```js Example.ts focus=21:28 mark=27
+
+```
+
+---
+
+9. The `.compose()` method is called at the end of a chain of method calls on a composer object to indicate that the composer object is complete.
+
+```js Example.ts focus=21:28 mark=28
+
+```
+
+---
+
+### The condition 
+
+1. The `cond` composer is used to create a [conditional expression](../how/condition.mdx). It takes three arguments: [a left side value](focus://30[37:44]), an [operator](focus://30[46:51]), and [a right side value](focus://30[61:75]). 
+
+2. The condition for this job is simple: if the current time is greater than the value of the `next_execution` variable, execute the job message. 
+
+
+```js Example.ts focus=30
+
+```
+
+---
+
+### The job 
+
+1. Now it's time to create the job message, which is the message that will be executed when the condition is met. 
+
+
+```js Example.ts focus=32:43
+
+```
+
+---
+
+2. The `create` method is used to create a new job instance for your job. A name, description, and optional labels give information about the job and what it does. 
+
+```js Example.ts focus=32:43 mark=33:36
+
+```
+
+---
+
+3. The job is set to be recurring, which means it will be re-added to the queue after execution and the `next_execution` variable will be updated. 
+
+```js Example.ts focus=32:43 mark=37
+
+```
+---
+
+4. The `requeueOnEvict(true)` method is used to specify that the job should be requeued if it is
+[evicted](../how/state.mdx) from the job queue.
+
+```js Example.ts focus=32:43 mark=38
+
+```
+---
+
+5. A [reward](../how/overview.mdx#rewards) is specified for the keeper that runs the job. 
+
+```js Example.ts focus=32:43 mark=39
+
+```
+---
+
+6. The [condition](#the-condition) created earlier is specified in the job. 
+
+```js Example.ts focus=32:43 mark=40
+
+```
+
+---
+
+7. The [variable](#the-variable) created earlier is specified in the job. 
+
+```js Example.ts focus=32:43 mark=41
+
+```
+
+---
+
+8. The `msg.execute` function is used to create a message that will be executed by the job. It takes
+two arguments: the contract address and the message payload.
+
+```js Example.ts focus=32:43 mark=42
+
+```
+
+---
+
+9. The `.compose()` method is called to complete the job object. 
+
+```js Example.ts focus=32:43 mark=43
+
+```
+---
+
+10. The code is finished by adding the `createJob` method, specifying the `createJobMsg`, the `sender`, and asking for the response. 
+
+```js Example.ts focus=45:46
+
+```
+
+
+</CH.Scrollycoding>
+
+Congratulations, you have just walked through an entire job created using the Warp SDK!
