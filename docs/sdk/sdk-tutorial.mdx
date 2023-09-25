@@ -4,13 +4,11 @@ hide_table_of_contents: true
 ---
 # SDK tutorial
 
-The [Warp SDK](https://github.com/terra-money/warp-sdk) provides a simple way to interact with the Warp protocol's contracts. Developers can use the Warp SDK to easily create jobs, conditions, and variables in a typesafe environment. 
-
-The Warp SDK can be thought of as a new programming language, introducing condition, variable, and job syntax. You can use the autocomplete functions in your IDE to help you get the most out of using the Warp SDK. 
+The [Warp SDK](https://github.com/terra-money/warp-sdk) provides a simple way to interact with the Warp protocol's contracts. Developers can use the Warp SDK to easily create jobs, conditions, and variables in a typesafe environment. You can use the autocomplete functions in your IDE to help you get the most out of using the Warp SDK. 
 
 ## Installation
 
-Run the following code to install the Warp SDK. You may also need to install [feather.js](https://docs.terra.money/develop/feather-js/getting-started/#2-initialize-the-lcd), Terra's JavaScript SDK, or the SDK of the chain you are using. 
+Run the following code to install the Warp SDK. You may also need to install [feather.js](https://docs.terra.money/develop/feather-js/getting-started/#2-initialize-the-lcd) (Terra's JavaScript SDK) or the SDK of the chain you are using. 
 
 ```sh
 npm install -S @terra-money/warp-sdk
@@ -117,7 +115,7 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 
 ## The variable
 
-1. Because this job needs to be run every day, it requires a [variable](../how/variables.mdx). Every time the job is run successfully, the execution time variable will be incremented 1 day. Just like in other programming languages, you can provide variables in the Warp SDK that can be [updated](../how/variables.mdx#update-functions-and-loops). 
+1. Because this job needs to be run every day, it requires a [variable](../how/variables.mdx). Every time the job is run successfully, the execution time variable will be incremented by one day. Just like in other programming languages, you can provide variables in the Warp SDK that can be [updated](../how/variables.mdx#update-functions-and-loops). 
 
 
 ```js Example.ts focus=21:28
