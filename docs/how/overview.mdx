@@ -6,6 +6,14 @@ sidebar_position: 1
 
 The following section is a basic overview of how Warp works. For a more in-depth look at Warp smart contracts, visit the [Contracts](../contracts/messages) section. To learn how to use Warp, visit the [Get started](../get-started.mdx) tutorial. 
 
+Warp brings decentralized automation to the blockchain. Unlike Cron Jobs, Warp allows users to specify nearly any circumstance to execute a Job, not just time. With Warp, the circumstance is called a Condition, and the Job contains a WASM message, rather than a command. Conditions can be anything from timestamps and blockheights to price queries and complex, nested combinations of circumstances. If it can be verified by another party on-chain, it can be used as a condition with which to trigger a Job. 
+
+## Example
+
+The following illustration demonstrates how a job is executed. 
+
+![](/img/warp/job.png)
+
 ## Jobs
 
 Jobs are the main feature of Warp. Users submit WASM messages along with specified [conditions](#conditions) and a reward. When the conditions are met, [keepers](#keepers) send the message and receive the reward. Jobs can contain any valid WASM messages, including other _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context.
@@ -13,39 +21,6 @@ Jobs are the main feature of Warp. Users submit WASM messages along with specifi
 When a job is created, users must specify a job name, a reward amount, an execute message, and a contract address for the message. The job message is signed by the owner at the time of job creation, to be executed later by keepers. 
 
 Any tokens sent as part of a job's message must be present in the user's [Warp account](#account) balance at the moment of execution.
-
-```rust
-pub struct Job {
-    // unique identifier for each Job
-    pub id: Uint64,
-    // job creator address
-    pub owner: Addr,
-    // UTC timestamp for when the Job was submitted
-    pub last_update_time: Uint64,
-    // name given to the Job
-    pub name: String,
-    // a description of the Job
-    pub description: String,
-    // a label for the Job
-    pub labels: Vec<String>,
-    // status of the Job (pending, executed, failed, canceled)
-    pub status: JobStatus,
-    // condition set dictating when the Job should be executed
-    pub condition: Condition,
-    // a Job message to be executed when the conditions are met
-    pub msgs: Vec<String>,
-    // variables to be used in a condition or Job message
-    pub vars: Vec<Variable>,
-    // whether the Job is recurring
-    pub recurring: bool,
-    // whether to requeue the Job after being evicted
-    pub requeue_on_evict: bool,
-    // reward to distribute to the keeper when the Job has been executed
-    pub reward: Uint128,
-    // assets that can be withdrawn back to the account after Job completion
-    pub assets_to_withdraw: Vec<AssetInfo>,
-}
-```
 
 A creation fee is added to every job, which is 5% of a Job's reward amount. This fee is denominated in the native asset of the chain Warp is deployed on. Upon Job creation, the fee is swapped to Luna and burned.  
 
@@ -96,9 +71,4 @@ For more on Job state, the queue, and a basic workflow, visit the [Job state pag
 In order to keep a job active, 5% of a job's reward amount will be withdrawn from the job creator's Warp account every 24 hours. Keepers called "Evictors" will check each job in the queue daily, and collect the 5% fee as a reward. When the Job creator's account no longer holds enough Luna, the job will be evicted and removed from the queue. The Evictor will receive the 5% eviction fee from the Job's reward, and the Creator will be refunded the Job reward amount, minus the eviction fee. 
 
 
-## Example
-
-The following illustration demonstrates how a job is executed. 
-
-![](/img/warp/job.png)
 
