@@ -4,9 +4,9 @@ sidebar_position: 1
 
 # Overview
 
-The following section is a basic overview of how Warp works. For a more in-depth look at Warp smart contracts, visit the [Contracts](../contracts/messages) section. To learn how to use Warp, visit the [Get started](../get-started.mdx) tutorial. 
+The following section is a basic overview of how Warp works. For a more in-depth look at Warp smart contracts, visit the [Contracts](../contracts/messages) section. To learn how to use Warp, visit the [Get started](../guides/ui-tutorial.mdx) tutorial. 
 
-Warp brings decentralized automation to the blockchain. Unlike Cron Jobs, Warp allows users to specify nearly any circumstance to execute a Job, not just time. With Warp, the circumstance is called a Condition, and the Job contains a WASM message, rather than a command. Conditions can be anything from timestamps and blockheights to price queries and complex, nested combinations of circumstances. If it can be verified by another party on-chain, it can be used as a condition with which to trigger a Job. 
+Warp brings decentralized automation to the blockchain. Unlike Cron Jobs, Warp allows users to specify nearly any circumstance to execute a Job, not just time. With Warp, the circumstance is called a [Condition](#conditions), and the [Job](#jobs) contains a WASM message. Conditions can be anything from timestamps and blockheights to price queries and complex, nested combinations of circumstances. If it can be verified by another party on-chain, it can be used as a condition with which to trigger a Job. Warp Jobs are submitted as pre-signed messages to a queue, and participants called [keepers](#keepers) monitor the conditions of each active Job. When the conditions have been met, the keeper executes the Job WASM message. 
 
 ## Example
 
@@ -18,7 +18,7 @@ The following illustration demonstrates how a job is executed.
 
 Jobs are the main feature of Warp. Users submit WASM messages along with specified [conditions](#conditions) and a reward. When the conditions are met, [keepers](#keepers) send the message and receive the reward. Jobs can contain any valid WASM messages, including other _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context.
 
-When a job is created, users must specify a job name, a reward amount, an execute message, and a contract address for the message. The job message is signed by the owner at the time of job creation, to be executed later by keepers. 
+When a job is created, users must specify a job name, a reward amount, an execute message, and a contract address for the message. The [job message](../contracts/messages.mdx) is signed by the owner at the time of job creation, to be executed later by keepers. 
 
 Any tokens sent as part of a job's message must be present in the user's [Warp account](#account) balance at the moment of execution.
 
@@ -34,7 +34,7 @@ To learn more about how conditions work, visit the [Conditions page](./condition
 
 ## Templates and variables
 
-[Templates](./templates.mdx) and [variables](./variables.mdx) allow Warp users to create reusable, looping jobs. Templates create a job structure, and they contain variables that can be [updated by a user](../get-started.mdx#create-a-job-using-a-premade-template). They can also be specified to update automatically through [looping](./variables.mdx#update-functions-and-loops). To learn how to create variables and job templates, follow the [Template tutorial](../guides/template.mdx). 
+[Templates](./templates.mdx) and [variables](./variables.mdx) allow Warp users to create reusable, looping jobs. Templates create a job structure, and they contain variables that can be [updated by a user](../guides/ui-tutorial.mdx#create-a-job-using-a-premade-template). They can also be specified to update automatically through [looping](./variables.mdx#update-functions-and-loops). To learn how to create variables and job templates, follow the [Template tutorial](../guides/template.mdx). 
 
 ## Warp accounts
 
