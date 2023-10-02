@@ -80,34 +80,24 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 ---
 
 ### Setup
+The first portion of the code is used to import the [feather.js SDK](https://github.com/terra-money/feather.js) and the [Warp SDK](https://github.com/terra-money/warp-sdk), connect to the blockchain network, and set up the wallet object. 
 
-1. The first 2 lines import the [feather.js SDK](https://github.com/terra-money/feather.js) and the [Warp SDK](https://github.com/terra-money/warp-sdk). These libraries provide all the functionality for your job. 
+<details> 
+<summary> Expand for more information about setup. </summary>
+<p>
 
-```js Example.ts focus=1:2
+<br/>
+1. [The first 2 lines](focus://1:2) import the [feather.js SDK](https://github.com/terra-money/feather.js) and the [Warp SDK](https://github.com/terra-money/warp-sdk). These libraries provide all the functionality for your job. 
 
-```
+2. [Lines 4-14](focus://4:14) initialize the Terra testnet LCD. Terra’s [Light Client Daemon](https://docs.terra.money/develop/feather-js/getting-started#2-initialize-the-lcd) allows you to connect to the blockchain, make queries, create wallets, and submit transactions. [The configuration](focus://4:10) specifies the network information needed for Terra's Pisco testnet. 
 
----
+3. [Line `16`](focus://16) adds a wallet object, allowing you to connect your account by entering your mnemonic. In production, it's better to store your mnemonic key data in your environment by using `process.env.SECRET_MNEMONIC` or `process.env.SECRET_PRIV_KEY`. This practice is more secure than a hard-coded string.
 
-2. This code initializes the Terra testnet LCD. Terra’s [Light Client Daemon](https://docs.terra.money/develop/feather-js/getting-started#2-initialize-the-lcd) allows you to connect to the blockchain, make queries, create wallets, and submit transactions. The configuration specifies the network information needed for Terra's Pisco testnet. 
+4. [Lines `18-19`](focus://18:19) initialize the Warp SDK and specify the `sender` of the job as the connected wallet account. 
+</p>
+</details>
 
-```js Example.ts focus=4:14
-
-```
-
----
-
-3. Add a wallet object and connect your account by entering your mnemonic. In production, it's better to store your mnemonic key data in your environment by using `process.env.SECRET_MNEMONIC` or `process.env.SECRET_PRIV_KEY`. This practice is more secure than a hard-coded string.
-
-```js Example.ts focus=16
-
-```
-
----
-
-4. The Warp SDK is initialized and the `sender` of the job is specified as the connected wallet account. 
-
-```js Example.ts focus=18:19
+```js Example.ts focus=1:19
 
 ```
 
@@ -133,7 +123,7 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 
 ---
 
-3. This variable is [`static`](../how/variables.mdx#static-variables) because we want it to be an updatable value. The other two types of variables are [query](../how/variables.mdx#query-variables) and [external](../how/variables.mdx#external-variables), which aren't needed for this job. 
+3. This variable is [`static`](../how/variables.mdx#static-variables) because it needs to be an updatable value. The other two types of variables are [query](../how/variables.mdx#query-variables) and [external](../how/variables.mdx#external-variables), which aren't needed for this job. 
 
 ```js Example.ts focus=21:28 mark=22
 
@@ -216,7 +206,7 @@ sdk.createJob(sender, createJobMsg).then((response) => {
 
 ```
 
----yarn
+---
 
 3. The job is set to be [recurring](../how/variables.mdx#update-functions-and-loops), which means it will be re-added to the queue after execution and the `next_execution` variable will be updated. 
 

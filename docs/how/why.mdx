@@ -27,22 +27,22 @@ Instead, what blockchains need is a **decentralized event handler**.
 
 A successful event handler has the following implemented features:
 
-- **Custom conditions:** A user should be able to compare any value on-chain with an expected result. The protocol should be fully generic and accept any comparisons without limiting users to certain presets. Submitted jobs should also be capable of nesting and contain multiple conditions in a single set. Examples include, but are not limited to:
+- **Custom conditions**: A user should be able to compare any value on-chain with an expected result. The protocol should be fully generic and accept any comparisons without limiting users to certain presets. Submitted jobs should also be capable of nesting and contain multiple conditions in a single set. Examples include, but are not limited to:
     - Ensuring that a block height or timestamp has passed
     - See if a price level is below or above a desired level for any DEX
     - Check if the user’s balance is above or below an amount
     - Check if a protocol’s yield is high enough to stake in
     - All or any of the above
-- **Custom transactions:** A user must be able to submit any possible WasmMsg as a transaction. This should also not be limited to a preset message. Examples include, but are not limited to:
+- **Custom transactions**: A user must be able to submit any possible WasmMsg as a transaction. This should also not be limited to a preset message. Examples include, but are not limited to:
     - Swapping tokens on a DEX
     - Sending tokens to another wallet or chain
     - Staking, unstaking, bonding, unbonding
     - Compounding liquid staking derivative token
     - Submitting governance proposal
     - etc
-- ************************************************Permissionless execution:************************************************ Anybody should be able to sign a submitted transaction as long as the conditions for doing so are satisfied.
-- ********************************************Attractive incentives:******************************************** Users who execute the transactions should have attractive enough incentives for doing so. These incentives could come from rewards pinned by users who submit the transactions to Warp.
-- ********************************************************************************************Decentralized:******************************************************************************************** To ensure the protocol is as decentralized as possible, it should exist purely on-chain and allow anybody to act as an incentivized keeper to execute messages. Anybody who desires can become a participant both as a job creator and a protocol keeper.
+- **Permissionless execution**: Anybody should be able to sign a submitted transaction as long as the conditions for doing so are satisfied.
+- **Attractive incentives**: Users who execute the transactions should have attractive enough incentives for doing so. These incentives could come from rewards pinned by users who submit the transactions to Warp.
+- **Decentralized**: To ensure the protocol is as decentralized as possible, it should exist purely on-chain and allow anybody to act as an incentivized keeper to execute messages. Anybody who desires can become a participant both as a job creator and a protocol keeper.
 
 With such a system, it is possible to design a fully on-chain event handler. This event handler can serve as an on-chain automation layer for users that can remove the need for manual transactions and centralized keeper bots.
 

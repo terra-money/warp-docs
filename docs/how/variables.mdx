@@ -3,7 +3,11 @@ sidebar_position: 4
 ---
 # Variables
 
-Variables are placeholders for arbitrary data that can be inserted into Warp jobs and conditions. To make creating jobs easier, variables can be specified and input into job or query templates. After creating variables, you can add them to messages using their reference value in the form of _`$warp.variable.variable-name`_. You can use variables with templates to create complex reusable jobs. Variables created in the Warp app are stored in your browser and are not written to the blockchain until they are inserted into templates. 
+Variables are placeholders for arbitrary data that can be inserted into Warp jobs and conditions. To make creating jobs easier, variables can be specified and input into job or query templates. After creating variables, you can add them to messages using their reference value in the form of _`$warp.variable.variable-name`_. 
+
+You can use variables with [templates](../guides/template.mdx) to create complex reusable jobs. 
+
+[Variables created in the Warp app](../guides/ui-tutorial.mdx#add-a-variable) are stored in your browser and are not written to the blockchain until they are inserted into templates. 
 
 ## VariableKind
 
@@ -37,7 +41,6 @@ pub struct StaticVariable {
 }
 ```
 
-
 ## Query variables
 
 Query variables allow you to select a value from the response of a specified query. Queries require a query message and a [selector](./query.mdx#selector), which is used to select the correct portion of the query response. When looping, query variables can be [updated](#update-functions-and-loops) or specified to be [reinitialized](#reinitialization). 
@@ -55,30 +58,6 @@ pub struct QueryVariable {
 pub struct QueryExpr {
     pub selector: String,
     pub query: QueryRequest<String>,
-}
-```
-
-## External Variables
-
-External variables are fetched from external sources such as APIs. They require an external reference input, which includes a URL, a method (_`Get`_, _`Post`_, _`Push`_, _`Pass`_, _`Delete`_), a header, a body, and a [JSON selector](./query.mdx#selectors). External variables can be [updated](#update-functions-and-loops) or specified to be [reinitialized](#reinitialization). 
-
-```rust variable.rs
-pub struct ExternalVariable {
-    pub kind: VariableKind,
-    pub name: String,
-    pub init_fn: ExternalExpr,
-    pub reinitialize: bool,
-    pub value: Option<String>, //none if uninitialized
-    pub update_fn: Option<UpdateFn>,
-}
-
-
-pub struct ExternalExpr {
-    pub url: String,
-    pub method: Option<Method>,
-    pub headers: Option<HashMap<String, String>>,
-    pub body: Option<String>,
-    pub selector: String,
 }
 ```
 
@@ -113,3 +92,26 @@ Expression and Query variables contain a _`reinitialize`_ boolean, which specifi
 
 Variables can be nested or referenced, allowing a reference of a result of one variable to appear in a different variable. However, you can only nest or reference previous variables in a sequence. For example, in the following code, _`{ vars: [var0, var1, var2, var3,] }`_, _`var2`_ can only contain the variables that came before it, and cannot reference _`var3`_. 
 
+## External Variables
+
+External variables are fetched from external sources such as APIs. They require an external reference input, which includes a URL, a method (_`Get`_, _`Post`_, _`Push`_, _`Pass`_, _`Delete`_), a header, a body, and a [JSON selector](./query.mdx#selectors). External variables can be [updated](#update-functions-and-loops) or specified to be [reinitialized](#reinitialization). 
+
+```rust variable.rs
+pub struct ExternalVariable {
+    pub kind: VariableKind,
+    pub name: String,
+    pub init_fn: ExternalExpr,
+    pub reinitialize: bool,
+    pub value: Option<String>, //none if uninitialized
+    pub update_fn: Option<UpdateFn>,
+}
+
+
+pub struct ExternalExpr {
+    pub url: String,
+    pub method: Option<Method>,
+    pub headers: Option<HashMap<String, String>>,
+    pub body: Option<String>,
+    pub selector: String,
+}
+```
