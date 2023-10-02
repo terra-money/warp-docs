@@ -1,14 +1,14 @@
 ---
-sidebar_position: 1
+sidebar_position: 4
 ---
 
-# How to make a template
+# Template tutorial
 
 This tutorial will walk you through making a limit order template to swap Luna for Astro. It is recommended that you read the [from-scratch job example guide](./example.mdx) so that you understand the basics of the job, condition, and how a swap works with Warp. The following tutorial shows you how to make a template using [variables](../how/variables.mdx). 
 
 ## Prerequisites
 
-- Follow the [Get started guide](../get-started.mdx) to set up a Warp account before proceeding. 
+- Follow the [Get started guide](ui-tutorial.mdx) to set up a Warp account before proceeding. 
 - Make sure you are connected to your Station wallet and on the **testnet** network. 
 
 ## Set up the job template 
@@ -53,7 +53,7 @@ Warp templates offer a human-readable description of the job. This is where you 
 
 If you type the `{` character in the description field, the Warp app will show which variables you have created, and you can select the correct one to input into your description. In descriptions, Warp variables must be surrounded by braces. 
 
-Because we are creating a template to swap Luna for Astro, our template description is as follows:
+Because you are creating a template to swap Luna for Astro, the template description is as follows:
 
 ```
 Swap {send_amount} $LUNA for {receive_amount} $ASTRO

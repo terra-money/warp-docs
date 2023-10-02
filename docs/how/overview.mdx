@@ -4,78 +4,62 @@ sidebar_position: 1
 
 # Overview
 
-The following section is a basic overview of how Warp works. For a more in-depth look at Warp smart contracts, visit the [Contracts](../contracts/messages) section. To learn how to use Warp, visit the [Get started](../get-started.mdx) tutorial. 
+The following section is a basic overview of how Warp works. For a more in-depth look at Warp smart contracts, visit the [Contracts](../contracts/messages) section. To learn how to use Warp, visit the [Get started](../guides/ui-tutorial.mdx) page. 
 
-## Jobs
+## What is Warp?
 
-Jobs are the main feature of Warp. Users submit WASM messages along with specified [conditions](#conditions) and a reward. When the conditions are met, [keepers](#keepers) send the message and receive the reward. Jobs can contain any valid WASM messages, including other _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context.
+Warp brings decentralized automation to the blockchain. Unlike common Cron Jobs, Warp allows users to specify nearly any circumstance to execute a Job, not just time. With Warp, the circumstance is called a [Condition](#conditions), and the [Job](#jobs) contains an executable message. Conditions can be anything from timestamps and blockheights to price queries and complex, nested combinations of circumstances. If it can be verified by another party on-chain, it can be used as a condition with which to trigger a Job. Warp Jobs are submitted as pre-signed messages to a queue, and participants called [keepers](#keepers) monitor the conditions of each active Job. When the conditions have been met, the keeper executes the Job message. 
 
-When a job is created, users must specify a job name, a reward amount, an execute message, and a contract address for the message. The job message is signed by the owner at the time of job creation, to be executed later by keepers. 
+## How does it work?
+
+The following illustration demonstrates how a job is executed. 
+
+![](/img/warp/job.png)
+
+## Concepts
+
+The following concepts are essential to Warp job creation. Make sure to read this section carefully to get a full understanding of how Warp works. 
+
+### Jobs
+
+Jobs are the main feature of Warp. Users submit WASM messages along with specified [conditions](#conditions) and a [reward](#rewards). When the conditions are met, [keepers](#keepers) send the message and receive the reward. Jobs can contain any valid WASM messages, including other _`create_job`_ transactions, allowing jobs to be chained together and executed from the same context.
+
+When a job is created, users must specify a job name, a reward amount, an execute message, and a contract address for the message. The [job message](../contracts/messages.mdx) is signed by the owner at the time of job creation, to be executed later by keepers. 
 
 Any tokens sent as part of a job's message must be present in the user's [Warp account](#account) balance at the moment of execution.
 
-```rust
-pub struct Job {
-    // unique identifier for each Job
-    pub id: Uint64,
-    // job creator address
-    pub owner: Addr,
-    // UTC timestamp for when the Job was submitted
-    pub last_update_time: Uint64,
-    // name given to the Job
-    pub name: String,
-    // a description of the Job
-    pub description: String,
-    // a label for the Job
-    pub labels: Vec<String>,
-    // status of the Job (pending, executed, failed, canceled)
-    pub status: JobStatus,
-    // condition set dictating when the Job should be executed
-    pub condition: Condition,
-    // a Job message to be executed when the conditions are met
-    pub msgs: Vec<String>,
-    // variables to be used in a condition or Job message
-    pub vars: Vec<Variable>,
-    // whether the Job is recurring
-    pub recurring: bool,
-    // whether to requeue the Job after being evicted
-    pub requeue_on_evict: bool,
-    // reward to distribute to the keeper when the Job has been executed
-    pub reward: Uint128,
-    // assets that can be withdrawn back to the account after Job completion
-    pub assets_to_withdraw: Vec<AssetInfo>,
-}
-```
-
 A creation fee is added to every job, which is 5% of a Job's reward amount. This fee is denominated in the native asset of the chain Warp is deployed on. Upon Job creation, the fee is swapped to Luna and burned.  
 
-To learn more about the workflow of jobs, visit the [Job state](./state.mdx) page. To learn about creating a job template, visit the [Template tutorial](../guides/template.mdx).
+To learn more about the workflow of jobs, visit the [Job state](./state.mdx) page. To learn about creating a job, visit the [Warp UI tutorial](../guides/ui-tutorial.mdx) or the [Warp SDK tutorial](../guides/sdk-tutorial.mdx).
 
-## Conditions
+### Conditions
 
 Each job must be submitted with conditions, which are a set of circumstances under which the job should be executed. Conditions are made up of expressions that can be simple, such as specifying a blockheight, or complex, in which multiple conditions are nested and joined using boolean operators. Query responses can also be used in expressions to specify a condition. When all the expressions in a condition evaluate to _`true`_, the condition is met, and the job can be completed. 
 
 To learn more about how conditions work, visit the [Conditions page](./condition.mdx).
 
-## Templates and variables
+### Templates and variables
 
-[Templates](./templates.mdx) and [variables](./variables.mdx) allow Warp users to create reusable, looping jobs. Templates create a job structure, and they contain variables that can be [updated by a user](../get-started.mdx#create-a-job-using-a-premade-template). They can also be specified to update automatically through [looping](./variables.mdx#update-functions-and-loops). To learn how to create variables and job templates, follow the [Template tutorial](../guides/template.mdx). 
+Templates and [variables](./variables.mdx) allow Warp users to create reusable, looping jobs. Templates create a job structure, and they contain variables that can be [updated by a user](../guides/ui-tutorial.mdx#create-a-job-using-a-premade-template). Tpo learn more about creating templates, follow the [Template tutorial](../guides/template.mdx). 
 
-## Warp accounts
+
+[Variables](./variables.mdx) can also be specified to update automatically through [update functions](./variables.mdx#update-functions-and-loops). If a job is set to be recurring, each requeueing of the job will trigger the job's update functions, specified as "on success" and "on failure". To learn about variables, visit the [variables](./variables.mdx) page or follow the [Warp UI tutorial](../guides/ui-tutorial.mdx). 
+
+### Warp accounts
 
 In order to transact funds, a job must have access to a wallet. Warp accounts are smart contract wallets that allow users to transact with Warp. Warp accounts function similarly to a Cosmos wallet account. For example, users can use their accounts to send, deposit, delegate, undelegate, or receive funds by interacting with their accounts as a smart contract. Using the Warp app, users can deposit or withdraw funds from their Warp accounts. Any transactions using jobs are executed through a user's account. Warp accounts can only be controlled by a user's wallet and the jobs that they create. 
 
 Warp allows for atomic account and Job creation: you can create an account, send funds to the account, and create a job all in one transaction. During Job creation, you can also specify which assets you want to be fully withdrawn back to your account after Job completion. 
 
-## Keepers
+### Keepers
 
-A keeper is any party that maintains the automation functions of a smart contract. Keepers are incentivized by Warp users to execute smart contract functions on their behalf, in exchange for a reward. Keepers query the chain and evaluate a job's condition. Once the conditions for a job are met, a keeper can submit the execute message contained in the job. To learn how to run a keeper, visit the [Keeper guide](../guides/keeper.mdx). 
+A keeper is any party that maintains the automation functions of a smart contract. With Warp, [anyone can be a keeper](../guides/keeper.mdx).  Keepers are incentivized by Warp users to execute smart contract functions on their behalf, in exchange for a reward. Keepers query the chain and evaluate a job's condition. Once the conditions for a job are met, a keeper can submit the execute message contained in the job. In exchange, they collect a [reward](#rewards). To learn how to run a keeper, visit the [Keeper guide](../guides/keeper.mdx). 
 
-## Rewards 
+### Rewards 
 
 Rewards are given by job owners to keepers in exchange for executing their jobs. Because Warp is a decentralized event handler, rewards are an incentive for unknown keepers to execute jobs, without the need for a centralized intermediary. The minimum reward value is _`0.01`_ Luna. Rewards are provided in Luna and are priced organically, based on computing power costs and incentives for the keeper. 
 
-## The queue
+### The queue
 
 Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). 
 
@@ -91,14 +75,9 @@ pub enum JobStatus {
 
 For more on Job state, the queue, and a basic workflow, visit the [Job state page](./state.mdx).
 
-## Eviction
+### Eviction
 
 In order to keep a job active, 5% of a job's reward amount will be withdrawn from the job creator's Warp account every 24 hours. Keepers called "Evictors" will check each job in the queue daily, and collect the 5% fee as a reward. When the Job creator's account no longer holds enough Luna, the job will be evicted and removed from the queue. The Evictor will receive the 5% eviction fee from the Job's reward, and the Creator will be refunded the Job reward amount, minus the eviction fee. 
 
 
-## Example
-
-The following illustration demonstrates how a job is executed. 
-
-![](/img/warp/job.png)
 

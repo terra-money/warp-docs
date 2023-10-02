@@ -1,0 +1,174 @@
+---
+sidebar_position: 1
+---
+import Admonition from '@theme/Admonition';
+
+# Warp UI tutorial
+
+Follow this tutorial to learn how to make a Job using the [Warp App](https://app.warp.money/). To use the SDK, follow the [SDK tutorial](./sdk-tutorial.mdx). To learn more about how Warp works, read [the overview](../how/overview.mdx). 
+- Download Google Chrome
+- Install [the Station Chrome Extension](https://docs.terra.money/learn/station/download/station-extension)
+
+## Set up your Warp account
+
+1. Click the wallet icon in the bottom left corner and then click **Station** to connect your station browser extension. 
+
+
+2. Before you can start using Warp, you need to create a [Warp account](../how/overview.mdx#warp-accounts). Click **Create account** to create a Warp account by signing a transaction. If you are on the Terra blockchain, make sure you have some Luna in your wallet to pay for gas fees. You can get testnet Luna from [Terra’s testnet faucet](https://faucet.terra.money/). 
+    
+<img className="readme-img-md" src="/img/ui/ui-2.png" />
+    
+2. Sign the account creation transaction by entering your password and clicking **Post**. 
+    
+<img className="readme-img-sm" src="/img/ui/ui-3.png" />
+    
+3. Click on the **Balances** icon in the menu on the left. It looks like two interlocked circles. Click **Deposit** to deposit funds into your account. Any funds transacted using a Warp Job need to be present in your Warp account. 
+
+<img className="readme-img-md" src="/img/ui/ui-4.png" />
+
+1. Enter an amount and click **Add**.
+    
+<img className="readme-img-sm" src="/img/ui/ui-5.png" />
+    
+2. Sign the transaction in the Station Extension. 
+
+## Create a Job
+
+In this tutorial, you’ll learn how to create a job that harvests rewards for the Eris protocol every day. The basic logic of the job can be stated as follows:
+
+    > _`If the current time is greater than the next execution time, execute the harvest message.`_ 
+        
+This job is set as [recurring](../how/variables.mdx#update-functions-and-loops), meaning that it will be [requeued](../how/overview.mdx#the-queue) after execution.
+
+1. Click on the plus symbol (**+**) in the menu on the left and then click **Job** in the menu that appears. 
+    
+<img className="readme-img-md" src="/img/ui/job-1.png" />
+    
+2. Click **Basic mode** to create a Job manually. 
+    
+<img className="readme-img-md" src="/img/ui/job-2.png" />
+    
+3. On the Job creation screen, enter a name for your job and a reward for a keeper to execute the Job
+        
+4. Input the following information into the Job creation fields:
+    - Name: _`eris-harvest`_
+    - Description: _`This job harvests rewards for eris protocol vaults each day.`_
+    - Reward: _`0.5 Luna`_
+
+5. Click the **Message** button located under the reward field. 
+
+In the message field, paste the following message that tells the Eris contract to harvest rewards. 
+
+<Admonition type="tip" icon="✅" title="Encoded Wasm messages">
+
+When using a Wasm message in the UI, the message contained in the `msg` field must be [base64 encoded](https://www.base64encode.org/). 
+
+</Admonition>
+
+
+<CH.Code>
+
+```js Encoded
+    
+      {
+        "wasm": {
+          "execute": {
+            "contract_addr": "terra10788fkzah89xrdm27zkj5yvhj9x3494lxawzm5qq3vvxcqz2yzaqyd3enk",
+            "msg": "eyJoYXJ2ZXN0Ijp7fX0=",
+            "funds": []
+          }
+        }
+      }
+    
+```
+
+```js Decoded
+    
+      {
+        "wasm": {
+          "execute": {
+            "contract_addr": "terra10788fkzah89xrdm27zkj5yvhj9x3494lxawzm5qq3vvxcqz2yzaqyd3enk",
+            "msg": {
+              "harvest": {}
+            },
+            "funds": []
+          }
+        }
+      }
+    
+```
+</ CH.Code>
+
+    
+6. Specify the job as [recurring](../how/variables.mdx#update-functions-and-loops) by clicking the toggle below the **Description** field. Recurring jobs are automatically [requeued](../how/overview.mdx#the-queue) after execution.
+
+<img className="readme-img-lg" src="/img/ui/job-3.png" />
+
+## Add a variable
+
+1. Because this job needs to be run every day, it requires a [variable](../how/variables.mdx). Every time the job is run successfully, the execution time variable will be incremented by one day. Just like in other programming languages, you can provide variables in Warp that can be [updated](../how/variables.mdx#update-functions-and-loops).
+
+<br/>
+
+Click the **Variables** tab on the right side of the screen and then click **New**. 
+    
+<img className="readme-img-lg" src="/img/ui/job-4.png" />
+    
+2. For the variable type, click **Static**. This variable is [static](../how/variables.mdx#static-variables) because it needs to be an updatable value. The other two types of variables are [query](../how/variables.mdx#query-variables) and [external](../how/variables.mdx#external-variables), which aren't needed for this job.
+    
+<img className="readme-img-md" src="/img/ui/job-5.png" />
+    
+3. This variable will be called  `next_execution`. The value type will be `uint`, and the value will be a date in UNIX format. You can visit https://www.unixtimestamp.com/ for information on UNIX timestamps. For example, the UNIX timestamp for Sat Sep 30 2023 01:16:39 GMT+0000 is `1696036599`. This value represents the next execution time for the harvest message. 
+    
+<img className="readme-img-lg" src="/img/ui/job-6.png" />
+    
+4. Because the harvest message must be updated every 24 hours, an update function needs to be used. Click the edit symbol in the **On Success** field to open the update function editor. 
+
+5.  Click the plus (+) symbol and click **Expression** to add an update expression. 
+    
+<img className="readme-img-lg" src="/img/ui/job-7.png" />
+    
+6. On the left side of the expression, click the puzzle piece symbol and select `Environment` . 
+    
+<img className="readme-img-lg" src="/img/ui/job-8.png" />
+    
+7.  Click **time**  to select the time environment variable. On the right side of your expression, input `86400`, which is the UNIX code for 24 hours.
+    
+<img className="readme-img-md" src="/img/ui/job-9.png" />
+    
+8. Click **Save**. 
+9. On the variable page, your update function will show, and explains that on each successful job execution, the value for the `next_execution` variable will be updated to the current time plus 24 hours (`86400`). 
+    
+<img className="readme-img-lg" src="/img/ui/job-10.png" />
+    
+10. Follow the same steps for the **On Error** field. Like before, the left side will be the **time** environment value. This time, input `3600` on the right side of the expression. This expression adds one hour to the current time every time the job message is triggered but fails. 
+
+11. Click **Save** to return to the New Job page. Then click **Next**  to move to the Condition page. 
+    
+<img className="readme-img-lg" src="/img/ui/job-11.png" />
+    
+## Create the Condition
+
+1. On the Condition page, click the plus (+) symbol to add a condition. Select **Expression**, then select **Uint**. 
+    
+<img className="readme-img-lg" src="/img/ui/job-12.png" />
+    
+2. The condition for this job is simple: if the current time is greater than or equal to the value of the `next_execution` variable, execute the job message. 
+
+3. To fill out the left side of the condition, click the puzzle piece symbol and select **Environment**, then select **time**. This sets the left side of the expression to the current time value. 
+    
+<img className="readme-img-lg" src="/img/ui/job-13.png" />
+    
+4. In the middle of the expression, select **gte**, which means “greater than or equal to.”
+
+5. On the right side of the expression, click the puzzle piece symbol and select  **Variable**, then select the **next_execution** variable created earlier. 
+    
+<img className="readme-img-lg" src="/img/ui/job-14.png" />
+    
+6. The finished condition reads as follows: if the current time is greater than the value of the `next_execution` variable, execute the job message. 
+    
+<img className="readme-img-lg" src="/img/ui/job-15.png" />
+    
+7. Click Save to submit the Job. Then, sign the transaction in your Station extension.
+
+

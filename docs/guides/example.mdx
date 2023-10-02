@@ -1,18 +1,18 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 ---
 
-# Job from scratch example
+# Limit order Job example
 
-This example will walk you through creating a basic Warp job and condition without using a premade template. For general information on how Warp works, visit the [Overview page](../how/overview.mdx). For a tutorial on how to use the Warp App, visit the [Get started page](../get-started.mdx).
+This example will walk you through creating a basic Warp job and condition without using a premade template. For general information on how Warp works, visit the [Overview page](../how/overview.mdx). For a tutorial on how to use the Warp App, visit the [Get started page](ui-tutorial.mdx).
 
 ## The workflow
 
-1. [Create a Warp account](../get-started.mdx). [Accounts](../how/overview.mdx#warp-accounts) are smart contracts that only you and your Warp jobs have permission to access.
+1. [Create a Warp account](ui-tutorial.mdx). [Accounts](../how/overview.mdx#warp-accounts) are smart contracts that only you and your Warp jobs have permission to access.
 
-2. [Add any assets](../get-started.mdx#create-an-account) (in this case, Luna) to your account.
+2. [Add Luna](ui-tutorial.mdx#create-an-account) to your account.
 
-3. [Create a job](../get-started.mdx#create-a-job) with the swap parameters such as price per unit, how much Luna you're willing to spend, etc. For this example, suppose that you want to spend 1 Luna to receive a minimum of 9500 Astro. You can see the [job message in the example below](#the-job-message).
+3. [Create a job](ui-tutorial.mdx#create-a-job) with the swap parameters such as price per unit, how much Luna you're willing to spend, etc. For this example, suppose that you want to spend 1 Luna to receive a minimum of 9500 Astro. You can see the [job message in the example below](#the-job-message).
 
 4. Using a [query message](#the-query), Create the [condition](#the-condition), where you specify that for your 1 Luna, you want to receive at least 9500 Astro Luna (~0.00010526 Luna per unit).
 

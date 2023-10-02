@@ -1,7 +1,6 @@
 // @ts-check
 const lightCodeTheme = require("./light.theme.js");
 const darkCodeTheme = require("./dark.theme.js");
-const theme = require("shiki/themes/poimandres.json");
 const { remarkCodeHike } = require("@code-hike/mdx");
 /** @type {import('@docusaurus/types').Config} */
 module.exports = async function config() {
@@ -42,7 +41,7 @@ module.exports = async function config() {
               [
                 remarkCodeHike,
                 {
-                  theme,
+                  theme: "poimandres",
                   lineNumbers: true,
                   showCopyButton: true,
                   staticMediaQuery: "not screen, (max-width: 768px)",

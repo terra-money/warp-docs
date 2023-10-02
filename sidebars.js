@@ -15,12 +15,12 @@
       },
       {
         type: 'link',
-        label: 'SDK', // The link label
+        label: 'SDK repo', // The link label
         href: 'https://github.com/terra-money/warp-sdk', // The external URL
       },
       {
         type: 'link',
-        label: 'Contracts', // The link label
+        label: 'Contract repo', // The link label
         href: 'https://github.com/terra-money/warp-contracts', // The external URL
       },
 
