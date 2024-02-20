@@ -26,7 +26,7 @@ Jobs are the main feature of Warp. Users submit WASM messages along with specifi
 
 When a job is created, users must specify a job name, a reward amount, an execute message, and a contract address for the message. The [job message](../contracts/messages.mdx) is signed by the owner at the time of job creation, to be executed later by keepers. 
 
-Any tokens sent as part of a job's message must be present in the user's [Warp account](#account) balance at the moment of execution.
+Any tokens sent as part of a job's message must be present in the [job account](#job-accounts) balance at the moment of execution.
 
 A creation fee is added to every job, which is 5% of a Job's reward amount. This fee is denominated in the native asset of the chain Warp is deployed on. Upon Job creation, the fee is swapped to Luna and burned.  
 
@@ -45,11 +45,24 @@ Templates and [variables](./variables.mdx) allow Warp users to create reusable, 
 
 [Variables](./variables.mdx) can also be specified to update automatically through [update functions](./variables.mdx#update-functions-and-loops). If a job is set to be recurring, each requeueing of the job will trigger the job's update functions, specified as "on success" and "on failure". To learn about variables, visit the [variables](./variables.mdx) page or follow the [Warp UI tutorial](../guides/ui-tutorial.mdx). 
 
-### Warp accounts
+### Funds and accounts
 
-In order to transact funds, a job must have access to a wallet. Warp accounts are smart contract wallets that allow users to transact with Warp. Warp accounts function similarly to a Cosmos wallet account. For example, users can use their accounts to send, deposit, delegate, undelegate, or receive funds by interacting with their accounts as a smart contract. Using the Warp app, users can deposit or withdraw funds from their Warp accounts. Any transactions using jobs are executed through a user's account. Warp accounts can only be controlled by a user's wallet and the jobs that they create. 
+#### Job accounts
 
-Warp allows for atomic account and Job creation: you can create an account, send funds to the account, and create a job all in one transaction. During Job creation, you can also specify which assets you want to be fully withdrawn back to your account after Job completion. 
+When a Warp job is created, a job account is automatically created. This account is a smart contract that can transact funds. Warp jobs can only utilize funds in their execution messages if the funds are present in their job accounts. Users can provide funds to the account by using `info.funds` in the Warp SDK, and these funds are relayed to the job account. This job account is used throughout the lifetime of the job. If the job is set to be recurring, the same account is used for the duration of the recurrance.
+
+#### Funding accounts
+
+Funding accounts are external accounts that can be used to fund maintenance costs for recurring jobs, such as fees and rewards for keepers. Whe creating a recurring job, a user can specify 
+
+Users can create and manage multiple funding accounts.
+Funding account is used for distributing rewards to keepers and paying fees.
+Otherwise, fees are subtracted from info.funds.
+Useful for recurring jobs to provide fees and topups on the side.
+
+
+
+
 
 ### Keepers
 
@@ -61,19 +74,7 @@ Rewards are given by job owners to keepers in exchange for executing their jobs.
 
 ### The queue
 
-Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). 
-
-```rust
-pub enum JobStatus {
-    Pending,
-    Executed,
-    Failed,
-    Cancelled,
-    Evicted,
-}
-```
-
-For more on Job state, the queue, and a basic workflow, visit the [Job state page](./state.mdx).
+Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). For more on Job state, the queue, and a basic workflow, visit the [Job state page](./state.mdx).
 
 ### Eviction
 
