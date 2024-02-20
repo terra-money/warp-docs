@@ -28,8 +28,6 @@ When a job is created, users must specify a job name, a reward amount, an execut
 
 Any tokens sent as part of a job's message must be present in the [job account](#job-accounts) balance at the moment of execution.
 
-A creation fee is added to every job, which is 5% of a Job's reward amount. This fee is denominated in the native asset of the chain Warp is deployed on. Upon Job creation, the fee is swapped to Luna and burned.  
-
 To learn more about the workflow of jobs, visit the [Job state](./state.mdx) page. To learn about creating a job, visit the [Warp UI tutorial](../guides/ui-tutorial.mdx) or the [Warp SDK tutorial](../guides/sdk-tutorial.mdx).
 
 ### Conditions
@@ -38,31 +36,17 @@ Each job must be submitted with conditions, which are a set of circumstances und
 
 To learn more about how conditions work, visit the [Conditions page](./condition.mdx).
 
-### Templates and variables
+### Templates
 
-Templates and [variables](./variables.mdx) allow Warp users to create reusable, looping jobs. Templates create a job structure, and they contain variables that can be [updated by a user](../guides/ui-tutorial.mdx#create-a-job-using-a-premade-template). Tpo learn more about creating templates, follow the [Template tutorial](../guides/template.mdx). 
+Templates and [variables](./variables.mdx) allow Warp users to create reusable, looping jobs. Templates create a job structure, and they contain variables that can be [updated by a user](../guides/ui-tutorial.mdx#create-a-job-using-a-premade-template). To learn more about creating templates, follow the [Template tutorial](../guides/template.mdx). 
 
+### Variables and recurring jobs 
 
 [Variables](./variables.mdx) can also be specified to update automatically through [update functions](./variables.mdx#update-functions-and-loops). If a job is set to be recurring, each requeueing of the job will trigger the job's update functions, specified as "on success" and "on failure". To learn about variables, visit the [variables](./variables.mdx) page or follow the [Warp UI tutorial](../guides/ui-tutorial.mdx). 
 
-### Funds and accounts
+### The queue
 
-#### Job accounts
-
-When a Warp job is created, a job account is automatically created. This account is a smart contract that can transact funds. Warp jobs can only utilize funds in their execution messages if the funds are present in their job accounts. Users can provide funds to the account by using `info.funds` in the Warp SDK, and these funds are relayed to the job account. This job account is used throughout the lifetime of the job. If the job is set to be recurring, the same account is used for the duration of the recurrance.
-
-#### Funding accounts
-
-Funding accounts are external accounts that can be used to fund maintenance costs for recurring jobs, such as fees and rewards for keepers. Whe creating a recurring job, a user can specify 
-
-Users can create and manage multiple funding accounts.
-Funding account is used for distributing rewards to keepers and paying fees.
-Otherwise, fees are subtracted from info.funds.
-Useful for recurring jobs to provide fees and topups on the side.
-
-
-
-
+Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). For more on Job state, the queue, and a basic workflow, visit the [Job state page](./state.mdx).
 
 ### Keepers
 
@@ -72,13 +56,17 @@ A keeper is any party that maintains the automation functions of a smart contrac
 
 Rewards are given by job owners to keepers in exchange for executing their jobs. Because Warp is a decentralized event handler, rewards are an incentive for unknown keepers to execute jobs, without the need for a centralized intermediary. The minimum reward value is _`0.01`_ Luna. Rewards are provided in Luna and are priced organically, based on computing power costs and incentives for the keeper. 
 
-### The queue
+### Fees
 
-Jobs that have been successfully created by a user are added to a queue, where they will remain until their conditions are met and they are executed by a [keeper](#keepers). For more on Job state, the queue, and a basic workflow, visit the [Job state page](./state.mdx).
+All protocol fees for Warp jobs are burned. Visit the [Fee page](./fees.mdx) to learn more about fee calculation. 
 
-### Eviction
+### Funds and accounts
 
-In order to keep a job active, 5% of a job's reward amount will be withdrawn from the job creator's Warp account every 24 hours. Keepers called "Evictors" will check each job in the queue daily, and collect the 5% fee as a reward. When the Job creator's account no longer holds enough Luna, the job will be evicted and removed from the queue. The Evictor will receive the 5% eviction fee from the Job's reward, and the Creator will be refunded the Job reward amount, minus the eviction fee. 
+#### Job accounts
 
+When a Warp job is created, a job account is automatically created i the background. This account is a smart contract that can transact funds. Warp jobs can only utilize funds in their execution messages if the funds are present in their job accounts. Users can provide funds to the account by specifying them in `info.funds` of the job creation message, and these funds are relayed to the job account. This job account is used throughout the lifetime of the job. If the job is set to be recurring, the same account is used for the duration of the recurrence.
 
+#### Funding accounts
+
+Funding accounts are external accounts that can be used to fund maintenance costs for recurring jobs, such as fees and rewards for keepers. When creating a recurring job, a user can specify a funding account. Without a funding account, fees are taken from the [job account](#job-accounts). 
 
