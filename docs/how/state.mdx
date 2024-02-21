@@ -49,7 +49,7 @@ hide_table_of_contents: true
 
 4. A keeper can attempt to execute any job with a [_`Pending`_](focus://7:9) status if they believe the job's conditions have been met. 
 5. If the job's conditions aren't yet met, the job remains in the queue, and its status is unchanged. 
-6. [Evictors](./overview.mdx#eviction) will collect 5% of the reward amount from the creator's Warp account balance for a job in the queue every 24 hours. If the account cannot pay, the job becomes [_`Evicted`_](focus://14[22:31],15[6:31],16[22:31]), and the 5% eviction fee is taken from the reward and sent to the evictor. The rest of the reward is refunded to the creator. 
+6. Jobs only remain active in the queue based on their duration, which is specified during job creation. Job duration is a variable in fee estimation. When a job's duration runs out, it is [_`Evicted`_](focus://14[22:31],15[6:31],16[22:31]). 
 7. If a job fails during execution, its status becomes [_`Failed`_](focus://20[22:30],21[22:30],22[22:30]). 
 8. If the job's conditions are met, the job's execute message gets sent, and the rewards included for executing the job are sent to the keeper. The job's status becomes [_`Executed`_](focus://23[7:17],24[7:17],25[7:17]). 
 

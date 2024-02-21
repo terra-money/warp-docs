@@ -58,22 +58,46 @@ const nextExecution = variable
 
 const condition = cond.uint(uint.env('time'), 'gt', uint.ref(nextExecution));
 
+const executions = [
+  {
+    condition,
+    msgs: [msg.execute('terra10788fkzah89xrdm27zkj5yvhj9x3494lxawzm5qq3vvxcqz2yzaqyd3enk', { harvest: {} })],
+  },
+];
+
+const recurring = true;
+const durationDays = '30';
+const vars = [nextExecution];
+
+const estimateJobRewardMsg = job
+  .estimate()
+  .recurring(recurring)
+  .durationDays(durationDays)
+  .vars(vars)
+  .executions(executions)
+  .compose();
+
+const reward = await sdk.estimateJobReward(sender, estimateJobRewardMsg);
+
+const operationalAmount = await sdk.estimateJobFee(sender, estimateJobRewardMsg, reward.amount.toString());
+
 const createJobMsg = job
   .create()
   .name('eris-harvest')
   .description('This job harvests rewards for eris protocol vaults each day.')
   .labels([])
-  .recurring(true)
-  .requeueOnEvict(true)
-  .reward('50000')
-  .cond(condition)
-  .var(nextExecution)
-  .msg(msg.execute('terra10788fkzah89xrdm27zkj5yvhj9x3494lxawzm5qq3vvxcqz2yzaqyd3enk', { harvest: {} }))
+  .recurring(recurring)
+  .reward(reward.amount.toString())
+  .operationalAmount(operationalAmount.amount.toString())
+  .vars(vars)
+  .durationDays(durationDays)
+  .executions(executions)
   .compose();
 
-sdk.createJob(sender, createJobMsg).then((response) => {
+sdk.createJob(sender, createJobMsg, [operationalAmount]).then((response) => {
   console.log(response);
 });
+
 
 ```
 
@@ -191,81 +215,92 @@ The first portion of the code is used to import the [feather.js SDK](https://git
 
 ### The job 
 
-1. Now it's time to create the job message, which is the message that will be executed when the condition is met. 
+1. Now it's time to create the job execution message, which is the message that will be executed when the condition is met. 
 
 
-```js Example.ts focus=32:43
-
-```
-
----
-
-2. The `create` method is used to create a new job instance for your job. A name, description, and optional labels give information about the job and what it does. 
-
-```js Example.ts focus=32:43 mark=33:36
+```js Example.ts focus=32:70
 
 ```
 
 ---
 
-3. The job is set to be [recurring](../how/variables.mdx#update-functions-and-loops), which means it will be re-added to the queue after execution and the `next_execution` variable will be updated. 
 
-```js Example.ts focus=32:43 mark=37
+2. The executions array contains the condition and execute message for the job. This array can be used for single or multiple condition/job pairs, operating as a switch. If the array contains multiple pairs, the conditions will be run top-down. Only the first pair whose condition returns as _`true`_ will be executed. 
 
-```
----
-
-4. The `requeueOnEvict(true)` method is used to specify that the job should be requeued if it is
-[evicted](../how/state.mdx) from the job queue.
-
-```js Example.ts focus=32:43 mark=38
-
-```
----
-
-5. A [reward](../how/overview.mdx#rewards) is specified for the keeper that runs the job. 
-
-```js Example.ts focus=32:43 mark=39
+```js Example.ts focus=32:37
 
 ```
 
 ---
 
-6. The [condition](#the-condition) created earlier is specified in the job. 
+3. In this example, there is only one condition and job pair set. The condition set earlier is referenced, and below that, the execute message for the job is set, containing the contract's address and the _`{harvest: {}}`_ message.
 
-```js Example.ts focus=32:43 mark=40
-
-```
-
----
-
-7. The [variable](#the-variable) created earlier is specified in the job. 
-
-```js Example.ts focus=32:43 mark=41
+```js Example.ts focus=32:37 mark=35
 
 ```
 
 ---
 
-8. The `msg.execute` function is used to create a message that will be executed by the job. It takes
-two arguments: the contract address and the message payload.
+4. The job is set to be [recurring](../how/variables.mdx#update-functions-and-loops), which means it will be re-added to the queue after execution. [The duration of the recurrence is set to run for 30 days](focus://40), and [the `next_execution` variable is specified to be updated upon requeuing](focus://41). 
 
-```js Example.ts focus=32:43 mark=42
+```js Example.ts focus=39:41
+
+```
+---
+
+5. In order to pay for the job fees and reward the keeper for execution, the job reward needs to be estimated. Using the job composer, the estimate specifies all the attributes of the job, including the fact that it is recurring, its duration, any variables, and the contents of the execution array. The `.compose()` method is called to complete the job object. 
+
+```js Example.ts focus=43:49
+
+```
+---
+
+6. The _`reward`_ is set to the value returned by the reward estimator when passing it the message from the previous step. 
+
+```js Example.ts focus=51
+
+```
+---
+
+7. The other job fees are estimated and set by passing _`estimateJobRewardMsg`_ and the reward calculated in the previous step to the job fee estimator. 
+
+```js Example.ts focus=53
+
+```
+---
+8. The job is created by putting together all the previous information using the job composer. The `create` method is used to create a new job instance for your job. A name, description, and optional labels give information about the job and what it does. 
+
+```js Example.ts focus=55:66
+
+```
+---
+
+9. The job is set to be recurring, and the reward and operational amount estimated earlier are inserted. 
+
+```js Example.ts focus=55:66 mark=60:62
+
+```
+---
+
+10. The [variable](#the-variable), duration of the job, and the execution array \(the [condition](#the-condition) and execute message\) are specified for the job. 
+
+
+```js Example.ts focus=55:66 mark=63:65
 
 ```
 
 ---
 
-9. The `.compose()` method is called to complete the job object. 
+2. The `.compose()` method is called to complete the job object. 
 
-```js Example.ts focus=32:43 mark=43
+```js Example.ts focus=55:66 mark=66
 
 ```
 ---
 
-10. The code is finished by adding the `createJob` method, specifying the `createJobMsg`, the `sender`, and asking for the response. 
+10. The code is finished by adding the `createJob` method, specifying the `createJobMsg`, the `sender`, and the `operationalAmount`, and asking for the response. 
 
-```js Example.ts focus=45:46
+```js Example.ts focus=68:70
 
 ```
 

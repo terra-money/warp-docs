@@ -7,30 +7,29 @@ import Admonition from '@theme/Admonition';
 
 Follow this tutorial to learn how to make a Job using the [Warp App](https://app.warp.money/). To use the SDK, follow the [SDK tutorial](./sdk-tutorial.mdx). To learn more about how Warp works, read [the overview](../how/overview.mdx). 
 - Download Google Chrome
-- Install [the Station Chrome Extension](https://docs.terra.money/learn/station/download/station-extension)
+- Install [the Station Chrome Extension](https://docs.terra.money/station/get-started/)
 
-## Set up your Warp account
+## Set up a funding account
 
 1. Click the wallet icon in the bottom left corner and then click **Station** to connect your station browser extension. 
 
-
-2. Before you can start using Warp, you need to create a [Warp account](../how/overview.mdx#warp-accounts). Click **Create account** to create a Warp account by signing a transaction. If you are on the Terra blockchain, make sure you have some Luna in your wallet to pay for gas fees. You can get testnet Luna from [Terra’s testnet faucet](https://faucet.terra.money/). 
+2. Before you can create a recurring job with Warp, you need to create a [fuding account](../how/overview.mdx#funding-accounts) to pay for job fees and rewards. Click the interlocked circled in the menu on the right to create a funding account by signing a transaction. If you are on the Terra blockchain, make sure you have some Luna in your wallet to pay for gas fees. You can get testnet Luna from [Terra’s testnet faucet](https://faucet.terra.money/). 
     
 <img className="readme-img-md" src="/img/ui/ui-2.png" />
+
+3. Click **New** and sign the account creation transaction in your Station extension to create a new account. 
     
-2. Sign the account creation transaction by entering your password and clicking **Post**. 
-    
-<img className="readme-img-sm" src="/img/ui/ui-3.png" />
-    
-3. Click on the **Balances** icon in the menu on the left. It looks like two interlocked circles. Click **Deposit** to deposit funds into your account. Any funds transacted using a Warp Job need to be present in your Warp account. 
+4. Click the **Free** tab to view your new account and then click on your account. 
+
+<img className="readme-img-md" src="/img/ui/ui-3.png" />
+
+5. Click **Deposit** to add funds to the account. These will be used to fund the job. You can also withdraw from your account. 
 
 <img className="readme-img-md" src="/img/ui/ui-4.png" />
 
-1. Enter an amount and click **Add**.
+6. Enter an amount and click **Add**.
     
-<img className="readme-img-sm" src="/img/ui/ui-5.png" />
-    
-2. Sign the transaction in the Station Extension. 
+7. Sign the transaction in the Station Extension. 
 
 ## Create a Job
 
@@ -40,20 +39,16 @@ In this tutorial, you’ll learn how to create a job that harvests rewards for t
         
 This job is set as [recurring](../how/variables.mdx#update-functions-and-loops), meaning that it will be [requeued](../how/overview.mdx#the-queue) after execution.
 
-1. Click on the plus symbol (**+**) in the menu on the left and then click **Job** in the menu that appears. 
-    
-<img className="readme-img-md" src="/img/ui/job-1.png" />
-    
-2. Click **Basic mode** to create a Job manually. 
+1. Click on the plus symbol (**+**) in the menu on the left and then click **Basic mode** to create a Job manually. 
     
 <img className="readme-img-md" src="/img/ui/job-2.png" />
     
-3. On the Job creation screen, enter a name for your job and a reward for a keeper to execute the Job
+3. On the Job creation screen, enter a name for your job. 
         
 4. Input the following information into the Job creation fields:
     - Name: _`eris-harvest`_
     - Description: _`This job harvests rewards for eris protocol vaults each day.`_
-    - Reward: _`0.5 Luna`_
+    - Duration: _`30`_ (in days)
 
 5. Click the **Message** button located under the reward field. 
 
@@ -100,9 +95,15 @@ When using a Wasm message in the UI, the message contained in the `msg` field mu
 </ CH.Code>
 
     
-6. Specify the job as [recurring](../how/variables.mdx#update-functions-and-loops) by clicking the toggle below the **Description** field. Recurring jobs are automatically [requeued](../how/overview.mdx#the-queue) after execution.
+6. Specify the job as [recurring](../how/variables.mdx#update-functions-and-loops) by inputting the number of days you want the job to run for and setting the **Job is recurring** toggle to **yes**. Recurring jobs are automatically [requeued](../how/overview.mdx#the-queue) after execution.
 
 <img className="readme-img-lg" src="/img/ui/job-3.png" />
+
+7. In the **Select funding account** section, click on the account you created and funded earlier. This account will fund the recurring job and pay for fees and job rewards. 
+
+<img className="readme-img-md" src="/img/ui/job-35.png" />
+
+7. Click **Next**. 
 
 ## Add a variable
 
@@ -137,7 +138,7 @@ Click the **Variables** tab on the right side of the screen and then click **New
 <img className="readme-img-md" src="/img/ui/job-9.png" />
     
 8. Click **Save**. 
-9. On the variable page, your update function will show, and explains that on each successful job execution, the value for the `next_execution` variable will be updated to the current time plus 24 hours (`86400`). 
+9. On the variable page, your update function will show. It explains that on each successful job execution, the value for the `next_execution` variable will be updated to the current time plus 24 hours (`86400`). 
     
 <img className="readme-img-lg" src="/img/ui/job-10.png" />
     
@@ -169,6 +170,8 @@ Click the **Variables** tab on the right side of the screen and then click **New
     
 <img className="readme-img-lg" src="/img/ui/job-15.png" />
     
-7. Click Save to submit the Job. Then, sign the transaction in your Station extension.
+7. Click **Save** to finalize your condition. 
+
+7. Review your job and be sure to look over the reward ad fee amounts that were estimated. Click **Save** to submit the Job. Then, sign the transaction in your Station extension.
 
 
