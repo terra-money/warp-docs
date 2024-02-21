@@ -34,6 +34,8 @@ To learn more about the workflow of jobs, visit the [Job state](./state.mdx) pag
 
 Each job must be submitted with conditions, which are a set of circumstances under which the job should be executed. Conditions are made up of expressions that can be simple, such as specifying a blockheight, or complex, in which multiple conditions are nested and joined using boolean operators. Query responses can also be used in expressions to specify a condition. When all the expressions in a condition evaluate to _`true`_, the condition is met, and the job can be completed. 
 
+Jobs can contain multiple pairs of conditions and execute messages. Using the [Warp SDK](../guides/sdk-tutorial.mdx), you can specify multiple execution pairs in the `executions` array, acting as a switch. The conditions are run top to bottom, and the first condition to evaluate as _`true`_ will trigger its paired execute message. 
+
 To learn more about how conditions work, visit the [Conditions page](./condition.mdx).
 
 ### Templates
