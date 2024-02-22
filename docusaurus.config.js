@@ -78,6 +78,12 @@ module.exports = async function config() {
             autoCollapseCategories: false,
           },
         },
+        algolia: {
+          appId: 'ZJHRCAY9WM',
+          apiKey: 'f9c5de6438a645ff618150c35aed0893',
+          indexName: 'warp',
+          contextualSearch: true,
+        },
         colorMode: {
           defaultMode: 'dark',
           disableSwitch: true,
