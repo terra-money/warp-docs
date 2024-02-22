@@ -91,11 +91,11 @@ module.exports = async function config() {
           },
           items: [
             {
-              href: "/get-started", //front-end URL
+              href: "https://docs.google.com/forms/d/e/1FAIpQLSeYGdWL9tIHC3BP2riYXtT_cyZVDMGKrrSH0JCPCdV3PtZGyg/viewform", //front-end URL
               position: "right",
-              label: "Get started",
+              label: "Get in touch",
               className: "header-home-link",
-              "aria-label": "Get started",
+              "aria-label": "Get in touch",
             },
             {
               href: "https://app.warp.money",
