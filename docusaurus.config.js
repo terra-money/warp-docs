@@ -64,6 +64,10 @@ module.exports = async function config() {
               require.resolve("katex/dist/katex.min.css"),
             ],
           },
+          gtag: {
+            trackingID: 'G-R68Q0KSBSM',
+            anonymizeIP: true,
+          },
         }),
       ],
     ],
