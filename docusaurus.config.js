@@ -84,7 +84,7 @@ module.exports = async function config() {
         },
         algolia: {
           appId: 'ZJHRCAY9WM',
-          apiKey: 'f9c5de6438a645ff618150c35aed0893',
+          apiKey: '3b890b1e40503baabf76b5980c34a274',
           indexName: 'warp',
           contextualSearch: true,
         },
