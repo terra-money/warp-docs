@@ -7,9 +7,6 @@ import Admonition from '@theme/Admonition';
 
 For general information on keepers, visit the [Overview page](../how/overview.mdx). 
 
-There are separate keeper bot scripts for Terra and Injective. The Terra script is stored under [`/bot.terra.ts`](https://github.com/terra-money/warp-sdk/blob/feature/cross-chain/src/bot.terra.ts) and the Injective script is stored in [`/bot.injective.ts`](https://github.com/terra-money/warp-sdk/blob/feature/cross-chain/src/bot.injective.ts). 
-
-
 ## Installation
 
 Running a keeper is simple. Warp provides a [GitHub repository](https://github.com/terra-money/warp-sdk) that contains the logic for a simple keeper. Follow these steps to create a keeper. 
@@ -32,6 +29,20 @@ Running a keeper is simple. Warp provides a [GitHub repository](https://github.c
     ```sh Injective
     yarn install
     yarn bot-injective
+    ```
+
+    For Neutron:
+
+    ```sh Neutron
+    yarn install
+    yarn bot-neutron
+    ```
+
+    For Osmosis:
+
+    ```sh Osmosis
+    yarn install
+    yarn bot-Osmosis
     ```
 
     For Neutron:
