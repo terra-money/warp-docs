@@ -10,6 +10,11 @@ The following section is a basic overview of how Warp works. For a more in-depth
 
 Warp brings decentralized automation to the blockchain. Unlike common Cron Jobs, Warp allows users to specify nearly any circumstance to execute a Job, not just time. With Warp, the circumstance is called a [Condition](#conditions), and the [Job](#jobs) contains an executable message. Conditions can be anything from timestamps and blockheights to price queries and complex, nested combinations of circumstances. If it can be verified by another party on-chain, it can be used as a condition with which to trigger a Job. Warp Jobs are submitted as pre-signed messages to a queue, and participants called [keepers](#keepers) monitor the conditions of each active Job. When the conditions have been met, the keeper executes the Job message. 
 
+## Decentralized automation
+
+Being a permissionless network, the executions of Warp jobs are fully decentralized. This means that anybody, as long as they have a functional computer, can run a Warp keeper to execute jobs and potentially profit off of them. The maintenance and upgrades of the Warp contracts themselves are performed by Terraform Labs, as the Warp protocol itself does not have its own token and associated governance. Learn more about the various Warp contracts and their associated admin addresses [here](../contracts/addresses.mdx).
+
+
 ## How does it work?
 
 The following illustration demonstrates how a job is executed. 
@@ -53,6 +58,7 @@ Jobs that have been successfully created by a user are added to a queue, where t
 ### Keepers
 
 A keeper is any party that maintains the automation functions of a smart contract. With Warp, [anyone can be a keeper](../guides/keeper.mdx).  Keepers are incentivized by Warp users to execute smart contract functions on their behalf, in exchange for a reward. Keepers query the chain and evaluate a job's condition. Once the conditions for a job are met, a keeper can submit the execute message contained in the job. In exchange, they collect a [reward](#rewards). To learn how to run a keeper, visit the [Keeper guide](../guides/keeper.mdx). 
+
 
 ### Rewards 
 
